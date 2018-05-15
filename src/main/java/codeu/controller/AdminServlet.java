@@ -34,7 +34,10 @@ public class AdminServlet extends HttpServlet {
    */
   @Override
   public void init() throws ServletException {
+    // Sets up the servlet
     super.init();
+
+    // Hardcoded for now
     adminUsernames = Arrays.asList("drew", "elona", "jocelyn", "ricardo");
   }
 
@@ -47,10 +50,15 @@ public class AdminServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
+
+    // Get the session's username. (Is this a security vulnerability? What if it's forged?)
     String username = (String) request.getSession().getAttribute("user");
+
     if (adminUsernames.contains(username)) {
+      // Let the user through
       request.getRequestDispatcher("/WEB-INF/view/admin.jsp").forward(request, response);
     } else {
+      // Back to login
       response.sendRedirect("/login");
       return;
     }
