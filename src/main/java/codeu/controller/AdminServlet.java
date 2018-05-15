@@ -41,6 +41,16 @@ public class AdminServlet extends HttpServlet {
     adminUsernames = Arrays.asList("drew", "elona", "jocelyn", "ricardo");
   }
 
+  /**
+   * Set up test state for handling admin page requests.
+   * This is a very temporary, hardcoded solution for testing. It will be removed once
+   * adminUsernames is moved to a more reasonable part of the code, like possibly a singleton.
+   */
+  public void test_init() {
+    // Hardcoded for now
+    adminUsernames = Arrays.asList("drew", "elona", "jocelyn", "ricardo");
+  }
+
 
   /**
    * This function fires when a user requests the /admin URL. It forwards the request to login.jsp
