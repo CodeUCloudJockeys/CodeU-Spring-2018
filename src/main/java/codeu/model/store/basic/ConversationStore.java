@@ -73,12 +73,12 @@ public class ConversationStore {
     conversations = new HashMap<>();
   }
 
-  /** Access the current set of conversations known to the application. */
+  /** Access the current map of conversations known to the application. */
   public Map<UUID, Conversation> getAllConversations() {
     return conversations;
   }
 
-  /** Add a new conversation to the current set of conversations known to the application. */
+  /** Add a new conversation to the current map of conversations known to the application. */
   public void addConversation(Conversation conversation) {
     conversations.put(conversation.getId(), conversation);
     titleToId.put(conversation.getTitle(), conversation.getId());
