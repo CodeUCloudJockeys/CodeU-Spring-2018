@@ -16,8 +16,12 @@ package codeu.model.store.basic;
 
 import codeu.model.data.Conversation;
 import codeu.model.store.persistence.PersistentStorageAgent;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
 
 /**
  * Store class that uses in-memory data structures to hold values and automatically loads from and
@@ -55,49 +59,48 @@ public class ConversationStore {
    */
   private PersistentStorageAgent persistentStorageAgent;
 
-  /** The in-memory list of Conversations. */
-  private List<Conversation> conversations;
+  /** The in-memory set of Conversations. */
+  private Map<UUID, Conversation> conversations;
+
+  /** A bimap from titles to IDs, so conversation IDs can be fetched from conversation titles
+   * quickly and vice versa.
+   */
+  private BiMap<String, UUID> titleToId;
 
   /** This class is a singleton, so its constructor is private. Call getInstance() instead. */
   private ConversationStore(PersistentStorageAgent persistentStorageAgent) {
     this.persistentStorageAgent = persistentStorageAgent;
-    conversations = new ArrayList<>();
+    conversations = new HashMap<>();
   }
 
-/** Access the current set of conversations known to the application. */
-  public List<Conversation> getAllConversations() {
+  /** Access the current set of conversations known to the application. */
+  public Map<UUID, Conversation> getAllConversations() {
     return conversations;
   }
 
   /** Add a new conversation to the current set of conversations known to the application. */
   public void addConversation(Conversation conversation) {
-    conversations.add(conversation);
+    conversations.put(conversation.getId(), conversation);
+    titleToId.put(conversation.getTitle(), conversation.getId());
+
     persistentStorageAgent.writeThrough(conversation);
   }
 
   /** Check whether a Conversation title is already known to the application. */
   public boolean isTitleTaken(String title) {
-    // This approach will be pretty slow if we have many Conversations.
-    for (Conversation conversation : conversations) {
-      if (conversation.getTitle().equals(title)) {
-        return true;
-      }
-    }
-    return false;
+    // This approach should be fairly fast!
+    UUID id = titleToId.get(title);
+    return conversations.containsKey(id);
   }
 
   /** Find and return the Conversation with the given title. */
   public Conversation getConversationWithTitle(String title) {
-    for (Conversation conversation : conversations) {
-      if (conversation.getTitle().equals(title)) {
-        return conversation;
-      }
-    }
-    return null;
+    UUID id = titleToId.get(title);
+    return conversations.get(id);
   }
 
   /** Sets the List of Conversations stored by this ConversationStore. */
-  public void setConversations(List<Conversation> conversations) {
+  public void setConversations(Map<UUID, Conversation> conversations) {
     this.conversations = conversations;
   }
 }
