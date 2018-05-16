@@ -39,6 +39,7 @@ public class AdminServlet extends HttpServlet {
     super.init();
 
     // Hardcoded for now
+    // TODO(rafer45): Store sensitive info (like admin data) in .gitignored file
     adminUsernames = Arrays.asList("drew", "elona", "jocelyn", "ricardo");
   }
 
