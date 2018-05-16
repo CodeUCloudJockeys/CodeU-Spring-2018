@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 public class AdminServlet extends HttpServlet {
 
   /** Store list with admin usernames. */
+  // TODO(rafer45): Replace adminUsernames with better system
   private List<String> adminUsernames;
 
   /**
@@ -47,7 +48,7 @@ public class AdminServlet extends HttpServlet {
    * adminUsernames is moved to a more reasonable part of the code, like possibly a singleton.
    */
   public void test_init() {
-    // Hardcoded for now
+    // TODO(rafer45): Remove test_init, replace with better system
     adminUsernames = Arrays.asList("drew", "elona", "jocelyn", "ricardo");
   }
 
@@ -61,7 +62,7 @@ public class AdminServlet extends HttpServlet {
   public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
 
-    // Get the session's username. (Is this a security vulnerability? What if it's forged?)
+    // TODO(rafer45): Investigate security implications of using Session
     String username = (String) request.getSession().getAttribute("user");
 
     if (adminUsernames.contains(username)) {
