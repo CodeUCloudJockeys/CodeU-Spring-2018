@@ -61,4 +61,24 @@ public class Conversation {
   public Instant getCreationTime() {
     return creation;
   }
+
+  /** Override equality, so conversations are compared based on their ID */
+  @Override
+  public boolean equals(Object o) {
+
+    if (o == this) return true;
+    if (!(o instanceof Conversation)) {
+      return false;
+    }
+
+    Conversation other = (Conversation) o;
+
+    return other.getId().equals(id);
+  }
+
+  /** Override hashcode, so conversations are hashed based on their ID */
+  @Override
+  public int hashCode() {
+    return this.getId().hashCode();
+  }
 }

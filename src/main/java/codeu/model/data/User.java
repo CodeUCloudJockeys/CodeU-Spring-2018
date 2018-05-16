@@ -90,4 +90,24 @@ public class User {
   public void adminify() { this.isAdmin = true; } // maybe rename to promote()
 
   public void unadminify() { this.isAdmin = false; } // maybe rename to demote()
+
+  /** Override equality, so users are compared based on their ID */
+  @Override
+  public boolean equals(Object o) {
+
+    if (o == this) return true;
+    if (!(o instanceof User)) {
+      return false;
+    }
+
+    User other = (User) o;
+
+    return other.getId().equals(id);
+  }
+
+  /** Override hashcode, so users are hashed based on their ID */
+  @Override
+  public int hashCode() {
+    return this.getId().hashCode();
+  }
 }
