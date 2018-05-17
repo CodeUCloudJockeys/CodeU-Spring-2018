@@ -22,10 +22,10 @@ import java.util.UUID;
  * created by a User and contain Messages.
  */
 public class Conversation {
-  public final UUID id;
-  public final UUID owner;
-  public final Instant creation;
-  public final String title;
+  private final UUID id;
+  private final UUID owner;
+  private final Instant creation;
+  private final String title;
 
   /**
    * Constructs a new Conversation.
@@ -60,5 +60,25 @@ public class Conversation {
   /** Returns the creation time of this Conversation. */
   public Instant getCreationTime() {
     return creation;
+  }
+
+  /** Override equality, so conversations are compared based on their ID */
+  @Override
+  public boolean equals(Object o) {
+
+    if (o == this) return true;
+    if (!(o instanceof Conversation)) {
+      return false;
+    }
+
+    Conversation other = (Conversation) o;
+
+    return other.getId().equals(id);
+  }
+
+  /** Override hashcode, so conversations are hashed based on their ID */
+  @Override
+  public int hashCode() {
+    return this.getId().hashCode();
   }
 }
