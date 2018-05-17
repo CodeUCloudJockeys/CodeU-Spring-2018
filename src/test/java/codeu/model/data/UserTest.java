@@ -35,4 +35,6 @@ public class UserTest {
     Assert.assertEquals(passwordHash, user.getPasswordHash());
     Assert.assertEquals(creation, user.getCreationTime());
   }
+
+  // TODO: Add admin user tests
 }
