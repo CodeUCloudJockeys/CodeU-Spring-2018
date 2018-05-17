@@ -61,8 +61,18 @@ public class AdminServletTest {
 
   @Test
   public void testDoGet_NotAdminUsername() throws IOException, ServletException {
-    // Very hardcoded for now. Will be made better later, possibly using a singleton AdminUserStore.
+
+    User user = new User(
+        UUID.randomUUID(),
+        "notadmin",
+        "$2a$10$.e.4EEfngEXmxAO085XnYOmDntkqod0C384jOR9oagwxMnPNHaGLa",
+        Instant.now(),
+        false
+    );
+
     Mockito.when(mockSession.getAttribute("user")).thenReturn("notadmin");
+
+    Mockito.when(mockUserStore.getUser("notadmin")).thenReturn(user);
 
     adminServlet.doGet(mockRequest, mockResponse);
 
@@ -75,8 +85,19 @@ public class AdminServletTest {
 
   @Test
   public void testDoGet_AdminUsername() throws IOException, ServletException {
-    // Very hardcoded for now. Will be made better later, possibly using a singleton AdminUserStore.
-    Mockito.when(mockSession.getAttribute("user")).thenReturn("ricardo");
+
+    User user = new User(
+        UUID.randomUUID(),
+        "admin",
+        "$2a$10$.e.4EEfngEXmxAO085XnYOmDntkqod0C384jOR9oagwxMnPNHaGLa",
+        Instant.now(),
+        true
+    );
+
+    Mockito.when(mockSession.getAttribute("user")).thenReturn("admin");
+
+    Mockito.when(mockUserStore.getUser("notadmin")).thenReturn(user);
+
     adminServlet.doGet(mockRequest, mockResponse);
 
     // Verify user is forwarded to admin page
