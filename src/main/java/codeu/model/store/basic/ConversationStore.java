@@ -16,7 +16,9 @@ package codeu.model.store.basic;
 
 import codeu.model.data.Conversation;
 import codeu.model.store.persistence.PersistentStorageAgent;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -59,7 +61,7 @@ public class ConversationStore {
    */
   private PersistentStorageAgent persistentStorageAgent;
 
-  /** The in-memory set of Conversations. */
+  /** The in-memory map of Conversations. */
   private Map<UUID, Conversation> conversations;
 
   /** A bimap from titles to IDs, so conversation IDs can be fetched from conversation titles
@@ -74,9 +76,9 @@ public class ConversationStore {
     titleToId = HashBiMap.create();
   }
 
-  /** Access the current map of conversations known to the application. */
-  public Map<UUID, Conversation> getAllConversations() {
-    return conversations;
+  /** Access the current list of conversations known to the application. */
+  public List<Conversation> getAllConversations() {
+    return new ArrayList<>(conversations.values());
   }
 
   /** Add a new conversation to the current map of conversations known to the application. */
@@ -90,18 +92,26 @@ public class ConversationStore {
   /** Check whether a Conversation title is already known to the application. */
   public boolean isTitleTaken(String title) {
     // This approach should be fairly fast!
-    UUID id = titleToId.get(title);
-    return conversations.containsKey(id);
+    return titleToId.containsKey(title);
   }
 
   /** Find and return the Conversation with the given title. */
   public Conversation getConversationWithTitle(String title) {
     UUID id = titleToId.get(title);
-    return conversations.get(id);
+    return (id == null) ? null : conversations.get(id);
   }
 
-  /** Sets the List of Conversations stored by this ConversationStore. */
-  public void setConversations(Map<UUID, Conversation> conversations) {
-    this.conversations = conversations;
+  /** Sets the Map of Conversations stored by this ConversationStore. */
+  public void setConversations(List<Conversation> conversationList) {
+    // For each conversation in the list
+    conversationList.forEach(conversation -> {
+
+      // Put the conversation in the map
+      conversations.put(conversation.getId(), conversation);
+
+      // Associate its title with its ID
+      titleToId.put(conversation.getTitle(), conversation.getId());
+
+    });
   }
 }
