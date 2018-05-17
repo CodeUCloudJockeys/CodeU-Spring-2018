@@ -15,6 +15,7 @@
 package codeu.controller;
 
 import codeu.model.data.User; // unused for now
+import codeu.model.store.basic.UserStore;
 import java.io.IOException;
 import java.util.List;
 import java.util.Arrays;
@@ -23,12 +24,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/** Servlet class responsible for the login page. */
+/** Servlet class responsible for the admin page. */
 public class AdminServlet extends HttpServlet {
 
-  /** Store list with admin usernames. */
-  // TODO(rafer45): Replace adminUsernames with better system
-  private List<String> adminUsernames;
+  /** Store class that gives access to Users. */
+  private UserStore userStore;
 
   /**
    * Set up state for handling admin page requests.
@@ -37,22 +37,16 @@ public class AdminServlet extends HttpServlet {
   public void init() throws ServletException {
     // Sets up the servlet
     super.init();
-
-    // Hardcoded for now
-    // TODO(rafer45): Store sensitive info (like admin data) in .gitignored file
-    adminUsernames = Arrays.asList("drew", "elona", "jocelyn", "ricardo");
+    setUserStore(UserStore.getInstance());
   }
 
   /**
-   * Set up test state for handling admin page requests.
-   * This is a very temporary, hardcoded solution for testing. It will be removed once
-   * adminUsernames is moved to a more reasonable part of the code, like possibly a singleton.
+   * Sets the UserStore used by this servlet. This function provides a common setup method for use
+   * by the test framework or the servlet's init() function.
    */
-  public void test_init() {
-    // TODO(rafer45): Remove test_init, replace with better system
-    adminUsernames = Arrays.asList("drew", "elona", "jocelyn", "ricardo");
+  void setUserStore(UserStore userStore) {
+    this.userStore = userStore;
   }
-
 
   /**
    * This function fires when a user requests the /admin URL. It forwards the request to login.jsp
@@ -65,8 +59,9 @@ public class AdminServlet extends HttpServlet {
 
     // TODO(rafer45): Investigate security implications of using Session
     String username = (String) request.getSession().getAttribute("user");
+    User user = userStore.getUser(username);
 
-    if (adminUsernames.contains(username)) {
+    if (user != null && user.getIsAdmin()) {
       // Let the user through
       request.getRequestDispatcher("/WEB-INF/view/admin.jsp").forward(request, response);
     } else {

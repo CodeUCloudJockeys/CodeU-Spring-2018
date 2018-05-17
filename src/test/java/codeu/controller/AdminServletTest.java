@@ -36,11 +36,11 @@ public class AdminServletTest {
   private HttpSession mockSession;
   private HttpServletResponse mockResponse;
   private RequestDispatcher mockRequestDispatcher;
+  private UserStore mockUserStore;
 
   @Before
   public void setup() {
     adminServlet = new AdminServlet();
-    adminServlet.test_init();
 
     mockRequest = Mockito.mock(HttpServletRequest.class);
     mockResponse = Mockito.mock(HttpServletResponse.class);
@@ -55,6 +55,8 @@ public class AdminServletTest {
       */
     Mockito.when(mockRequest.getRequestDispatcher("/WEB-INF/view/admin.jsp"))
         .thenReturn(mockRequestDispatcher);
+
+    mockUserStore = Mockito.mock(UserStore.class);
   }
 
   @Test
