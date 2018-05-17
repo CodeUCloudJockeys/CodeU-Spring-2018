@@ -71,6 +71,7 @@ public class ConversationStore {
   private ConversationStore(PersistentStorageAgent persistentStorageAgent) {
     this.persistentStorageAgent = persistentStorageAgent;
     conversations = new HashMap<>();
+    titleToId = HashBiMap.create();
   }
 
   /** Access the current map of conversations known to the application. */
