@@ -71,6 +71,7 @@ public class MessageStore {
     persistentStorageAgent.writeThrough(message);
   }
 
+  // TODO: Optimize this
   /** Access the current set of Messages within the given Conversation. */
   public List<Message> getMessagesInConversation(UUID conversationId) {
 
