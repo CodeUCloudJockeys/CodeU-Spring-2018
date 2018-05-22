@@ -81,12 +81,23 @@ public class ConversationStore {
     return new ArrayList<>(conversations.values());
   }
 
-  /** Add a new conversation to the current map of conversations known to the application. */
+  /**
+   * Add a new conversation to the current map of conversations known to the application.
+   * This writes the conversation to the persistent storage.
+   */
   public void addConversation(Conversation conversation) {
-    conversations.put(conversation.getId(), conversation);
-    titleToId.put(conversation.getTitle(), conversation.getId());
+    addConversationWithoutPersistentStorage(conversation);
 
     persistentStorageAgent.writeThrough(conversation);
+  }
+
+  /**
+   * Add a new conversation to the current map of conversations known to the application.
+   * This does NOT write the conversation to the persistent storage.
+   */
+  public void addConversationWithoutPersistentStorage(Conversation conversation) {
+    conversations.put(conversation.getId(), conversation);
+    titleToId.put(conversation.getTitle(), conversation.getId());
   }
 
   /** Check whether a Conversation title is already known to the application. */
@@ -103,15 +114,7 @@ public class ConversationStore {
 
   /** Sets the Map of Conversations stored by this ConversationStore. */
   public void setConversations(List<Conversation> conversationList) {
-    // For each conversation in the list
-    conversationList.forEach(conversation -> {
-
-      // Put the conversation in the map
-      conversations.put(conversation.getId(), conversation);
-
-      // Associate its title with its ID
-      titleToId.put(conversation.getTitle(), conversation.getId());
-
-    });
+    // For each conversation in the list, add it without writing it to persistent storage.
+    conversationList.forEach(conversation -> addConversationWithoutPersistentStorage(conversation));
   }
 }

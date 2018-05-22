@@ -96,12 +96,24 @@ public class UserStore {
   /**
    * Add a new user to the current map of users known to the application. This should only be called
    * to add a new user, not to update an existing user.
+   *
+   * This writes the user to the persistent storage.
    */
   public void addUser(User user) {
-    users.put(user.getId(), user);
-    nameToId.put(user.getName(), user.getId());
+    addUserWithoutPersistentStorage(user);
 
     persistentStorageAgent.writeThrough(user);
+  }
+
+  /**
+   * Add a new user to the current map of users known to the application. This should only be called
+   * to add a new user, not to update an existing user.
+   *
+   * This does NOT write the user to the persistent storage.
+   */
+  public void addUserWithoutPersistentStorage(User user) {
+    users.put(user.getId(), user);
+    nameToId.put(user.getName(), user.getId());
   }
 
   /**
@@ -121,16 +133,8 @@ public class UserStore {
    * is loaded from Datastore.
    */
   public void setUsers(List<User> userList) {
-    // For each user in the list
-    userList.forEach(user -> {
-
-      // Put the user in the user map
-      users.put(user.getId(), user);
-
-      // Associate its name with its ID
-      nameToId.put(user.getName(), user.getId());
-
-    });
+    // For each user in the list, add it without writing it to persistent storage.
+    userList.forEach(user -> addUserWithoutPersistentStorage(user));
   }
 }
 
