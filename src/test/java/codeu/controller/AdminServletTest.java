@@ -57,6 +57,7 @@ public class AdminServletTest {
         .thenReturn(mockRequestDispatcher);
 
     mockUserStore = Mockito.mock(UserStore.class);
+    adminServlet.setUserStore(mockUserStore);
   }
 
   @Test
