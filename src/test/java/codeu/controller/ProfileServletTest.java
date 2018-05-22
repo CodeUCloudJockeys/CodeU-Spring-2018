@@ -20,20 +20,20 @@
 
   @Before
   public void setup() throws IOException {
-  profileServlet = new ProfileServlet();
-  mockRequest = Mockito.mock(HttpServletRequest.class);
-  mockResponse = Mockito.mock(HttpServletResponse.class);
-  mockSession = Mockito.mock(HttpSession.class);
-  Mockito.when(mockRequest.getSession()).thenReturn(mockSession);
+    profileServlet = new ProfileServlet();
+    mockRequest = Mockito.mock(HttpServletRequest.class);
+    mockResponse = Mockito.mock(HttpServletResponse.class);
+    mockSession = Mockito.mock(HttpSession.class);
+    Mockito.when(mockRequest.getSession()).thenReturn(mockSession);
   }
 
   @Test
-  public void testDoGet_noUser() throws IOException, ServletException{
-  Mockito.when(mockSession.getAttribute("user")).thenReturn(null);
-  profileServlet.doGet(mockRequest, mockResponse);
-    
-  //Checks if the user null, the redirected into login page
-  Mockito.verify(mockResponse).sendRedirect("/login");
+  public void testDoGet_noUser() throws IOException, ServletException {
+    Mockito.when(mockSession.getAttribute("user")).thenReturn(null);
+    profileServlet.doGet(mockRequest, mockResponse);
+
+    //Checks if the user null, the redirected into login page
+    Mockito.verify(mockResponse).sendRedirect("/login");
   }
 
 }
