@@ -97,7 +97,7 @@ public class AdminServletTest {
 
     Mockito.when(mockSession.getAttribute("user")).thenReturn("admin");
 
-    Mockito.when(mockUserStore.getUser("notadmin")).thenReturn(user);
+    Mockito.when(mockUserStore.getUser("admin")).thenReturn(user);
 
     adminServlet.doGet(mockRequest, mockResponse);
 
