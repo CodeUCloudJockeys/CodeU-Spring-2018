@@ -97,20 +97,10 @@ public class MessageStore {
     messages.put(id, message);
 
     // Add to its conversation's list
-    if (conversationIdToMessageIdList.containsKey(conversationId)) {
-      conversationIdToMessageIdList.get(conversationId).add(id);
-    } else {
-      conversationIdToMessageIdList.put(conversationId, new ArrayList<>());
-      conversationIdToMessageIdList.get(conversationId).add(id);
-    }
+    addToListInMap(conversationIdToMessageIdList, conversationId, id);
 
     // Add to its author's list
-    if (authorIdToMessageIdList.containsKey(authorId)) {
-      conversationIdToMessageIdList.get(authorId).add(id);
-    } else {
-      conversationIdToMessageIdList.put(authorId, new ArrayList<>());
-      conversationIdToMessageIdList.get(authorId).add(id);
-    }
+    addToListInMap(authorIdToMessageIdList, authorId, id);
   }
 
   /** Access the current set of Messages within the given Conversation. */
@@ -169,5 +159,14 @@ public class MessageStore {
   /** Sets the List of Messages stored by this MessageStore. */
   public void setMessages(List<Message> messages) {
     messages.forEach(message -> addMessageWithoutPersistentStorage(message));
+  }
+  
+  private static void addToListInMap(map, key, value) {
+    if (map.containsKey(key)) {
+      map.get(key).add(value);
+    } else {
+      map.put(key, new ArrayList<>());
+      map.get(key).add(value);
+    }
   }
 }
