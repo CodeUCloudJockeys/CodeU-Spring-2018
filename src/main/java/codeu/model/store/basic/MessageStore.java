@@ -109,17 +109,11 @@ public class MessageStore {
     List<Message> messagesInConversation;
 
     if (conversationIdToMessageIdList.containsKey(conversationId)) {
-      messagesInConversation = // To get the messages in a conversation,
-
-          // We get a list of the message IDs
+      // Get all messages from conversation ID
+      messagesInConversation =
           conversationIdToMessageIdList.get(conversationId)
-              // We turn the list into a stream
               .stream()
-
-              // Then we turn each ID into a message
               .map(id -> messages.get(id))
-
-              // Then we put the results in a list
               .collect(Collectors.toList());
     } else {
       // If the conversation has no messages, return an empty list
@@ -131,25 +125,17 @@ public class MessageStore {
 
   /** Access the set of Messages sent by a given User. */
   public List<Message> getMessagesByUser(UUID authorId) {
-
     List<Message> messagesByUser;
 
     if (authorIdToMessageIdList.containsKey(authorId)) {
-      messagesByUser = // To get the messages by a user,
-
-          // We get a list of the message IDs
+      // Get all messages from author ID
+      messagesByUser =
           authorIdToMessageIdList.get(authorId)
-
-              // We turn the list into a stream
               .stream()
-
-              // Then we turn each ID into a message
               .map(id -> messages.get(id))
-
-              // Then we put the results in a list
               .collect(Collectors.toList());
     } else {
-      // If the conversation has no messages, return an empty list
+      // If the user has no messages, return an empty list
       messagesByUser = new ArrayList<>();
     }
 
