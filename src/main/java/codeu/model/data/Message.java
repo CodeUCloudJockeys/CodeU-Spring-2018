@@ -71,8 +71,6 @@ public class Message {
   /** Override equality, so messages are compared based on their ID */
   @Override
   public boolean equals(Object o) {
-
-    if (o == this) return true;
     if (!(o instanceof Message)) {
       return false;
     }
