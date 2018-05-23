@@ -16,9 +16,6 @@ package codeu.model.store.basic;
 
 import codeu.model.data.User;
 import codeu.model.store.persistence.PersistentStorageAgent;
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -63,15 +60,15 @@ public class UserStore {
   private Map<UUID, User> users;
 
   /**
-   * A bimap from names to IDs, so user IDs can be fetched from usernames quickly and vice versa.
+   * A map from names to IDs, so user IDs can be fetched from usernames quickly.
    */
-  private BiMap<String, UUID> nameToId;
+  private Map<String, UUID> nameToId;
 
   /** This class is a singleton, so its constructor is private. Call getInstance() instead. */
   private UserStore(PersistentStorageAgent persistentStorageAgent) {
     this.persistentStorageAgent = persistentStorageAgent;
     users = new HashMap<>();
-    nameToId = HashBiMap.create();
+    nameToId = new HashMap<>();
   }
 
   /**

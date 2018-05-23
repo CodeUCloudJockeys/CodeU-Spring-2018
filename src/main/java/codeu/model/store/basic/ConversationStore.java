@@ -22,9 +22,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
-
 /**
  * Store class that uses in-memory data structures to hold values and automatically loads from and
  * saves to PersistentStorageAgent. It's a singleton so all servlet classes can access the same
@@ -64,16 +61,17 @@ public class ConversationStore {
   /** The in-memory map of Conversations. */
   private Map<UUID, Conversation> conversations;
 
-  /** A bimap from titles to IDs, so conversation IDs can be fetched from conversation titles
-   * quickly and vice versa.
+  /**
+   * A map from titles to IDs, so conversation IDs can be fetched from conversation titles
+   * quickly.
    */
-  private BiMap<String, UUID> titleToId;
+  private Map<String, UUID> titleToId;
 
   /** This class is a singleton, so its constructor is private. Call getInstance() instead. */
   private ConversationStore(PersistentStorageAgent persistentStorageAgent) {
     this.persistentStorageAgent = persistentStorageAgent;
     conversations = new HashMap<>();
-    titleToId = HashBiMap.create();
+    titleToId = new HashMap<>();
   }
 
   /** Access the current list of conversations known to the application. */
