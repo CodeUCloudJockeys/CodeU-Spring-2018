@@ -96,10 +96,8 @@ public class MessageStore {
 
     messages.put(id, message);
 
-    // Add to its conversation's list
     addToListInMap(conversationIdToMessageIdList, conversationId, id);
 
-    // Add to its author's list
     addToListInMap(authorIdToMessageIdList, authorId, id);
   }
 
