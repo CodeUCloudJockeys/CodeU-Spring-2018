@@ -76,7 +76,7 @@ public class ConversationStore {
 
   // TODO: Add tests for this
   /** Amount of conversations */
-  int Count() {
+  public int Count() {
     return conversations.size();
   }
 

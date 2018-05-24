@@ -76,7 +76,7 @@ public class MessageStore {
   }
 
   /** Amount of messages */
-  int Count() {
+  public int Count() {
     return messages.size();
   }
 

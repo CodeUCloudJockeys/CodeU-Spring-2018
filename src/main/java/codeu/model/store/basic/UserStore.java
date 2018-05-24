@@ -72,7 +72,7 @@ public class UserStore {
   }
 
   /** Amount of users */
-  int Count() {
+  public int Count() {
     return users.size();
   }
 
