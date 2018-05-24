@@ -148,11 +148,10 @@ public class MessageStore {
   }
   
   private static void addToListInMap(map, key, value) {
-    if (map.containsKey(key)) {
-      map.get(key).add(value);
-    } else {
+    if (!map.containsKey(key)) {
       map.put(key, new ArrayList<>());
-      map.get(key).add(value);
     }
+
+    map.get(key).add(value);
   }
 }
