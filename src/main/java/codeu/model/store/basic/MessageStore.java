@@ -145,7 +145,7 @@ public class MessageStore {
     messages.forEach(message -> addMessageWithoutPersistentStorage(message));
   }
   
-  private static void addToListInMap(map, key, value) {
+  private static void addToListInMap(Map<UUID, List<UUID>> map, UUID key, UUID value) {
     if (!map.containsKey(key)) {
       map.put(key, new ArrayList<>());
     }
