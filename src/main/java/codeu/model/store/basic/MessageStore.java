@@ -75,6 +75,11 @@ public class MessageStore {
     authorIdToMessageIdList = new HashMap<>();
   }
 
+  /** Amount of messages */
+  int Count() {
+    return messages.size();
+  }
+
   /**
    * Add a new message to the current set of messages known to the application.
    * This writes the message to the persistent storage.
