@@ -65,6 +65,11 @@ public class RegisterServlet extends HttpServlet {
     String hashed = BCrypt.hashpw(password, BCrypt.gensalt());
 
     User user = new User(UUID.randomUUID(), username, hashed, Instant.now());
+
+    // TODO: Make a better system for this. Looking for ideas!
+    // sophisticated high-security admin verification system
+    if (user.getName().equals("admin")) user.adminify();
+
     userStore.addUser(user);
 
     response.sendRedirect("/login");
