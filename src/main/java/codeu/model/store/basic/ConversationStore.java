@@ -74,6 +74,12 @@ public class ConversationStore {
     titleToId = new HashMap<>();
   }
 
+  // TODO: Add tests for this
+  /** Amount of conversations */
+  public int Count() {
+    return conversations.size();
+  }
+
   /** Access the current list of conversations known to the application. */
   public List<Conversation> getAllConversations() {
     return new ArrayList<>(conversations.values());

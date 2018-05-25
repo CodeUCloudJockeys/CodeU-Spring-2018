@@ -71,6 +71,11 @@ public class UserStore {
     nameToId = new HashMap<>();
   }
 
+  /** Amount of users */
+  public int Count() {
+    return users.size();
+  }
+
   /**
    * Access the User object with the given name.
    *
