@@ -17,8 +17,11 @@ package codeu.model.store.basic;
 import codeu.model.data.Message;
 import codeu.model.store.persistence.PersistentStorageAgent;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * Store class that uses in-memory data structures to hold values and automatically loads from and
@@ -56,37 +59,97 @@ public class MessageStore {
    */
   private PersistentStorageAgent persistentStorageAgent;
 
-  /** The in-memory list of Messages. */
-  private List<Message> messages;
+  /** The in-memory map of Messages. */
+  private Map<UUID, Message> messages;
+
+  // These map from some conversation/user ID to a list containing the IDs of their messages
+  private Map<UUID, List<UUID>> conversationIdToMessageIdList;
+  private Map<UUID, List<UUID>> authorIdToMessageIdList;
 
   /** This class is a singleton, so its constructor is private. Call getInstance() instead. */
   private MessageStore(PersistentStorageAgent persistentStorageAgent) {
     this.persistentStorageAgent = persistentStorageAgent;
-    messages = new ArrayList<>();
+    messages = new HashMap<>();
+
+    conversationIdToMessageIdList = new HashMap<>();
+    authorIdToMessageIdList = new HashMap<>();
   }
 
-  /** Add a new message to the current set of messages known to the application. */
+  /**
+   * Add a new message to the current set of messages known to the application.
+   * This writes the message to the persistent storage.
+   */
   public void addMessage(Message message) {
-    messages.add(message);
+    addMessageWithoutPersistentStorage(message);
+
     persistentStorageAgent.writeThrough(message);
+  }
+
+  /**
+   * Add a new message to the current set of messages known to the application.
+   * This does NOT write the message to the persistent storage.
+   */
+  public void addMessageWithoutPersistentStorage(Message message) {
+    UUID id = message.getId();
+    UUID conversationId = message.getConversationId();
+    UUID authorId = message.getAuthorId();
+
+    messages.put(id, message);
+
+    addToListInMap(conversationIdToMessageIdList, conversationId, id);
+
+    addToListInMap(authorIdToMessageIdList, authorId, id);
   }
 
   /** Access the current set of Messages within the given Conversation. */
   public List<Message> getMessagesInConversation(UUID conversationId) {
 
-    List<Message> messagesInConversation = new ArrayList<>();
+    List<Message> messagesInConversation;
 
-    for (Message message : messages) {
-      if (message.getConversationId().equals(conversationId)) {
-        messagesInConversation.add(message);
-      }
+    if (conversationIdToMessageIdList.containsKey(conversationId)) {
+      // Get all messages from conversation ID
+      messagesInConversation =
+          conversationIdToMessageIdList.get(conversationId)
+              .stream()
+              .map(id -> messages.get(id))
+              .collect(Collectors.toList());
+    } else {
+      // If the conversation has no messages, return an empty list
+      messagesInConversation = new ArrayList<>();
     }
 
     return messagesInConversation;
   }
 
+  /** Access the set of Messages sent by a given User. */
+  public List<Message> getMessagesByUser(UUID authorId) {
+    List<Message> messagesByUser;
+
+    if (authorIdToMessageIdList.containsKey(authorId)) {
+      // Get all messages from author ID
+      messagesByUser =
+          authorIdToMessageIdList.get(authorId)
+              .stream()
+              .map(id -> messages.get(id))
+              .collect(Collectors.toList());
+    } else {
+      // If the user has no messages, return an empty list
+      messagesByUser = new ArrayList<>();
+    }
+
+    return messagesByUser;
+  }
+
   /** Sets the List of Messages stored by this MessageStore. */
   public void setMessages(List<Message> messages) {
-    this.messages = messages;
+    messages.forEach(message -> addMessageWithoutPersistentStorage(message));
+  }
+  
+  private static void addToListInMap(Map<UUID, List<UUID>> map, UUID key, UUID value) {
+    if (!map.containsKey(key)) {
+      map.put(key, new ArrayList<>());
+    }
+
+    map.get(key).add(value);
   }
 }

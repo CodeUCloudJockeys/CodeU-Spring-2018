@@ -17,7 +17,10 @@ package codeu.model.store.basic;
 import codeu.model.data.Conversation;
 import codeu.model.store.persistence.PersistentStorageAgent;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * Store class that uses in-memory data structures to hold values and automatically loads from and
@@ -55,49 +58,61 @@ public class ConversationStore {
    */
   private PersistentStorageAgent persistentStorageAgent;
 
-  /** The in-memory list of Conversations. */
-  private List<Conversation> conversations;
+  /** The in-memory map of Conversations. */
+  private Map<UUID, Conversation> conversations;
+
+  /**
+   * A map from titles to IDs, so conversation IDs can be fetched from conversation titles
+   * quickly.
+   */
+  private Map<String, UUID> titleToId;
 
   /** This class is a singleton, so its constructor is private. Call getInstance() instead. */
   private ConversationStore(PersistentStorageAgent persistentStorageAgent) {
     this.persistentStorageAgent = persistentStorageAgent;
-    conversations = new ArrayList<>();
+    conversations = new HashMap<>();
+    titleToId = new HashMap<>();
   }
 
-/** Access the current set of conversations known to the application. */
+  /** Access the current list of conversations known to the application. */
   public List<Conversation> getAllConversations() {
-    return conversations;
+    return new ArrayList<>(conversations.values());
   }
 
-  /** Add a new conversation to the current set of conversations known to the application. */
+  /**
+   * Add a new conversation to the current map of conversations known to the application.
+   * This writes the conversation to the persistent storage.
+   */
   public void addConversation(Conversation conversation) {
-    conversations.add(conversation);
+    addConversationWithoutPersistentStorage(conversation);
+
     persistentStorageAgent.writeThrough(conversation);
+  }
+
+  /**
+   * Add a new conversation to the current map of conversations known to the application.
+   * This does NOT write the conversation to the persistent storage.
+   */
+  public void addConversationWithoutPersistentStorage(Conversation conversation) {
+    conversations.put(conversation.getId(), conversation);
+    titleToId.put(conversation.getTitle(), conversation.getId());
   }
 
   /** Check whether a Conversation title is already known to the application. */
   public boolean isTitleTaken(String title) {
-    // This approach will be pretty slow if we have many Conversations.
-    for (Conversation conversation : conversations) {
-      if (conversation.getTitle().equals(title)) {
-        return true;
-      }
-    }
-    return false;
+    // This approach should be fairly fast!
+    return titleToId.containsKey(title);
   }
 
   /** Find and return the Conversation with the given title. */
   public Conversation getConversationWithTitle(String title) {
-    for (Conversation conversation : conversations) {
-      if (conversation.getTitle().equals(title)) {
-        return conversation;
-      }
-    }
-    return null;
+    UUID id = titleToId.get(title);
+    return (id == null) ? null : conversations.get(id);
   }
 
-  /** Sets the List of Conversations stored by this ConversationStore. */
-  public void setConversations(List<Conversation> conversations) {
-    this.conversations = conversations;
+  /** Sets the Map of Conversations stored by this ConversationStore. */
+  public void setConversations(List<Conversation> conversationList) {
+    // For each conversation in the list, add it without writing it to persistent storage.
+    conversationList.forEach(conversation -> addConversationWithoutPersistentStorage(conversation));
   }
 }
