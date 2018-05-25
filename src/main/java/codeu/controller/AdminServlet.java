@@ -14,7 +14,6 @@
 
 package codeu.controller;
 
-import codeu.model.data.Conversation;
 import codeu.model.data.Message;
 import codeu.model.data.User; // unused for now
 import codeu.model.store.basic.ConversationStore;
@@ -22,7 +21,7 @@ import codeu.model.store.basic.MessageStore;
 import codeu.model.store.basic.UserStore;
 import java.io.IOException;
 import java.util.List;
-import java.util.Arrays;
+import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -40,6 +39,9 @@ public class AdminServlet extends HttpServlet {
   /** Store class that gives access to Conversations. */
   private ConversationStore conversationStore;
 
+  /** Data items with their labels */
+  private Map<String, String> labeledStats;
+
   /**
    * Set up state for handling admin page requests.
    */
@@ -50,6 +52,8 @@ public class AdminServlet extends HttpServlet {
     setUserStore(UserStore.getInstance());
     setMessageStore(MessageStore.getInstance());
     setConversationStore(ConversationStore.getInstance());
+
+    initLabeledStats();
   }
 
   /**
@@ -76,6 +80,11 @@ public class AdminServlet extends HttpServlet {
     this.conversationStore = conversationStore;
   }
 
+  /** Initiates the map for the labeled stats. It is linked because order matters. */
+  void initLabeledStats() {
+    labeledStats = new LinkedHashMap<>();
+  }
+
   /**
    * This function fires when a user requests the /admin URL. It forwards the request to login.jsp
    * if the user is in the admin list, else it redirects to login. Currently a very insecure
@@ -88,16 +97,17 @@ public class AdminServlet extends HttpServlet {
     String username = (String) request.getSession().getAttribute("user");
     User user = userStore.getUser(username);
 
-    int userCount = userStore.Count();
-    int messageCount = messageStore.Count();
-    int conversationCount = conversationStore.Count();
-
     if (user != null && user.getIsAdmin()) {
 
+      int userCount = userStore.Count();
+      int messageCount = messageStore.Count();
+      int conversationCount = conversationStore.Count();
       // Set the stats
-      request.setAttribute("userCount", userCount);
-      request.setAttribute("messageCount", messageCount);
-      request.setAttribute("conversationCount", conversationCount);
+      labeledStats.put("Number of users:", Integer.toString(userCount));
+      labeledStats.put("Number of messages:", Integer.toString(messageCount));
+      labeledStats.put("Number of conversations:", Integer.toString(conversationCount));
+
+      request.setAttribute("labeledStats", labeledStats);
 
       // Let the user through
       request.getRequestDispatcher("/WEB-INF/view/admin.jsp").forward(request, response);
