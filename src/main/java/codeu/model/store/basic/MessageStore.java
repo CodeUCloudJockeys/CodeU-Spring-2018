@@ -18,6 +18,7 @@ import codeu.model.data.Message;
 import codeu.model.store.persistence.PersistentStorageAgent;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -152,7 +153,7 @@ public class MessageStore {
   
   private static void addToListInMap(Map<UUID, List<UUID>> map, UUID key, UUID value) {
     if (!map.containsKey(key)) {
-      map.put(key, new ArrayList<>());
+      map.put(key, new LinkedList<>());
     }
 
     map.get(key).add(value);
