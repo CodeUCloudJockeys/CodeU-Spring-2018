@@ -13,7 +13,10 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 --%>
-<%@ page import="java.lang.Integer" %>
+<%@ page import="java.util.Map" %>
+<%
+Map<String, String> labeledStats = (Map<String, String>) request.getAttribute("labeledStats");
+%>
 
 <!DOCTYPE html>
 <html>
@@ -44,17 +47,15 @@
 
     <% } else { %>
 
-      <%
-      int userCount = (Integer) request.getAttribute("userCount");
-      int messageCount = (Integer) request.getAttribute("messageCount");
-      int conversationCount = (Integer) request.getAttribute("conversationCount");
-      %>
-
       <h2>Hello, administrator!</h2>
       <p>Here is some data:</p>
-      <p><b>User count:</b> <%= userCount %></p>
-      <p><b>Message count:</b> <%= messageCount %></p>
-      <p><b>Conversation count:</b> <%= conversationCount %></p>
+      <ul>
+        <%
+          for (Map.Entry<String, String> labeledStat : labeledStats.entrySet()) {
+        %>
+        <li><strong><%= labeledStat.getKey() %></strong> <%= labeledStat.getValue() %></li>
+        <% } %>
+      </ul>
 
     <% } %>
 
