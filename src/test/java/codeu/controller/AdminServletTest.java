@@ -15,6 +15,8 @@
 package codeu.controller;
 
 import codeu.model.data.User;
+import codeu.model.store.basic.ConversationStore;
+import codeu.model.store.basic.MessageStore;
 import codeu.model.store.basic.UserStore;
 import java.io.IOException;
 import java.time.Instant;
@@ -37,6 +39,8 @@ public class AdminServletTest {
   private HttpServletResponse mockResponse;
   private RequestDispatcher mockRequestDispatcher;
   private UserStore mockUserStore;
+  private MessageStore mockMessageStore;
+  private ConversationStore mockConversationStore;
 
   @Before
   public void setup() {
@@ -58,6 +62,13 @@ public class AdminServletTest {
 
     mockUserStore = Mockito.mock(UserStore.class);
     adminServlet.setUserStore(mockUserStore);
+
+    mockMessageStore = Mockito.mock(MessageStore.class);
+    adminServlet.setMessageStore(mockMessageStore);
+
+    mockConversationStore = Mockito.mock(ConversationStore.class);
+    adminServlet.setConversationStore(mockConversationStore);
+
   }
 
   @Test

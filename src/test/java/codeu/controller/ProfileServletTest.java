@@ -1,7 +1,6 @@
 package codeu.controller;
 
 import java.io.IOException;
-//1234
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -10,7 +9,8 @@ import javax.servlet.http.HttpSession;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
-public class ProfileServletTest {
+
+  public class ProfileServletTest {
 
   private ProfileServlet profileServlet;
   private HttpServletRequest mockRequest;
@@ -29,12 +29,14 @@ public class ProfileServletTest {
      .thenReturn(mockRequestDispatcher);
     Mockito.when(mockRequest.getSession()).thenReturn(mockSession);
   }
+
   @Test
-  public void testDoGet_noUser() throws IOException, ServletException{
-	Mockito.when(mockSession.getAttribute("user")).thenReturn(null);
+  public void testDoGet_noUser() throws IOException, ServletException {
+    Mockito.when(mockSession.getAttribute("user")).thenReturn(null);
     profileServlet.doGet(mockRequest, mockResponse);
-    
+
     //Checks if the user null, the redirected into login page
     Mockito.verify(mockResponse).sendRedirect("/login");
   }
+
 }

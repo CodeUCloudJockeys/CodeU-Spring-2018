@@ -98,6 +98,7 @@ public class ProfileServlet extends HttpServlet{
     Profile profile =
             new Profile(UUID.randomUUID(), user.getId(), profileAbout, Instant.now());
     profileStore.addProfile(profile);
+
   }
 	 
 }
