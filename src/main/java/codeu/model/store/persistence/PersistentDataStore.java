@@ -153,7 +153,7 @@ public class PersistentDataStore {
 
     return messages;
   }
-//begin edit
+  
   public List<Profile> loadProfile() throws PersistentDataStoreException {
 
 	    List<Profile> profiles = new ArrayList<>();
@@ -181,7 +181,6 @@ public class PersistentDataStore {
 	    return profiles;
 	  }  
   
-  //end edit
   /** Write a User object to the Datastore service. */
   public void writeThrough(User user) {
     Entity userEntity = new Entity("chat-users", user.getId().toString());
@@ -215,7 +214,6 @@ public class PersistentDataStore {
   }
   
   
-  //begin edit
   public void writeThrough(Profile profile) {
 	Entity profileEntity = new Entity("chat-profile", profile.getId().toString());
 	profileEntity.setProperty("uuid", profile.getId().toString());
@@ -224,6 +222,6 @@ public class PersistentDataStore {
 	profileEntity.setProperty("creation_time", profile.getCreation().toString());
 	datastore.put(profileEntity);
 }
-  //end edit
+  
 }
 

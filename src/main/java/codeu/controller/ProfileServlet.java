@@ -79,13 +79,12 @@ public class ProfileServlet extends HttpServlet{
       response.sendRedirect("/login");
       return;
     }
-    //edit
 
     User user = userStore.getUser(username);
     if (user == null) {
+      // user was not found, don't let them add a message
       response.sendRedirect("/login");
       return;
-      
     }
 
     String profileAbout = request.getParameter("profileAbout");
@@ -98,7 +97,6 @@ public class ProfileServlet extends HttpServlet{
     Profile profile =
             new Profile(UUID.randomUUID(), user.getId(), profileAbout, Instant.now());
     profileStore.addProfile(profile);
-
   }
 	 
 }

@@ -91,11 +91,9 @@ public class PersistentStorageAgent {
     return persistentDataStore.loadMessages();
   }
 
-  //begin edit
   public List<Profile> loadProfile() throws PersistentDataStoreException {
 	    return persistentDataStore.loadProfile();
 	  }
-  //end edit
   
   /** Write a User object to the Datastore service. */
   public void writeThrough(User user) {
@@ -111,7 +109,7 @@ public class PersistentStorageAgent {
   public void writeThrough(Message message) {
     persistentDataStore.writeThrough(message);
   }
-  //begin edit
+  
   public void writeThrough(Profile profile){
 	  persistentDataStore.writeThrough(profile);
   }

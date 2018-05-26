@@ -34,6 +34,5 @@ public class Profile {
     return creation;
   }
 
-  
 }
 
