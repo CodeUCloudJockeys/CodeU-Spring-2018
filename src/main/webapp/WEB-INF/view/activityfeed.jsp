@@ -11,14 +11,5 @@
   limitations under the License.
 --%>
 <%-- still trying to get the hang of jsp, not sure if this is correctly implemented --%>
-<%  List<String> friends_usernames = Arrays.aslist('Ricardo', 'Elona', 'Drew');
-    String username = (String) request.getSession().getAtrribute('user');
-
-    if(friends_usernams.contains(username)){
-%> 
+ 
     <p>This is the activity feed page </p>
-<%  }else{
-%>
-    <p>There is no activity to display</p>
-<%  }
-%> 

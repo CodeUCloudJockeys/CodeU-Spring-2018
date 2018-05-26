@@ -34,16 +34,20 @@ public class ActivityFeedServlet extends HttpServlet{
 	public void init() throws ServletException{
 		super.init(); 
 
-		//hardocded activity for now
+		//hardcoded activity for now
 		activity = Arrays.asList('Ricardo Joined', 'Elona says hi', 'Drew just left the conversation');
 		friends_usernames = Arrays.asList('Ricardo', 'Elona', 'Drew');
 	}
 
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
-      throws IOException, ServletException){
-		String username = (String) request.getSession().getAtrribute('user');
+	throws IOException, ServletException){
+	String username = (String) request.getSession().getAtrribute('user');
 
-			request.getRequestDispatcher("/WEB-INF/view/activity.jsp").forward(request, response);
+	if(friends_usernames == null){
+		System.out.println('There is no activity.');
+	}else{
+		request.getRequestDispatcher("/WEB-INF/view/activity.jsp").forward(request, response);
+	}
 	}
 }

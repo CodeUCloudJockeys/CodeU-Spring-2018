@@ -51,7 +51,7 @@ public class ActivityFeedServletTest {
 
   @Test
   public void testDoGet_friendUsername() throws IOException, ServletException {
-    Mockito.when(mockSession.getAttribute("user")).thenReturn("Welcome to the activity feed page");
+    Mockito.when(mockSession.getAttribute("user")).thenReturn("Jocelyn");
     activityFeedServlet.doGet(mockRequest, mockResponse);
 
     // Verify if user is redirected to activity feed page
