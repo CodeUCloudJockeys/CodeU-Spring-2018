@@ -85,6 +85,7 @@ public class ProfileServlet extends HttpServlet{
     if (user == null) {
       response.sendRedirect("/login");
       return;
+      
     }
 
     String profileAbout = request.getParameter("profileAbout");

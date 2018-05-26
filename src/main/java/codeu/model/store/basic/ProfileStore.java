@@ -16,6 +16,7 @@ public class ProfileStore {
 	    }
 	    return instance;
 	  }
+  
 
 	  public static ProfileStore getTestInstance(PersistentStorageAgent persistentStorageAgent) {
 	    return new ProfileStore(persistentStorageAgent);
