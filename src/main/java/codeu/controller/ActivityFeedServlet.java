@@ -14,9 +14,11 @@
 
 package codeu.controller;
 
+import codeu.model.data.User;
 import java.util.List;
+import java.util.Arrays;
 import java.io.IOException;
-import java.time.Instant;//unsused for now
+import java.time.Instant;/**unsused for now */
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -25,29 +27,31 @@ import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
 
 /** Servlet class responsible for Activity feed page */
-public class ActivityFeedServlet extends HttpServlet{
+public class ActivityFeedServlet extends HttpServlet {
 	/** variable used to keep track of activity, I'm thinking to create more variables as we go to register different types of activities */
 	private List<String> activity;
 	/** used to keep track of users friends*/
 	private List<String> friends_usernames;
+
 	@Override
-	public void init() throws ServletException{
+	public void init() throws ServletException {
 		super.init(); 
 
-		//hardcoded activity for now
-		activity = Arrays.asList('Ricardo Joined', 'Elona says hi', 'Drew just left the conversation');
-		friends_usernames = Arrays.asList('Ricardo', 'Elona', 'Drew');
+		/**hardcoded activity for now */
+		activity = Arrays.asList("Ricardo Joined", "Elona says hi", "Drew just left the conversation");
+		friends_usernames = Arrays.asList("Ricardo", "Elona", "Drew");
 	}
 
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
-	throws IOException, ServletException){
-	String username = (String) request.getSession().getAtrribute('user');
+	throws IOException, ServletException {
+		String username = (String) request.getSession().getAttribute("user");
 
-	if(friends_usernames == null){
-		System.out.println('There is no activity.');
-	}else{
-		request.getRequestDispatcher("/WEB-INF/view/activity.jsp").forward(request, response);
-	}
-	}
+		if(username == null){
+			response.sendRedirect("/login");
+			return;
+		}else{
+			request.getRequestDispatcher("/WEB-INF/view/activityfeed.jsp").forward(request, response);
+			}
+		}
 }

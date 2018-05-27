@@ -29,16 +29,18 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+
 public class ActivityFeedServletTest {
 
   private ActivityFeedServlet activityFeedServlet;
   private HttpServletRequest mockRequest;
   private HttpSession mockSession;
   private HttpServletResponse mockResponse;
+  private RequestDispatcher mockRequestDispatcher;
 
   @Before
   public void setup() {
-    activityFeedServlet = new ActivityFeedServletA;
+    activityFeedServlet = new ActivityFeedServlet();
 
     mockRequest = Mockito.mock(HttpServletRequest.class);
     mockResponse = Mockito.mock(HttpServletResponse.class);
@@ -47,10 +49,13 @@ public class ActivityFeedServletTest {
     Mockito.when(mockRequest.getSession()).thenReturn(mockSession);
 
     mockRequestDispatcher = Mockito.mock(RequestDispatcher.class);
+    Mockito.when(mockRequest.getRequestDispatcher("/WEB-INF/view/activityfeed.jsp"))
+        .thenReturn(mockRequestDispatcher);
+
   }
 
   @Test
-  public void testDoGet_friendUsername() throws IOException, ServletException {
+  public void testDoGet_friendUsername() throws IOException, ServletException{
     Mockito.when(mockSession.getAttribute("user")).thenReturn("Jocelyn");
     activityFeedServlet.doGet(mockRequest, mockResponse);
 
@@ -64,7 +69,7 @@ public class ActivityFeedServletTest {
 
     activityFeedServlet.doGet(mockRequest, mockResponse);
 
-    // Verify user still is redirected to the activity page but correct message is displayed
-    Mockito.verify(mockRequestDispatcher, Mockito.never()).forward(mockRequest, mockResponse);
+    // Verify user is redirected to login page
+    Mockito.verify(mockResponse).sendRedirect("/login");
   }
 }
