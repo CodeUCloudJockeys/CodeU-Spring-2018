@@ -67,4 +67,22 @@ public class Message {
   public Instant getCreationTime() {
     return creation;
   }
+
+  /** Override equality, so messages are compared based on their ID */
+  @Override
+  public boolean equals(Object o) {
+    if (!(o instanceof Message)) {
+      return false;
+    }
+
+    Message other = (Message) o;
+
+    return other.getId().equals(id);
+  }
+
+  /** Override hashcode, so messages are hashed based on their ID */
+  @Override
+  public int hashCode() {
+    return this.getId().hashCode();
+  }
 }

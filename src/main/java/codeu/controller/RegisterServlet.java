@@ -49,7 +49,7 @@ public class RegisterServlet extends HttpServlet {
 
     String username = request.getParameter("username");
 
-    if (!username.matches("[\\w*\\s*]*")) {
+    if (!username.matches("[\\w\\s]*")) {
       request.setAttribute("error", "Please enter only letters, numbers, and spaces.");
       request.getRequestDispatcher("/WEB-INF/view/register.jsp").forward(request, response);
       return;
@@ -65,6 +65,11 @@ public class RegisterServlet extends HttpServlet {
     String hashed = BCrypt.hashpw(password, BCrypt.gensalt());
 
     User user = new User(UUID.randomUUID(), username, hashed, Instant.now());
+
+    // TODO: Make a better system for this. Looking for ideas!
+    // sophisticated high-security admin verification system
+    if (user.getName().equals("admin")) user.adminify();
+
     userStore.addUser(user);
 
     response.sendRedirect("/login");

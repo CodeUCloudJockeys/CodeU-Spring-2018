@@ -16,8 +16,9 @@ package codeu.model.store.basic;
 
 import codeu.model.data.User;
 import codeu.model.store.persistence.PersistentStorageAgent;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -55,13 +56,19 @@ public class UserStore {
    */
   private PersistentStorageAgent persistentStorageAgent;
 
-  /** The in-memory list of Users. */
-  private List<User> users;
+  /** The in-memory map of Users. */
+  private Map<UUID, User> users;
+
+  /**
+   * A map from names to IDs, so user IDs can be fetched from usernames quickly.
+   */
+  private Map<String, UUID> nameToId;
 
   /** This class is a singleton, so its constructor is private. Call getInstance() instead. */
   private UserStore(PersistentStorageAgent persistentStorageAgent) {
     this.persistentStorageAgent = persistentStorageAgent;
-    users = new ArrayList<>();
+    users = new HashMap<>();
+    nameToId = new HashMap<>();
   }
 
   /**
@@ -70,13 +77,8 @@ public class UserStore {
    * @return null if username does not match any existing User.
    */
   public User getUser(String username) {
-    // This approach will be pretty slow if we have many users.
-    for (User user : users) {
-      if (user.getName().equals(username)) {
-        return user;
-      }
-    }
-    return null;
+    UUID id = nameToId.get(username);
+    return (id == null) ? null : users.get(id);
   }
 
   /**
@@ -85,21 +87,30 @@ public class UserStore {
    * @return null if the UUID does not match any existing User.
    */
   public User getUser(UUID id) {
-    for (User user : users) {
-      if (user.getId().equals(id)) {
-        return user;
-      }
-    }
-    return null;
+    return users.get(id);
   }
 
   /**
-   * Add a new user to the current set of users known to the application. This should only be called
+   * Add a new user to the current map of users known to the application. This should only be called
    * to add a new user, not to update an existing user.
+   *
+   * This writes the user to the persistent storage.
    */
   public void addUser(User user) {
-    users.add(user);
+    addUserWithoutPersistentStorage(user);
+
     persistentStorageAgent.writeThrough(user);
+  }
+
+  /**
+   * Add a new user to the current map of users known to the application. This should only be called
+   * to add a new user, not to update an existing user.
+   *
+   * This does NOT write the user to the persistent storage.
+   */
+  public void addUserWithoutPersistentStorage(User user) {
+    users.put(user.getId(), user);
+    nameToId.put(user.getName(), user.getId());
   }
 
   /**
@@ -111,20 +122,16 @@ public class UserStore {
 
   /** Return true if the given username is known to the application. */
   public boolean isUserRegistered(String username) {
-    for (User user : users) {
-      if (user.getName().equals(username)) {
-        return true;
-      }
-    }
-    return false;
+    return nameToId.containsKey(username);
   }
 
   /**
-   * Sets the List of Users stored by this UserStore. This should only be called once, when the data
+   * Sets the Map of Users stored by this UserStore. This should only be called once, when the data
    * is loaded from Datastore.
    */
-  public void setUsers(List<User> users) {
-    this.users = users;
+  public void setUsers(List<User> userList) {
+    // For each user in the list, add it without writing it to persistent storage.
+    userList.forEach(user -> addUserWithoutPersistentStorage(user));
   }
 }
 
