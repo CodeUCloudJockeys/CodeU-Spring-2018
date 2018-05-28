@@ -13,7 +13,6 @@
 // limitations under the License.
 
 package codeu.controller;
-import codeu.model.data.User; // unused for now
 import codeu.model.data.Conversation;
 import codeu.model.data.Message;
 import codeu.model.data.User; // unused for now
@@ -77,7 +76,6 @@ public class AdminServlet extends HttpServlet {
   }
 
   /**
->>>>>>> ea7ba240a1be24824241b46686ed62675421fde2
    * This function fires when a user requests the /admin URL. It forwards the request to login.jsp
    * if the user is in the admin list, else it redirects to login. Currently a very insecure
    * barebones version
@@ -86,7 +84,6 @@ public class AdminServlet extends HttpServlet {
   public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
 
-    // TODO(rafer45): Investigate security implications of using Session
     String username = (String) request.getSession().getAttribute("user");
     User user = userStore.getUser(username);
 

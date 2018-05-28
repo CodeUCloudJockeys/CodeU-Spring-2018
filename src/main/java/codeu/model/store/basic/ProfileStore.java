@@ -11,46 +11,46 @@ public class ProfileStore {
   private static ProfileStore instance;
   
   public static ProfileStore getInstance() {
-	    if (instance == null) {
-	      instance = new ProfileStore(PersistentStorageAgent.getInstance());
-	    }
-	    return instance;
-	  }
-
-	  public static ProfileStore getTestInstance(PersistentStorageAgent persistentStorageAgent) {
-	    return new ProfileStore(persistentStorageAgent);
-	  }
+    if (instance == null) {
+	  instance = new ProfileStore(PersistentStorageAgent.getInstance());
+    }
+      return instance;
+    }
+  
+  public static ProfileStore getTestInstance(PersistentStorageAgent persistentStorageAgent) {
+    return new ProfileStore(persistentStorageAgent);
+  }
 	  
-	  private PersistentStorageAgent persistentStorageAgent;
+  private PersistentStorageAgent persistentStorageAgent;
 
-	  private List<Profile> profiles;
+  private List<Profile> profiles;
 
-	  private ProfileStore(PersistentStorageAgent persistentStorageAgent) {
-	    this.persistentStorageAgent = persistentStorageAgent;
-	    profiles = new ArrayList<>();
+  private ProfileStore(PersistentStorageAgent persistentStorageAgent) {
+	this.persistentStorageAgent = persistentStorageAgent;
+	profiles = new ArrayList<>();
+  }
+  
+  public List<Profile> getAllProfiles() {
+    return profiles;
+  }
+
+  public void addProfile(Profile profile) {
+   profiles.add(profile);
+   persistentStorageAgent.writeThrough(profile);
+  }
+
+
+  public Profile getProfile(String about) {
+    for (Profile profile : profiles) {
+	  if (profile.getAbout().equals(about)) {
+	    return profile;
 	  }
+    }
+    return null;
+  }
 
-	  public List<Profile> getAllProfiles() {
-	    return profiles;
-	  }
-
-	  public void addProfile(Profile profile) {
-	    profiles.add(profile);
-	    persistentStorageAgent.writeThrough(profile);
-	  }
-
-
-	  public Profile getProfile(String about) {
-	    for (Profile profile : profiles) {
-	      if (profile.getAbout().equals(about)) {
-	        return profile;
-	      }
-	    }
-	    return null;
-	  }
-
-	  public void setProfile(List<Profile> profiles) {
-	    this.profiles = profiles;
-	  }
+  public void setProfile(List<Profile> profiles) {
+    this.profiles = profiles;
+  }
 
 }

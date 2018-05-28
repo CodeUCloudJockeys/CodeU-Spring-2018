@@ -31,11 +31,11 @@ public class ProfileServlet extends HttpServlet{
   @Override
   public void init() throws ServletException {
   // Sets ProfileServlet
-  super.init();
+    super.init();
   //username of the profile page hardcoded
-  name = "exuser";
-  setUserStore(UserStore.getInstance());
-  setProfileStore(ProfileStore.getInstance());
+    name = "exuser";
+    setUserStore(UserStore.getInstance());
+    setProfileStore(ProfileStore.getInstance());
 
   }
   void setUserStore(UserStore userStore) {
@@ -54,19 +54,19 @@ public class ProfileServlet extends HttpServlet{
   *  I will implement this later.
   */
 		  
-  String username = (String) request.getSession().getAttribute("user");
-  request.setAttribute("username", username);
+    String username = (String) request.getSession().getAttribute("user");
+    request.setAttribute("username", username);
   /** For now, if a user does not exist, they will not be able to view the profile page
   * at all. Otherwise, any user will be able to view the prototype.
   */
-  if(username == null)
-  {
-	  response.sendRedirect("/login");
-  }
-  else
-  {
-	  request.getRequestDispatcher("/WEB-INF/view/profile.jsp").forward(request, response);
-  }
+    if(username == null)
+    {
+	    response.sendRedirect("/login");
+    }
+    else
+    {
+	    request.getRequestDispatcher("/WEB-INF/view/profile.jsp").forward(request, response);
+    }
 		
  }
   @Override
