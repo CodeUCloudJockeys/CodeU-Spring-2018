@@ -55,6 +55,6 @@ public class ActivityFeedServlet extends HttpServlet {
       return;
     } else {
       request.getRequestDispatcher("/WEB-INF/view/activityfeed.jsp").forward(request, response);
-		}
-	}
+    }
+  }
 }
