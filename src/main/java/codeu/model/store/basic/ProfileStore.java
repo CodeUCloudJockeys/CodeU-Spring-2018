@@ -12,39 +12,39 @@ public class ProfileStore {
   
   public static ProfileStore getInstance() {
     if (instance == null) {
-	  instance = new ProfileStore(PersistentStorageAgent.getInstance());
+      instance = new ProfileStore(PersistentStorageAgent.getInstance());
     }
-      return instance;
-    }
-  
+    return instance;
+  }
+
   public static ProfileStore getTestInstance(PersistentStorageAgent persistentStorageAgent) {
     return new ProfileStore(persistentStorageAgent);
   }
-	  
+  
   private PersistentStorageAgent persistentStorageAgent;
 
   private List<Profile> profiles;
 
   private ProfileStore(PersistentStorageAgent persistentStorageAgent) {
-	this.persistentStorageAgent = persistentStorageAgent;
-	profiles = new ArrayList<>();
+    this.persistentStorageAgent = persistentStorageAgent;
+    profiles = new ArrayList<>();
   }
-  
+
   public List<Profile> getAllProfiles() {
     return profiles;
   }
 
   public void addProfile(Profile profile) {
-   profiles.add(profile);
-   persistentStorageAgent.writeThrough(profile);
+    profiles.add(profile);
+    persistentStorageAgent.writeThrough(profile);
   }
 
 
   public Profile getProfile(String about) {
     for (Profile profile : profiles) {
-	  if (profile.getAbout().equals(about)) {
-	    return profile;
-	  }
+      if (profile.getAbout().equals(about)) {
+        return profile;
+      }
     }
     return null;
   }
@@ -52,5 +52,4 @@ public class ProfileStore {
   public void setProfile(List<Profile> profiles) {
     this.profiles = profiles;
   }
-
 }
