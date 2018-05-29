@@ -11,7 +11,7 @@ public class Profile {
   
   public Profile(UUID ownerId, UUID id, String about, Instant creation) {
     this.ownerId = ownerId;
-  	this.id = id;
+    this.id = id;
     this.creation = creation;
     this.about = about;
   }
