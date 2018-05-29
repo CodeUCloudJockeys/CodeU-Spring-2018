@@ -28,30 +28,33 @@ import org.jsoup.safety.Whitelist;
 
 /** Servlet class responsible for Activity feed page */
 public class ActivityFeedServlet extends HttpServlet {
-/** variable used to keep track of activity, I'm thinking to create more variables as we go to register different types of activities */
-private List<String> activity;
-/** used to keep track of users friends*/
-private List<String> friends_usernames;
+  /**
+   * variable used to keep track of activity, I'm thinking to create
+   * more variables as we go to register different types of activities
+   */
+  private List<String> activity;
+  /** used to keep track of users friends*/
+  private List<String> friends_usernames;
 
-@Override
-public void init() throws ServletException {
-	super.init(); 
+  @Override
+  public void init() throws ServletException {
+    super.init(); 
 
-	/**hardcoded activity for now */
-	activity = Arrays.asList("Ricardo Joined", "Elona says hi", "Drew just left the conversation");
-	friends_usernames = Arrays.asList("Ricardo", "Elona", "Drew");
-}
+    /**hardcoded activity for now */
+    activity = Arrays.asList("Ricardo Joined", "Elona says hi", "Drew just left the conversation");
+    friends_usernames = Arrays.asList("Ricardo", "Elona", "Drew");
+  }
 
-@Override
-public void doGet(HttpServletRequest request, HttpServletResponse response)
-throws IOException, ServletException {
-	String username = (String) request.getSession().getAttribute("user");
+  @Override
+  public void doGet(HttpServletRequest request, HttpServletResponse response)
+      throws IOException, ServletException {
+    String username = (String) request.getSession().getAttribute("user");
 
-	if(username == null){
-		response.sendRedirect("/login");
-		return;
-	}else{
-		request.getRequestDispatcher("/WEB-INF/view/activityfeed.jsp").forward(request, response);
+    if (username == null) {
+      response.sendRedirect("/login");
+      return;
+    } else {
+      request.getRequestDispatcher("/WEB-INF/view/activityfeed.jsp").forward(request, response);
 		}
 	}
 }
