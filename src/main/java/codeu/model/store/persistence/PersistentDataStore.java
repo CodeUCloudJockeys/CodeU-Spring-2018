@@ -156,31 +156,31 @@ public class PersistentDataStore {
   
   public List<Profile> loadProfile() throws PersistentDataStoreException {
 
-   List<Profile> profiles = new ArrayList<>();
+    List<Profile> profiles = new ArrayList<>();
 
     // Retrieve all profiles from the datastore.
-   Query query = new Query("chat-profile").addSort("creation_time", SortDirection.ASCENDING);
-   PreparedQuery results = datastore.prepare(query);
+    Query query = new Query("chat-profile").addSort("creation_time", SortDirection.ASCENDING);
+    PreparedQuery results = datastore.prepare(query);
 
-   for (Entity entity : results.asIterable()) {
-     try {
-	   UUID uuid = UUID.fromString((String) entity.getProperty("owner_id"));
-	   UUID profileUuid = UUID.fromString((String) entity.getProperty("id"));
-	   Instant creationTime = Instant.parse((String) entity.getProperty("creation_time"));
-	   String about = (String) entity.getProperty("about");
-	   Profile profile = new Profile(uuid, profileUuid, about, creationTime);
-	   profiles.add(profile);
-     } catch (Exception e) {
-	   // In a production environment, errors should be very rare. Errors which may
-	   // occur include network errors, Datastore service errors, authorization errors,
-	   // database entity definition mismatches, or service mismatches.
-	   throw new PersistentDataStoreException(e);
-	 }
-   }
+    for (Entity entity : results.asIterable()) {
+      try {
+        UUID uuid = UUID.fromString((String) entity.getProperty("owner_id"));
+        UUID profileUuid = UUID.fromString((String) entity.getProperty("id"));
+        Instant creationTime = Instant.parse((String) entity.getProperty("creation_time"));
+        String about = (String) entity.getProperty("about");
+        Profile profile = new Profile(uuid, profileUuid, about, creationTime);
+        profiles.add(profile);
+      } catch (Exception e) {
+        // In a production environment, errors should be very rare. Errors which may
+        // occur include network errors, Datastore service errors, authorization errors,
+        // database entity definition mismatches, or service mismatches.
+        throw new PersistentDataStoreException(e);
+      }
+    }
 
-   return profiles;
-  }  
-  
+    return profiles;
+  }
+
   /** Write a User object to the Datastore service. */
   public void writeThrough(User user) {
     Entity userEntity = new Entity("chat-users", user.getId().toString());
@@ -215,13 +215,11 @@ public class PersistentDataStore {
   
   
   public void writeThrough(Profile profile) {
-	Entity profileEntity = new Entity("chat-profile", profile.getId().toString());
-	profileEntity.setProperty("uuid", profile.getId().toString());
-	profileEntity.setProperty("profile_uuid", profile.getProfile().toString());
-	profileEntity.setProperty("about", profile.getAbout());
-	profileEntity.setProperty("creation_time", profile.getCreation().toString());
-	datastore.put(profileEntity);
+    Entity profileEntity = new Entity("chat-profile", profile.getId().toString());
+    profileEntity.setProperty("uuid", profile.getId().toString());
+    profileEntity.setProperty("profile_uuid", profile.getProfile().toString());
+    profileEntity.setProperty("about", profile.getAbout());
+    profileEntity.setProperty("creation_time", profile.getCreation().toString());
+    datastore.put(profileEntity);
   }
-  
 }
-
