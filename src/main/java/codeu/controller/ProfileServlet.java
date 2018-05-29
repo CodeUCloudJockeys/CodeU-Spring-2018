@@ -19,7 +19,7 @@ import codeu.model.store.basic.UserStore;
 
   /** This servlet class is responsible the profile pages*/
 public class ProfileServlet extends HttpServlet{
-	
+
   /** From my perspective this variable is used to keep track of who is looking at
    *  the profile page. If the account and user match then they will be allowed 
    *  to edit their profile page.
@@ -30,45 +30,41 @@ public class ProfileServlet extends HttpServlet{
 
   @Override
   public void init() throws ServletException {
-  // Sets ProfileServlet
+    // Sets ProfileServlet
     super.init();
-  //username of the profile page hardcoded
+    // username of the profile page hardcoded
     name = "exuser";
     setUserStore(UserStore.getInstance());
     setProfileStore(ProfileStore.getInstance());
 
   }
   void setUserStore(UserStore userStore) {
-	    this.userStore = userStore;
+    this.userStore = userStore;
   }
   void setProfileStore(ProfileStore profileStore) {
-	    this.profileStore = profileStore;
+    this.profileStore = profileStore;
   }
-	  
+
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response)
-	  throws IOException, ServletException {
-		  
-  /** The hardcoded 'name' is the username of the profile page
-  *  If this matches with 'username' it will allow an editing feature of the profile.
-  *  I will implement this later.
-  */
-		  
+      throws IOException, ServletException {
+
+    /** The hardcoded 'name' is the username of the profile page
+    *  If this matches with 'username' it will allow an editing feature of the profile.
+    *  I will implement this later.
+    */
+
     String username = (String) request.getSession().getAttribute("user");
     request.setAttribute("username", username);
-  /** For now, if a user does not exist, they will not be able to view the profile page
-  * at all. Otherwise, any user will be able to view the prototype.
-  */
-    if(username == null)
-    {
-	    response.sendRedirect("/login");
+    /** For now, if a user does not exist, they will not be able to view the profile page
+    * at all. Otherwise, any user will be able to view the prototype.
+    */
+    if (username == null) {
+      response.sendRedirect("/login");
+    } else {
+      request.getRequestDispatcher("/WEB-INF/view/profile.jsp").forward(request, response);
     }
-    else
-    {
-	    request.getRequestDispatcher("/WEB-INF/view/profile.jsp").forward(request, response);
-    }
-		
- }
+  }
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
@@ -95,8 +91,7 @@ public class ProfileServlet extends HttpServlet{
       return;
     }
     Profile profile =
-            new Profile(UUID.randomUUID(), user.getId(), profileAbout, Instant.now());
+        new Profile(UUID.randomUUID(), user.getId(), profileAbout, Instant.now());
     profileStore.addProfile(profile);
   }
-	 
 }
