@@ -3,7 +3,7 @@ language: java
 jdk:
   - oraclejdk8
 
-before_intall:
+before_install:
   - wget https://github.com/google/google-java-format/releases/download/google-java-format-1.6/google-java-format-1.6-all-deps.jar
 
 script:
