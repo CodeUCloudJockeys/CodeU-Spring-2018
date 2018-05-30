@@ -3,5 +3,10 @@ language: java
 jdk:
   - oraclejdk8
 
+before_intall:
+  - wget https://github.com/google/google-java-format/releases/download/google-java-format-1.6/google-java-format-1.6-all-deps.jar
+
 script:
   - mvn test
+  - java -jar google-java-format-1.6-all-deps.jar -n --set-exit-if-changed src/main/java/codeu/controller/*.java src/main/java/codeu/model/data/*.java src/main/java/codeu/model/store/basic/*.java src/main/java/codeu/model/store/persistence/*.java
+
