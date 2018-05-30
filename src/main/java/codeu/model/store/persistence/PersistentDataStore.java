@@ -151,6 +151,36 @@ public class PersistentDataStore {
     return messages;
   }
 
+  /**
+   * Loads all friend objects from the Datastore service and returns them in a List
+   *
+   * @throws PersistentDataStoreException if an error was detected during the load from the
+   *     Datastore service
+   */
+  public List<Friend> loadFriends() throws PersistentDataStoreException {
+
+    List<Friend> friends = new ArrayList<>();
+
+    // Retrieve all messages from the datastore.
+    Query query = new Query("chat-friends");
+    PreparedQuery results = datastore.prepare(query);
+
+    for (Entity entity : results.asIterable()) {
+      try {
+        UUID friendID = UUID.fromString((String) entity.getProperty("id"));
+        String friendName = (String) entity.getProperty("name");
+        Friend friend = new friend(friendID, friendName);
+        friends.add(friend);
+      } catch (Exception e) {
+        // In a production environment, errors should be very rare. Errors which may
+        // occur include network errors, Datastore service errors, authorization errors,
+        // database entity definition mismatches, or service mismatches.
+        throw new PersistentDataStoreException(e);
+      }
+    }
+
+    return friends;
+  }
   /** Write a User object to the Datastore service. */
   public void writeThrough(User user) {
     Entity userEntity = new Entity("chat-users", user.getId().toString());
@@ -181,6 +211,14 @@ public class PersistentDataStore {
     conversationEntity.setProperty("title", conversation.getTitle());
     conversationEntity.setProperty("creation_time", conversation.getCreationTime().toString());
     datastore.put(conversationEntity);
+  }
+
+  /** Write a Friend object to the Datastotre service */
+  public void writeThrough(Friend friend){
+    Entity friendEntity = new Entity("chat-friends", friend.getId().toString());
+    friendEntity.setProperty("name", friend.getName());
+    friendEntity.setProperty("id", friend.getId());
+    datastore.put(friendEntity);
   }
 }
 
