@@ -21,7 +21,6 @@ import codeu.model.store.basic.UserStore;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.UUID;
-
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -54,9 +53,9 @@ public class AdminServletTest {
     Mockito.when(mockRequest.getSession()).thenReturn(mockSession);
 
     mockRequestDispatcher = Mockito.mock(RequestDispatcher.class);
-     /* When AdminServlet tries to forward to the dispatcher of "/WEB-INF/view/admin.jsp", just
-      * return the mock dispatcher.
-      */
+    /* When AdminServlet tries to forward to the dispatcher of "/WEB-INF/view/admin.jsp", just
+     * return the mock dispatcher.
+     */
     Mockito.when(mockRequest.getRequestDispatcher("/WEB-INF/view/admin.jsp"))
         .thenReturn(mockRequestDispatcher);
 
@@ -68,19 +67,18 @@ public class AdminServletTest {
 
     mockConversationStore = Mockito.mock(ConversationStore.class);
     adminServlet.setConversationStore(mockConversationStore);
-
   }
 
   @Test
   public void testDoGet_NotAdminUsername() throws IOException, ServletException {
 
-    User user = new User(
-        UUID.randomUUID(),
-        "notadmin",
-        "$2a$10$.e.4EEfngEXmxAO085XnYOmDntkqod0C384jOR9oagwxMnPNHaGLa",
-        Instant.now(),
-        false
-    );
+    User user =
+        new User(
+            UUID.randomUUID(),
+            "notadmin",
+            "$2a$10$.e.4EEfngEXmxAO085XnYOmDntkqod0C384jOR9oagwxMnPNHaGLa",
+            Instant.now(),
+            false);
 
     Mockito.when(mockSession.getAttribute("user")).thenReturn("notadmin");
 
@@ -98,13 +96,13 @@ public class AdminServletTest {
   @Test
   public void testDoGet_AdminUsername() throws IOException, ServletException {
 
-    User user = new User(
-        UUID.randomUUID(),
-        "admin",
-        "$2a$10$.e.4EEfngEXmxAO085XnYOmDntkqod0C384jOR9oagwxMnPNHaGLa",
-        Instant.now(),
-        true
-    );
+    User user =
+        new User(
+            UUID.randomUUID(),
+            "admin",
+            "$2a$10$.e.4EEfngEXmxAO085XnYOmDntkqod0C384jOR9oagwxMnPNHaGLa",
+            Instant.now(),
+            true);
 
     Mockito.when(mockSession.getAttribute("user")).thenReturn("admin");
 

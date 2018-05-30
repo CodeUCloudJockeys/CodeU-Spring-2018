@@ -14,15 +14,11 @@
 
 package codeu.controller;
 
-import codeu.model.data.Conversation;
-import codeu.model.data.Message;
 import codeu.model.data.User; // unused for now
 import codeu.model.store.basic.ConversationStore;
 import codeu.model.store.basic.MessageStore;
 import codeu.model.store.basic.UserStore;
 import java.io.IOException;
-import java.util.List;
-import java.util.Arrays;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -40,9 +36,7 @@ public class AdminServlet extends HttpServlet {
   /** Store class that gives access to Conversations. */
   private ConversationStore conversationStore;
 
-  /**
-   * Set up state for handling admin page requests.
-   */
+  /** Set up state for handling admin page requests. */
   @Override
   public void init() throws ServletException {
     // Sets up the servlet

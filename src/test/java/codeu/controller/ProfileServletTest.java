@@ -1,17 +1,15 @@
-  package codeu.controller;
+package codeu.controller;
 
-  import java.io.IOException;
+import java.io.IOException;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.Mockito;
 
-  import javax.servlet.ServletException;
-  import javax.servlet.http.HttpServletRequest;
-  import javax.servlet.http.HttpServletResponse;
-  import javax.servlet.http.HttpSession;
-  import org.junit.Before;
-  import org.junit.Test;
-  import org.mockito.Mockito;
-
-
-  public class ProfileServletTest {
+public class ProfileServletTest {
 
   private ProfileServlet profileServlet;
   private HttpServletRequest mockRequest;
@@ -32,8 +30,7 @@
     Mockito.when(mockSession.getAttribute("user")).thenReturn(null);
     profileServlet.doGet(mockRequest, mockResponse);
 
-    //Checks if the user null, the redirected into login page
+    // Checks if the user null, the redirected into login page
     Mockito.verify(mockResponse).sendRedirect("/login");
   }
-
 }

@@ -59,9 +59,7 @@ public class UserStore {
   /** The in-memory map of Users. */
   private Map<UUID, User> users;
 
-  /**
-   * A map from names to IDs, so user IDs can be fetched from usernames quickly.
-   */
+  /** A map from names to IDs, so user IDs can be fetched from usernames quickly. */
   private Map<String, UUID> nameToId;
 
   /** This class is a singleton, so its constructor is private. Call getInstance() instead. */
@@ -99,7 +97,7 @@ public class UserStore {
    * Add a new user to the current map of users known to the application. This should only be called
    * to add a new user, not to update an existing user.
    *
-   * This writes the user to the persistent storage.
+   * <p>This writes the user to the persistent storage.
    */
   public void addUser(User user) {
     addUserWithoutPersistentStorage(user);
@@ -111,16 +109,14 @@ public class UserStore {
    * Add a new user to the current map of users known to the application. This should only be called
    * to add a new user, not to update an existing user.
    *
-   * This does NOT write the user to the persistent storage.
+   * <p>This does NOT write the user to the persistent storage.
    */
   public void addUserWithoutPersistentStorage(User user) {
     users.put(user.getId(), user);
     nameToId.put(user.getName(), user.getId());
   }
 
-  /**
-   * Update an existing User.
-   */
+  /** Update an existing User. */
   public void updateUser(User user) {
     persistentStorageAgent.writeThrough(user);
   }
@@ -139,4 +135,3 @@ public class UserStore {
     userList.forEach(user -> addUserWithoutPersistentStorage(user));
   }
 }
-
