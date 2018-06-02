@@ -36,6 +36,7 @@ Map<String, String> labeledStats = (Map<String, String>) request.getAttribute("l
     <% } %>
     <a href="/about.jsp">About</a>
     <a href="/admin">Admin</a>
+    <a href="/control_panel">Control Panel</a>
   </nav>
 
   <div id="container">
