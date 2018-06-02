@@ -19,7 +19,7 @@ import codeu.model.store.basic.UserStore;
 
   /** This servlet class is responsible the profile pages*/
 public class ProfileServlet extends HttpServlet{
-	
+
   /** From my perspective this variable is used to keep track of who is looking at
    *  the profile page. If the account and user match then they will be allowed 
    *  to edit their profile page.
@@ -36,12 +36,12 @@ public class ProfileServlet extends HttpServlet{
 
   }
   void setUserStore(UserStore userStore) {
-	    this.userStore = userStore;
+    this.userStore = userStore;
   }
   void setProfileStore(ProfileStore profileStore) {
-	    this.profileStore = profileStore;
+    this.profileStore = profileStore;
   }
-	  
+
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response)
 	  throws IOException, ServletException {
@@ -60,8 +60,7 @@ public class ProfileServlet extends HttpServlet{
         request.setAttribute("profiles", profiles);
 	    request.getRequestDispatcher("/WEB-INF/view/profile.jsp").forward(request, response);
     }
-		
- }
+  }
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
@@ -86,10 +85,9 @@ public class ProfileServlet extends HttpServlet{
     }
 
     Profile profile =
-            new Profile(UUID.randomUUID(), user.getId(), profileAbout, Instant.now());
+        new Profile(UUID.randomUUID(), user.getId(), profileAbout, Instant.now());
     profileStore.addProfile(profile);
     response.sendRedirect("/profile/" + username);
 
   }
-	 
 }
