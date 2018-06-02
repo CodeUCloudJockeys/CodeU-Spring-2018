@@ -13,7 +13,6 @@
 // limitations under the License.
 
 package codeu.controller;
-
 import codeu.model.data.Conversation;
 import codeu.model.data.Message;
 import codeu.model.data.User; // unused for now
@@ -98,7 +97,6 @@ public class AdminServlet extends HttpServlet {
       request.setAttribute("userCount", userCount);
       request.setAttribute("messageCount", messageCount);
       request.setAttribute("conversationCount", conversationCount);
-
       // Let the user through
       request.getRequestDispatcher("/WEB-INF/view/admin.jsp").forward(request, response);
     } else {
