@@ -101,54 +101,54 @@ public class AdminServlet extends HttpServlet {
     String username = (String) request.getSession().getAttribute("user");
     User user = userStore.getUser(username);
 
-    if (user != null && user.getIsAdmin()) {
-
-      int userCount = userStore.Count();
-      int messageCount = messageStore.Count();
-      int conversationCount = conversationStore.Count();
-
-
-      // TODO: Optimize this later
-      // This currently will calculate the wordiest/most active/newest users
-      // by looking at all users and comparing them. This calculation will be really slow
-      // with many users, and it will be done every single time the admin page is opened.
-
-      // Later I'll just add a check in when a user posts a message comparing the user's word count
-      // with the word count of the wordiest user. Most active user will work similarly, and newest
-      // user will be set upon valid user creation.
-      // UserStore will be in charge of keeping track of the state involved with superlative users.
-      List<User> users = userStore.getUserList();
-
-      String newestUserName = getNewestUser(users)
-          .map(User::getName) // Get the name if the user exists
-          .orElse("No users."); // return "No users" if it does not exist.
-
-      String mostActiveUserName = getMostActiveUser(users)
-          .map(User::getName)
-          .orElse("No users.");
-
-      String wordiestUserName = getWordiestUser(users)
-          .map(User::getName)
-          .orElse("No users.");
-
-      // Set the stats
-      labeledStats.put("Number of users:", Integer.toString(userCount));
-      labeledStats.put("Number of messages:", Integer.toString(messageCount));
-      labeledStats.put("Number of conversations:", Integer.toString(conversationCount));
-
-      labeledStats.put("Newest user:", newestUserName);
-      labeledStats.put("Most active user:", mostActiveUserName);
-      labeledStats.put("Wordiest user:", wordiestUserName);
-
-      request.setAttribute("labeledStats", labeledStats);
-
-      // Let the user through
-      request.getRequestDispatcher("/WEB-INF/view/admin.jsp").forward(request, response);
-    } else {
+    // If user does not exist or user isn't admin
+    if (user == null || !user.getIsAdmin()) {
       // Back to login
       response.sendRedirect("/login");
       return;
     }
+
+    int userCount = userStore.Count();
+    int messageCount = messageStore.Count();
+    int conversationCount = conversationStore.Count();
+
+
+    // TODO: Optimize this later
+    // This currently will calculate the wordiest/most active/newest users
+    // by looking at all users and comparing them. This calculation will be really slow
+    // with many users, and it will be done every single time the admin page is opened.
+
+    // Later I'll just add a check in when a user posts a message comparing the user's word count
+    // with the word count of the wordiest user. Most active user will work similarly, and newest
+    // user will be set upon valid user creation.
+    // UserStore will be in charge of keeping track of the state involved with superlative users.
+    List<User> users = userStore.getUserList();
+
+    String newestUserName = getNewestUser(users)
+        .map(User::getName) // Get the name if the user exists
+        .orElse("No users."); // return "No users" if it does not exist.
+
+    String mostActiveUserName = getMostActiveUser(users)
+        .map(User::getName)
+        .orElse("No users.");
+
+    String wordiestUserName = getWordiestUser(users)
+        .map(User::getName)
+        .orElse("No users.");
+
+    // Set the stats
+    labeledStats.put("Number of users:", Integer.toString(userCount));
+    labeledStats.put("Number of messages:", Integer.toString(messageCount));
+    labeledStats.put("Number of conversations:", Integer.toString(conversationCount));
+
+    labeledStats.put("Newest user:", newestUserName);
+    labeledStats.put("Most active user:", mostActiveUserName);
+    labeledStats.put("Wordiest user:", wordiestUserName);
+
+    request.setAttribute("labeledStats", labeledStats);
+
+    // Let the user through
+    request.getRequestDispatcher("/WEB-INF/view/admin.jsp").forward(request, response);
   }
 
   /**
