@@ -133,7 +133,7 @@ public class UserStore {
 
   /** Get a list with all the users */
   public List<User> getUserList() {
-    return new ArrayList<User>(users.values());
+    return new ArrayList<>(users.values());
   }
 
   /**
