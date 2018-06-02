@@ -14,6 +14,7 @@
 
 package codeu.controller;
 
+import codeu.model.data.Conversation;
 import codeu.model.data.Message;
 import codeu.model.data.User; // unused for now
 import codeu.model.store.basic.ConversationStore;
@@ -111,7 +112,6 @@ public class AdminServlet extends HttpServlet {
     int userCount = userStore.Count();
     int messageCount = messageStore.Count();
     int conversationCount = conversationStore.Count();
-
 
     // TODO: Optimize this later
     // This currently will calculate the wordiest/most active/newest users

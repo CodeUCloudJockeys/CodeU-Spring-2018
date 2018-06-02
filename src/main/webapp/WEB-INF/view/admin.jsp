@@ -43,6 +43,10 @@ Map<String, String> labeledStats = (Map<String, String>) request.getAttribute("l
     <h1>Admin Page</h1>
 
     <% if(request.getAttribute("error") != null){ %>
+        <h2 style="color:red"><%= request.getAttribute("error") %></h2>
+    <% } %>
+
+    <p>Hello, administrator!</p>
 
       <h2 style="color:red"><%= request.getAttribute("error") %></h2>
 
