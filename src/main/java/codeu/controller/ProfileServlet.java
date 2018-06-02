@@ -30,10 +30,7 @@ public class ProfileServlet extends HttpServlet{
 
   @Override
   public void init() throws ServletException {
-  // Sets ProfileServlet
     super.init();
-  //username of the profile page hardcoded
-    name = "exuser";
     setUserStore(UserStore.getInstance());
     setProfileStore(ProfileStore.getInstance());
 
@@ -48,23 +45,19 @@ public class ProfileServlet extends HttpServlet{
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response)
 	  throws IOException, ServletException {
-		  
-  /** The hardcoded 'name' is the username of the profile page
-  *  If this matches with 'username' it will allow an editing feature of the profile.
-  *  I will implement this later.
-  */
+
 		  
     String username = (String) request.getSession().getAttribute("user");
     request.setAttribute("username", username);
-  /** For now, if a user does not exist, they will not be able to view the profile page
-  * at all. Otherwise, any user will be able to view the prototype.
-  */
+
     if(username == null)
     {
 	    response.sendRedirect("/login");
     }
     else
     {
+        List<Profile> profiles = profileStore.getAllProfiles();
+        request.setAttribute("profiles", profiles);
 	    request.getRequestDispatcher("/WEB-INF/view/profile.jsp").forward(request, response);
     }
 		
@@ -75,28 +68,28 @@ public class ProfileServlet extends HttpServlet{
 
     String username = (String) request.getSession().getAttribute("user");
     if (username == null) {
-      // user is not logged in, don't let them add a message
+      // user is not logged in, don't let them in
       response.sendRedirect("/login");
       return;
     }
 
     User user = userStore.getUser(username);
     if (user == null) {
-      // user was not found, don't let them add a message
       response.sendRedirect("/login");
       return;
+    }
+    
+    String profileAbout = request.getParameter("profileAbout");
+    if(profileAbout != null)
+    {
+      profileStore.updateAbout(username, profileAbout);
     }
 
-    String profileAbout = request.getParameter("profileAbout");
-    //Working on some hardcoded tests
-    profileAbout = "hi";
-    if (profileAbout == null) {
-      response.sendRedirect("/login");
-      return;
-    }
     Profile profile =
             new Profile(UUID.randomUUID(), user.getId(), profileAbout, Instant.now());
     profileStore.addProfile(profile);
+    response.sendRedirect("/profile/" + username);
+
   }
 	 
 }
