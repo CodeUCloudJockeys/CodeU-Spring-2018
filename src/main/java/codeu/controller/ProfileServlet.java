@@ -17,13 +17,9 @@ import codeu.model.store.basic.ProfileStore;
 import codeu.model.store.basic.UserStore;
 
 
-  /** This servlet class is responsible the profile pages*/
+/** This servlet class is responsible the profile pages*/
 public class ProfileServlet extends HttpServlet{
 
-  /** From my perspective this variable is used to keep track of who is looking at
-   *  the profile page. If the account and user match then they will be allowed 
-   *  to edit their profile page.
-   *  */
   private String name;
   private UserStore userStore;
   private ProfileStore profileStore;
@@ -33,41 +29,39 @@ public class ProfileServlet extends HttpServlet{
     super.init();
     setUserStore(UserStore.getInstance());
     setProfileStore(ProfileStore.getInstance());
-
   }
+  
   void setUserStore(UserStore userStore) {
     this.userStore = userStore;
   }
   void setProfileStore(ProfileStore profileStore) {
     this.profileStore = profileStore;
   }
-
+	  
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response)
 	  throws IOException, ServletException {
-
-		  
-    String username = (String) request.getSession().getAttribute("user");
+    
+	String username = (String) request.getSession().getAttribute("user");
     request.setAttribute("username", username);
-
+    
     if(username == null)
     {
-	    response.sendRedirect("/login");
+	  response.sendRedirect("/login");
     }
     else
     {
-        List<Profile> profiles = profileStore.getAllProfiles();
-        request.setAttribute("profiles", profiles);
-	    request.getRequestDispatcher("/WEB-INF/view/profile.jsp").forward(request, response);
-    }
-  }
+      List<Profile> profiles = profileStore.getAllProfiles();
+      request.setAttribute("profiles", profiles);
+      request.getRequestDispatcher("/WEB-INF/view/profile.jsp").forward(request, response);
+    }	
+ }
+  
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
-
     String username = (String) request.getSession().getAttribute("user");
     if (username == null) {
-      // user is not logged in, don't let them in
       response.sendRedirect("/login");
       return;
     }
@@ -85,9 +79,10 @@ public class ProfileServlet extends HttpServlet{
     }
 
     Profile profile =
-        new Profile(UUID.randomUUID(), user.getId(), profileAbout, Instant.now());
+            new Profile(UUID.randomUUID(), user.getId(), profileAbout, Instant.now());
     profileStore.addProfile(profile);
     response.sendRedirect("/profile/" + username);
 
   }
+	 
 }

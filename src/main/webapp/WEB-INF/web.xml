@@ -71,6 +71,7 @@
     <servlet-class>codeu.controller.ProfileServlet</servlet-class>
   </servlet>
 
+
   <servlet-mapping>
     <servlet-name>ProfileServlet</servlet-name>
     <url-pattern>/profile/*</url-pattern>

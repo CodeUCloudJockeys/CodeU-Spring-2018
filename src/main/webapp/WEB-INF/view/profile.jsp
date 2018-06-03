@@ -15,39 +15,38 @@
   <nav>
     <a id="navTitle" href="/">CodeU Chat App</a>
     <a href="/profile">Profile</a>
-    <% if(request.getSession().getAttribute("user") != null){ %>
+      <% if(request.getSession().getAttribute("user") != null){ %>
       <a></a>
-    <% } else{ %>
-      <a href="/login">Login</a>
-    <% } %>
+      <% } else{ %>
+        <a href="/login">Login</a>
+      <% } %>
     <a href="/about.jsp">About</a>
   </nav>
- <div id="container">
-
-  <% String username = (String) request.getAttribute("username");
+  
+  <div id="container">
+    <% String username = (String) request.getAttribute("username");
  	if(request.getSession().getAttribute("user") != null){ %>
-    <a>Hi my name is <%= request.getSession().getAttribute("user") %>!</a>
-    <p>About me:</p>
-    <hr/>
-  <%} %>
+      <a>Hi my name is <%= request.getSession().getAttribute("user") %>!</a>
+      <p>About me:</p>
+      <hr/>
+    <%} %>
     
   <% List<Profile> profiles = (List<Profile>) request.getAttribute("profiles");
     if(profiles == null){
   %>
     <p>Create a profile to get started.</p>
-  <%
-    }
-    else{
+  <% } else{
   %>
-  <%
-    for(Profile profile : profiles){
-    String user = (String) request.getSession().getAttribute("user");
-  %>
-  <% if(profile.getProfile().equals(user)){
-  %>
-    <a><%= profile.getAbout() %></a>
-  <% } %>
-  <%} %>
+    <%
+      for(Profile profile : profiles){
+      String user = (String) request.getSession().getAttribute("user");
+    %>
+  
+      <% if(profile.getProfile().equals(user)){
+      %>
+        <a><%= profile.getAbout() %></a>
+      <% } %>
+    <%} %>
   <% } %>
   <hr/>
   

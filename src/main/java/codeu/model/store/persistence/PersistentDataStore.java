@@ -231,5 +231,4 @@ public class PersistentDataStore {
 	profileEntity.setProperty("creation_time", profile.getCreation().toString());
 	datastore.put(profileEntity);
   }
-  
 }

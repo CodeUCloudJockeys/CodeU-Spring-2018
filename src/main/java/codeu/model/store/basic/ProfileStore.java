@@ -36,9 +36,10 @@ public class ProfileStore {
   }
 
   public void addProfile(Profile profile) {
-    profiles.add(profile);
-    persistentStorageAgent.writeThrough(profile);
+   profiles.add(profile);
+   persistentStorageAgent.writeThrough(profile);
   }
+
 
 
   public Profile getProfile(String username) {
@@ -49,6 +50,7 @@ public class ProfileStore {
     }
     return null;
   }
+  
   public void updateAbout(String username, String about) {
     for (Profile profile : profiles) {
       if (profile.equals(username)) {
@@ -56,6 +58,7 @@ public class ProfileStore {
       }
 	}
   }
+
   public void setProfile(List<Profile> profiles) {
     this.profiles = profiles;
   }
