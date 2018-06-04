@@ -14,8 +14,6 @@
 
 package codeu.controller;
 
-import codeu.model.data.Conversation;
-import codeu.model.data.Message;
 import codeu.model.data.User; // unused for now
 import codeu.model.store.basic.ConversationStore;
 import codeu.model.store.basic.MessageStore;

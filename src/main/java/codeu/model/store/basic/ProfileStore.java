@@ -1,15 +1,14 @@
 package codeu.model.store.basic;
+
 import codeu.model.data.Profile;
 import codeu.model.store.persistence.PersistentStorageAgent;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
-
 
 public class ProfileStore {
 
   private static ProfileStore instance;
-  
+
   public static ProfileStore getInstance() {
     if (instance == null) {
       instance = new ProfileStore(PersistentStorageAgent.getInstance());
@@ -20,7 +19,7 @@ public class ProfileStore {
   public static ProfileStore getTestInstance(PersistentStorageAgent persistentStorageAgent) {
     return new ProfileStore(persistentStorageAgent);
   }
-  
+
   private PersistentStorageAgent persistentStorageAgent;
 
   private List<Profile> profiles;
@@ -38,7 +37,6 @@ public class ProfileStore {
     profiles.add(profile);
     persistentStorageAgent.writeThrough(profile);
   }
-
 
   public Profile getProfile(String about) {
     for (Profile profile : profiles) {

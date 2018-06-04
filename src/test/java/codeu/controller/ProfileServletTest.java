@@ -17,7 +17,7 @@ public class ProfileServletTest {
   private HttpServletResponse mockResponse;
   private HttpSession mockSession;
   private RequestDispatcher mockRequestDispatcher;
-  
+
   @Before
   public void setup() throws IOException {
     profileServlet = new ProfileServlet();
@@ -26,7 +26,7 @@ public class ProfileServletTest {
     mockSession = Mockito.mock(HttpSession.class);
     mockRequestDispatcher = Mockito.mock(RequestDispatcher.class);
     Mockito.when(mockRequest.getRequestDispatcher("/WEB-INF/view/chat.jsp"))
-     .thenReturn(mockRequestDispatcher);
+        .thenReturn(mockRequestDispatcher);
     Mockito.when(mockRequest.getSession()).thenReturn(mockSession);
   }
 

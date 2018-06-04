@@ -8,7 +8,7 @@ public class Profile {
   public final UUID ownerId;
   public final Instant creation;
   public final String about;
-  
+
   public Profile(UUID ownerId, UUID id, String about, Instant creation) {
     this.ownerId = ownerId;
     this.id = id;
@@ -33,6 +33,4 @@ public class Profile {
   public Instant getCreation() {
     return creation;
   }
-
 }
-
