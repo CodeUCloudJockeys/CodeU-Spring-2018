@@ -1,6 +1,7 @@
 package codeu.controller;
 
 import java.io.IOException;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -15,13 +16,17 @@ public class ProfileServletTest {
   private HttpServletRequest mockRequest;
   private HttpServletResponse mockResponse;
   private HttpSession mockSession;
-
+  private RequestDispatcher mockRequestDispatcher;
+  
   @Before
   public void setup() throws IOException {
     profileServlet = new ProfileServlet();
     mockRequest = Mockito.mock(HttpServletRequest.class);
     mockResponse = Mockito.mock(HttpServletResponse.class);
     mockSession = Mockito.mock(HttpSession.class);
+    mockRequestDispatcher = Mockito.mock(RequestDispatcher.class);
+    Mockito.when(mockRequest.getRequestDispatcher("/WEB-INF/view/chat.jsp"))
+     .thenReturn(mockRequestDispatcher);
     Mockito.when(mockRequest.getSession()).thenReturn(mockSession);
   }
 
