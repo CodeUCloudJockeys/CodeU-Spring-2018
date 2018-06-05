@@ -74,7 +74,6 @@ public class ConversationStore {
     titleToId = new HashMap<>();
   }
 
-  // TODO: Add tests for this
   /** Amount of conversations */
   public int Count() {
     return conversations.size();
@@ -114,6 +113,11 @@ public class ConversationStore {
   public Conversation getConversationWithTitle(String title) {
     UUID id = titleToId.get(title);
     return (id == null) ? null : conversations.get(id);
+  }
+
+  /** Get a list with all the conversations. */
+  public List<Conversation> getConversationList() {
+    return new ArrayList<>(conversations.values());
   }
 
   /** Sets the Map of Conversations stored by this ConversationStore. */
