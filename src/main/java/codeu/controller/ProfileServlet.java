@@ -37,24 +37,21 @@ public class ProfileServlet extends HttpServlet{
   void setProfileStore(ProfileStore profileStore) {
     this.profileStore = profileStore;
   }
-	  
+
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response)
-	  throws IOException, ServletException {
+    throws IOException, ServletException {
     
-	String username = (String) request.getSession().getAttribute("user");
+    String username = (String) request.getSession().getAttribute("user");
     request.setAttribute("username", username);
     
-    if(username == null)
-    {
-	  response.sendRedirect("/login");
-    }
-    else
-    {
+    if(username == null) {
+      response.sendRedirect("/login");
+    } else {
       List<Profile> profiles = profileStore.getAllProfiles();
       request.setAttribute("profiles", profiles);
       request.getRequestDispatcher("/WEB-INF/view/profile.jsp").forward(request, response);
-    }	
+    }
  }
   
   @Override
@@ -79,10 +76,9 @@ public class ProfileServlet extends HttpServlet{
     }
 
     Profile profile =
-            new Profile(UUID.randomUUID(), user.getId(), profileAbout, Instant.now());
+        new Profile(UUID.randomUUID(), user.getId(), profileAbout, Instant.now());
     profileStore.addProfile(profile);
     response.sendRedirect("/profile/" + username);
 
   }
-	 
 }
