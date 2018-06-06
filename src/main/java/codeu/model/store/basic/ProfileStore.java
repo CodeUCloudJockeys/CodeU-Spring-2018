@@ -10,7 +10,7 @@ import java.util.UUID;
 public class ProfileStore {
 
   private static ProfileStore instance;
-  
+
   public static ProfileStore getInstance() {
     if (instance == null) {
       instance = new ProfileStore(PersistentStorageAgent.getInstance());
@@ -21,7 +21,7 @@ public class ProfileStore {
   public static ProfileStore getTestInstance(PersistentStorageAgent persistentStorageAgent) {
     return new ProfileStore(persistentStorageAgent);
   }
-  
+
   private PersistentStorageAgent persistentStorageAgent;
 
   private List<Profile> profiles;
@@ -36,27 +36,27 @@ public class ProfileStore {
   }
 
   public void addProfile(Profile profile) {
-   profiles.add(profile);
-   persistentStorageAgent.writeThrough(profile);
+    profiles.add(profile);
+    persistentStorageAgent.writeThrough(profile);
   }
 
 
 
   public Profile getProfile(String username) {
     for (Profile profile : profiles) {
-	  if (profile.equals(username)) {
-	    return profile;
-	  }
+      if (profile.equals(username)) {
+        return profile;
+      }
     }
     return null;
   }
-  
+
   public void updateAbout(String username, String about) {
     for (Profile profile : profiles) {
       if (profile.equals(username)) {
-    	persistentStorageAgent.writeThroughAbout(profile, about);
+        persistentStorageAgent.writeThroughAbout(profile, about);
       }
-	}
+    }
   }
 
   public void setProfile(List<Profile> profiles) {
