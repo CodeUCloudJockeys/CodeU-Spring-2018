@@ -30,7 +30,7 @@ public class ProfileServlet extends HttpServlet{
     setUserStore(UserStore.getInstance());
     setProfileStore(ProfileStore.getInstance());
   }
-  
+
   void setUserStore(UserStore userStore) {
     this.userStore = userStore;
   }
@@ -40,11 +40,11 @@ public class ProfileServlet extends HttpServlet{
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws IOException, ServletException {
-    
+      throws IOException, ServletException {
+
     String username = (String) request.getSession().getAttribute("user");
     request.setAttribute("username", username);
-    
+
     if(username == null) {
       response.sendRedirect("/login");
     } else {
@@ -53,7 +53,7 @@ public class ProfileServlet extends HttpServlet{
       request.getRequestDispatcher("/WEB-INF/view/profile.jsp").forward(request, response);
     }
  }
-  
+
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
@@ -68,10 +68,9 @@ public class ProfileServlet extends HttpServlet{
       response.sendRedirect("/login");
       return;
     }
-    
+
     String profileAbout = request.getParameter("profileAbout");
-    if(profileAbout != null)
-    {
+    if(profileAbout != null) {
       profileStore.updateAbout(username, profileAbout);
     }
 
