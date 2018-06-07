@@ -67,7 +67,7 @@ public class User {
   public String getName() {
     return name;
   }
-  
+
   /** Returns the password hash of this User. */
   public String getPasswordHash() {
     return passwordHash;
@@ -79,17 +79,23 @@ public class User {
   }
 
   /** Returns whether the user is an admin. */
-  public boolean getIsAdmin() { return isAdmin; }
+  public boolean getIsAdmin() {
+    return isAdmin;
+  }
 
   /**
-   * Turns a user into an admin. This is not setAdmin because promoting and demoting a user are
-   * very different operations. That is, user.adminify() seems to me to be more explicit than
+   * Turns a user into an admin. This is not setAdmin because promoting and demoting a user are very
+   * different operations. That is, user.adminify() seems to me to be more explicit than
    * user.setIsAdmin(true), and explicitness is something we want for such a security-critical
    * method
    */
-  public void adminify() { this.isAdmin = true; } // maybe rename to promote()
+  public void adminify() {
+    this.isAdmin = true;
+  } // maybe rename to promote()
 
-  public void unadminify() { this.isAdmin = false; } // maybe rename to demote()
+  public void unadminify() {
+    this.isAdmin = false;
+  } // maybe rename to demote()
 
   /** Override equality, so users are compared based on their ID */
   @Override

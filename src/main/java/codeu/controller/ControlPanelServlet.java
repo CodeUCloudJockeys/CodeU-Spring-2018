@@ -18,7 +18,6 @@ import codeu.model.data.User;
 import codeu.model.store.basic.UserStore;
 import java.io.IOException;
 import java.util.List;
-import java.util.stream.Collectors;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -29,11 +28,10 @@ public class ControlPanelServlet extends HttpServlet {
 
   /** Store class that gives access to Users. */
   private UserStore userStore;
+
   private List<User> userList;
 
-  /**
-   * Set up state.
-   */
+  /** Set up state. */
   @Override
   public void init() throws ServletException {
     // Sets up the servlet

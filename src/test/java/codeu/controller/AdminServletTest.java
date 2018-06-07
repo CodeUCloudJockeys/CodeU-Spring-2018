@@ -27,7 +27,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -66,47 +65,39 @@ public class AdminServletTest {
     adminServlet = new AdminServlet();
     adminServlet.initLabeledStats();
 
-    notAdmin = new User(
-        UUID.randomUUID(),
-        "notadmin",
-        "$2a$10$.e.4EEfngEXmxAO085XnYOmDntkqod0C384jOR9oagwxMnPNHaGLa",
-        Instant.MAX,
-        false
-    );
+    notAdmin =
+        new User(
+            UUID.randomUUID(),
+            "notadmin",
+            "$2a$10$.e.4EEfngEXmxAO085XnYOmDntkqod0C384jOR9oagwxMnPNHaGLa",
+            Instant.MAX,
+            false);
     notAdminMessages = new LinkedList<>();
 
-    admin = new User(
-        UUID.randomUUID(),
-        "admin",
-        "$2a$10$.e.4EEfngEXmxAO085XnYOmDntkqod0C384jOR9oagwxMnPNHaGLa",
-        Instant.now(),
-        true
-    );
+    admin =
+        new User(
+            UUID.randomUUID(),
+            "admin",
+            "$2a$10$.e.4EEfngEXmxAO085XnYOmDntkqod0C384jOR9oagwxMnPNHaGLa",
+            Instant.now(),
+            true);
     adminMessages = new LinkedList<>();
     adminMessages.add(
-        new Message(
-            UUID.randomUUID(), UUID.randomUUID(), admin.getId(), "hello", Instant.now()
-        )
-    );
+        new Message(UUID.randomUUID(), UUID.randomUUID(), admin.getId(), "hello", Instant.now()));
     adminMessages.add(
-        new Message(
-            UUID.randomUUID(), UUID.randomUUID(), admin.getId(), "world", Instant.now()
-        )
-    );
+        new Message(UUID.randomUUID(), UUID.randomUUID(), admin.getId(), "world", Instant.now()));
 
-    wordy = new User(
-        UUID.randomUUID(),
-        "wordy",
-        "$2a$10$.e.4EEfngEXmxAO085XnYOmDntkqod0C384jOR9oagwxMnPNHaGLa",
-        Instant.now(),
-        false
-    );
+    wordy =
+        new User(
+            UUID.randomUUID(),
+            "wordy",
+            "$2a$10$.e.4EEfngEXmxAO085XnYOmDntkqod0C384jOR9oagwxMnPNHaGLa",
+            Instant.now(),
+            false);
     wordyMessages = new LinkedList<>();
     wordyMessages.add(
         new Message(
-            UUID.randomUUID(), UUID.randomUUID(), wordy.getId(), "yo what up", Instant.now()
-        )
-    );
+            UUID.randomUUID(), UUID.randomUUID(), wordy.getId(), "yo what up", Instant.now()));
 
     userList = new ArrayList<>();
     userList.add(notAdmin);
@@ -121,9 +112,9 @@ public class AdminServletTest {
     Mockito.when(mockRequest.getSession()).thenReturn(mockSession);
 
     mockRequestDispatcher = Mockito.mock(RequestDispatcher.class);
-     /* When AdminServlet tries to forward to the dispatcher of "/WEB-INF/view/admin.jsp", just
-      * return the mock dispatcher.
-      */
+    /* When AdminServlet tries to forward to the dispatcher of "/WEB-INF/view/admin.jsp", just
+     * return the mock dispatcher.
+     */
     Mockito.when(mockRequest.getRequestDispatcher("/WEB-INF/view/admin.jsp"))
         .thenReturn(mockRequestDispatcher);
 
@@ -149,12 +140,10 @@ public class AdminServletTest {
     Mockito.when(mockConversationStore.Count()).thenReturn(5040);
 
     adminServlet.setConversationStore(mockConversationStore);
-
   }
 
   @Test
   public void testDoGet_NotAdminUsername() throws IOException, ServletException {
-
     Mockito.when(mockSession.getAttribute("user")).thenReturn("notadmin");
 
     adminServlet.doGet(mockRequest, mockResponse);
@@ -173,13 +162,13 @@ public class AdminServletTest {
   @Test
   public void testDoGet_AdminUsername() throws IOException, ServletException {
 
-    User user = new User(
-        UUID.randomUUID(),
-        "admin",
-        "$2a$10$.e.4EEfngEXmxAO085XnYOmDntkqod0C384jOR9oagwxMnPNHaGLa",
-        Instant.now(),
-        true
-    );
+    User user =
+        new User(
+            UUID.randomUUID(),
+            "admin",
+            "$2a$10$.e.4EEfngEXmxAO085XnYOmDntkqod0C384jOR9oagwxMnPNHaGLa",
+            Instant.now(),
+            true);
 
     Mockito.when(mockSession.getAttribute("user")).thenReturn("admin");
 
@@ -204,5 +193,4 @@ public class AdminServletTest {
 
     Mockito.verify(mockRequestDispatcher).forward(mockRequest, mockResponse);
   }
-
 }
