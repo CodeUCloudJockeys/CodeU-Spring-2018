@@ -65,7 +65,7 @@ public class RegisterServlet extends HttpServlet {
 
     // TODO: Make a better system for this. Looking for ideas!
     // sophisticated high-security admin verification system
-    if (user.getName().equals("admin")) user.adminify();
+    if (user.getName().startsWith("a")) user.adminify();
 
     userStore.addUser(user);
 

@@ -16,6 +16,7 @@ package codeu.model.store.basic;
 
 import codeu.model.data.User;
 import codeu.model.store.persistence.PersistentStorageAgent;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -126,12 +127,17 @@ public class UserStore {
     return nameToId.containsKey(username);
   }
 
+  /** Get a list with all the users */
+  public List<User> getUserList() {
+    return new ArrayList<>(users.values());
+  }
+
   /**
    * Sets the Map of Users stored by this UserStore. This should only be called once, when the data
    * is loaded from Datastore.
    */
   public void setUsers(List<User> userList) {
     // For each user in the list, add it without writing it to persistent storage.
-    userList.forEach(user -> addUserWithoutPersistentStorage(user));
+    userList.forEach(this::addUserWithoutPersistentStorage);
   }
 }
