@@ -13,9 +13,10 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 --%>
-<%@ page import="java.util.Map" %>
+<%@ page import="java.util.List" %>
+<%@ page import="codeu.model.data.User" %>
 <%
-Map<String, String> labeledStats = (Map<String, String>) request.getAttribute("labeledStats");
+List<User> userList = (List<User>) request.getAttribute("userList");
 %>
 
 <!DOCTYPE html>
@@ -36,31 +37,38 @@ Map<String, String> labeledStats = (Map<String, String>) request.getAttribute("l
     <% } %>
     <a href="/about.jsp">About</a>
     <a href="/admin">Admin</a>
-    <a href="/control_panel">Control Panel</a>
   </nav>
 
   <div id="container">
-    <h1>Admin Page</h1>
+    <h1>Control Panel</h1>
 
     <% if(request.getAttribute("error") != null){ %>
-        <h2 style="color:red"><%= request.getAttribute("error") %></h2>
-    <% } %>
-
-    <p>Hello, administrator!</p>
 
       <h2 style="color:red"><%= request.getAttribute("error") %></h2>
 
     <% } else { %>
 
       <h2>Hello, administrator!</h2>
-      <p>Here is some data:</p>
-      <ul>
+      <p>Here are the users:</p>
+      <table>
+        <tr>
+          <th>Username</th>
+          <th>Admin</th>
+        </tr>
         <%
-          for (Map.Entry<String, String> labeledStat : labeledStats.entrySet()) {
+          for (User user : userList) {
         %>
-        <li><strong><%= labeledStat.getKey() %></strong> <%= labeledStat.getValue() %></li>
+
+          <tr>
+            <td><%= user.getName() %></td>
+
+            <%-- Checkbox is checked if user is admin --%>
+            <td><input type="checkbox" id="<%= user.getName() %>" <%= user.getIsAdmin() ? "checked" : "" %>></td>
+          </tr>
+
         <% } %>
-      </ul>
+
+      </table>
 
     <% } %>
 

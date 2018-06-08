@@ -11,7 +11,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-
 public class MessageStoreTest {
 
   private MessageStore messageStore;
@@ -77,6 +76,11 @@ public class MessageStoreTest {
 
     assertEquals(inputMessage, resultMessage);
     Mockito.verify(mockPersistentStorageAgent).writeThrough(inputMessage);
+  }
+
+  @Test
+  public void testCount() {
+    Assert.assertEquals(3, messageStore.Count());
   }
 
   private void assertEquals(Message expectedMessage, Message actualMessage) {

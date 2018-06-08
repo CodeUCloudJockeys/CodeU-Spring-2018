@@ -17,15 +17,12 @@ package codeu.model.store.persistence;
 import codeu.model.data.Conversation;
 import codeu.model.data.Message;
 import codeu.model.data.Profile;
-
 import codeu.model.data.User;
-import codeu.model.store.persistence.PersistentDataStoreException;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
-import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.appengine.api.datastore.Query.SortDirection;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -42,7 +39,6 @@ public class PersistentDataStore {
   // Handle to Google AppEngine's Datastore service.
   private DatastoreService datastore;
 
-  
   /**
    * Constructs a new PersistentDataStore and sets up its state to begin loading objects from the
    * Datastore service.
@@ -71,7 +67,7 @@ public class PersistentDataStore {
         String userName = (String) entity.getProperty("username");
         String password = (String) entity.getProperty("password_hash");
         Instant creationTime = Instant.parse((String) entity.getProperty("creation_time"));
-        boolean isAdmin = Boolean.getBoolean((String) entity.getProperty("is_admin"));
+        boolean isAdmin = Boolean.valueOf((String) entity.getProperty("is_admin"));
         User user = new User(uuid, userName, password, creationTime, isAdmin);
         users.add(user);
       } catch (Exception e) {
@@ -153,7 +149,7 @@ public class PersistentDataStore {
 
     return messages;
   }
-  
+
   public List<Profile> loadProfile() throws PersistentDataStoreException {
 
     List<Profile> profiles = new ArrayList<>();
@@ -212,8 +208,7 @@ public class PersistentDataStore {
     conversationEntity.setProperty("creation_time", conversation.getCreationTime().toString());
     datastore.put(conversationEntity);
   }
-  
-  
+
   public void writeThrough(Profile profile) {
     Entity profileEntity = new Entity("chat-profile", profile.getId().toString());
     profileEntity.setProperty("uuid", profile.getId().toString());

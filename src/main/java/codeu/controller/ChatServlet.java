@@ -87,6 +87,7 @@ public class ChatServlet extends HttpServlet {
     String requestUrl = request.getRequestURI();
     String conversationTitle = requestUrl.substring("/chat/".length());
 
+    // TODO: Filter away users per conversation
     Conversation conversation = conversationStore.getConversationWithTitle(conversationTitle);
     if (conversation == null) {
       // couldn't find conversation, redirect to conversation list
@@ -97,6 +98,7 @@ public class ChatServlet extends HttpServlet {
 
     UUID conversationId = conversation.getId();
 
+    // TODO: Add pagination -- this will get insane with more than a few hundred messages
     List<Message> messages = messageStore.getMessagesInConversation(conversationId);
 
     request.setAttribute("conversation", conversation);

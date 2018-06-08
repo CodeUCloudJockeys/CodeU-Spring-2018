@@ -1,11 +1,10 @@
 package codeu.model.store.basic;
+
 import codeu.model.data.Profile;
 import codeu.model.data.User;
 import codeu.model.store.persistence.PersistentStorageAgent;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
-
 
 public class ProfileStore {
 
@@ -41,8 +40,8 @@ public class ProfileStore {
   }
 
 
-
   public Profile getProfile(String username) {
+
     for (Profile profile : profiles) {
       if (profile.equals(username)) {
         return profile;

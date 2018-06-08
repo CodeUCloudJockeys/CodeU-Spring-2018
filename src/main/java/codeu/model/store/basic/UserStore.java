@@ -16,6 +16,7 @@ package codeu.model.store.basic;
 
 import codeu.model.data.User;
 import codeu.model.store.persistence.PersistentStorageAgent;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,9 +60,7 @@ public class UserStore {
   /** The in-memory map of Users. */
   private Map<UUID, User> users;
 
-  /**
-   * A map from names to IDs, so user IDs can be fetched from usernames quickly.
-   */
+  /** A map from names to IDs, so user IDs can be fetched from usernames quickly. */
   private Map<String, UUID> nameToId;
 
   /** This class is a singleton, so its constructor is private. Call getInstance() instead. */
@@ -99,7 +98,7 @@ public class UserStore {
    * Add a new user to the current map of users known to the application. This should only be called
    * to add a new user, not to update an existing user.
    *
-   * This writes the user to the persistent storage.
+   * <p>This writes the user to the persistent storage.
    */
   public void addUser(User user) {
     addUserWithoutPersistentStorage(user);
@@ -111,16 +110,14 @@ public class UserStore {
    * Add a new user to the current map of users known to the application. This should only be called
    * to add a new user, not to update an existing user.
    *
-   * This does NOT write the user to the persistent storage.
+   * <p>This does NOT write the user to the persistent storage.
    */
   public void addUserWithoutPersistentStorage(User user) {
     users.put(user.getId(), user);
     nameToId.put(user.getName(), user.getId());
   }
 
-  /**
-   * Update an existing User.
-   */
+  /** Update an existing User. */
   public void updateUser(User user) {
     persistentStorageAgent.writeThrough(user);
   }
@@ -130,13 +127,17 @@ public class UserStore {
     return nameToId.containsKey(username);
   }
 
+  /** Get a list with all the users */
+  public List<User> getUserList() {
+    return new ArrayList<>(users.values());
+  }
+
   /**
    * Sets the Map of Users stored by this UserStore. This should only be called once, when the data
    * is loaded from Datastore.
    */
   public void setUsers(List<User> userList) {
     // For each user in the list, add it without writing it to persistent storage.
-    userList.forEach(user -> addUserWithoutPersistentStorage(user));
+    userList.forEach(this::addUserWithoutPersistentStorage);
   }
 }
-
