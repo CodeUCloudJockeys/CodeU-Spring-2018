@@ -11,9 +11,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/** This servlet class is responsible the profile pages */
-public class ProfileServlet extends HttpServlet {
-
 /** This servlet class is responsible the profile pages*/
 public class ProfileServlet extends HttpServlet{
 
