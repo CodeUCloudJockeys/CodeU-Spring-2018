@@ -19,7 +19,6 @@ public class ProfileServlet extends HttpServlet {
 public class ProfileServlet extends HttpServlet{
 
   private String name;
-
   private UserStore userStore;
   private ProfileStore profileStore;
 
