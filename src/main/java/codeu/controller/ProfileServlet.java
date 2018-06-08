@@ -1,4 +1,5 @@
 package codeu.controller;
+import java.util.List;
 import codeu.model.data.Profile;
 import codeu.model.data.User;
 import codeu.model.store.basic.ProfileStore;
