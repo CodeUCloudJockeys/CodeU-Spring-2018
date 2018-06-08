@@ -1,5 +1,4 @@
 package codeu.model.store.basic;
-
 import codeu.model.data.Profile;
 import codeu.model.data.User;
 import codeu.model.store.persistence.PersistentStorageAgent;
