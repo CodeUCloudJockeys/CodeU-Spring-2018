@@ -41,7 +41,6 @@ public class ProfileStore {
 
 
   public Profile getProfile(String username) {
-
     for (Profile profile : profiles) {
       if (profile.equals(username)) {
         return profile;
