@@ -1,5 +1,4 @@
 package codeu.controller;
-
 import codeu.model.data.Profile;
 import codeu.model.data.User;
 import codeu.model.store.basic.ProfileStore;
@@ -81,6 +80,5 @@ public class ProfileServlet extends HttpServlet{
 
     profileStore.addProfile(profile);
     response.sendRedirect("/profile/" + username);
-
   }
 }
