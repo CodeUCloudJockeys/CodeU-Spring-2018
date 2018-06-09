@@ -62,8 +62,7 @@ public class ConversationStore {
   private Map<UUID, Conversation> conversations;
 
   /**
-   * A map from titles to IDs, so conversation IDs can be fetched from conversation titles
-   * quickly.
+   * A map from titles to IDs, so conversation IDs can be fetched from conversation titles quickly.
    */
   private Map<String, UUID> titleToId;
 
@@ -74,7 +73,6 @@ public class ConversationStore {
     titleToId = new HashMap<>();
   }
 
-  // TODO: Add tests for this
   /** Amount of conversations */
   public int Count() {
     return conversations.size();
@@ -86,8 +84,8 @@ public class ConversationStore {
   }
 
   /**
-   * Add a new conversation to the current map of conversations known to the application.
-   * This writes the conversation to the persistent storage.
+   * Add a new conversation to the current map of conversations known to the application. This
+   * writes the conversation to the persistent storage.
    */
   public void addConversation(Conversation conversation) {
     addConversationWithoutPersistentStorage(conversation);
@@ -96,8 +94,8 @@ public class ConversationStore {
   }
 
   /**
-   * Add a new conversation to the current map of conversations known to the application.
-   * This does NOT write the conversation to the persistent storage.
+   * Add a new conversation to the current map of conversations known to the application. This does
+   * NOT write the conversation to the persistent storage.
    */
   public void addConversationWithoutPersistentStorage(Conversation conversation) {
     conversations.put(conversation.getId(), conversation);
@@ -114,6 +112,11 @@ public class ConversationStore {
   public Conversation getConversationWithTitle(String title) {
     UUID id = titleToId.get(title);
     return (id == null) ? null : conversations.get(id);
+  }
+
+  /** Get a list with all the conversations. */
+  public List<Conversation> getConversationList() {
+    return new ArrayList<>(conversations.values());
   }
 
   /** Sets the Map of Conversations stored by this ConversationStore. */
