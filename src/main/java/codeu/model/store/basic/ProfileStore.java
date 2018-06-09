@@ -1,5 +1,4 @@
 package codeu.model.store.basic;
-
 import codeu.model.data.Profile;
 import codeu.model.data.User;
 import codeu.model.store.persistence.PersistentStorageAgent;
@@ -35,25 +34,25 @@ public class ProfileStore {
   }
 
   public void addProfile(Profile profile) {
-   profiles.add(profile);
-   persistentStorageAgent.writeThrough(profile);
+    profiles.add(profile);
+    persistentStorageAgent.writeThrough(profile);
   }
 
   public Profile getProfile(String username) {
     for (Profile profile : profiles) {
-	  if (profile.equals(username)) {
-	    return profile;
-	  }
+      if (profile.equals(username)) {
+        return profile;
+      }
     }
     return null;
   }
-  
+
   public void updateAbout(String username, String about) {
     for (Profile profile : profiles) {
       if (profile.equals(username)) {
-    	persistentStorageAgent.writeThroughAbout(profile, about);
+        persistentStorageAgent.writeThroughAbout(profile, about);
       }
-	}
+    }
   }
 
   public void setProfile(List<Profile> profiles) {

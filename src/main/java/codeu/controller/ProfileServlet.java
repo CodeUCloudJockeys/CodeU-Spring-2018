@@ -1,5 +1,5 @@
 package codeu.controller;
-
+import java.util.List;
 import codeu.model.data.Profile;
 import codeu.model.data.User;
 import codeu.model.store.basic.ProfileStore;
@@ -17,7 +17,6 @@ import javax.servlet.http.HttpServletResponse;
 public class ProfileServlet extends HttpServlet{
 
   private String name;
-
   private UserStore userStore;
   private ProfileStore profileStore;
 
@@ -35,25 +34,24 @@ public class ProfileServlet extends HttpServlet{
   void setProfileStore(ProfileStore profileStore) {
     this.profileStore = profileStore;
   }
-	  
+
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response)
-	throws IOException, ServletException {
-    
-	String username = (String) request.getSession().getAttribute("user");
+      throws IOException, ServletException {
+
+    String username = (String) request.getSession().getAttribute("user");
     request.setAttribute("username", username);
-    
-    if(username == null)
-    {
-	  response.sendRedirect("/login");
-    }
-    else
-    {
+
+    if(username == null) {
+      response.sendRedirect("/login");
+    } else {
       List<Profile> profiles = profileStore.getAllProfiles();
       request.setAttribute("profiles", profiles);
       request.getRequestDispatcher("/WEB-INF/view/profile.jsp").forward(request, response);
-    }	
+    }
+
  }
+
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -69,10 +67,9 @@ public class ProfileServlet extends HttpServlet{
       response.sendRedirect("/login");
       return;
     }
-    
+
     String profileAbout = request.getParameter("profileAbout");
-    if(profileAbout != null)
-    {
+    if(profileAbout != null) {
       profileStore.updateAbout(username, profileAbout);
     }
 
@@ -82,5 +79,4 @@ public class ProfileServlet extends HttpServlet{
     profileStore.addProfile(profile);
     response.sendRedirect("/profile/" + username);
   }
-	 
 }
