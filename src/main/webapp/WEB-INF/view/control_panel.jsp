@@ -40,7 +40,7 @@ List<User> userList = (List<User>) request.getAttribute("userList");
 
       <h2>Hello, administrator!</h2>
       <p>Here are the users:</p>
-      <table>
+      <table border=1 frame=void>
         <tr>
           <th>Username</th>
           <th>Admin</th>
