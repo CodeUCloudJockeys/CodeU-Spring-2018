@@ -55,7 +55,7 @@ public class LoginServlet extends HttpServlet {
   public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
 
-    boolean isLoggedIn = request.getSession().getAttribute("user") != null;
+    boolean isLoggedIn = (request.getSession().getAttribute("user") != null);
     if (isLoggedIn) {
       // Back to site index (the login page makes no sense if user is already logged in)
       response.sendRedirect("/");

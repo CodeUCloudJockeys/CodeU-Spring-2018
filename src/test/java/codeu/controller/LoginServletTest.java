@@ -34,6 +34,7 @@ public class LoginServletTest {
   private HttpServletRequest mockRequest;
   private HttpServletResponse mockResponse;
   private RequestDispatcher mockRequestDispatcher;
+  private HttpSession mockSession;
 
   @Before
   public void setup() {
@@ -41,15 +42,31 @@ public class LoginServletTest {
     mockRequest = Mockito.mock(HttpServletRequest.class);
     mockResponse = Mockito.mock(HttpServletResponse.class);
     mockRequestDispatcher = Mockito.mock(RequestDispatcher.class);
+
     Mockito.when(mockRequest.getRequestDispatcher("/WEB-INF/view/login.jsp"))
         .thenReturn(mockRequestDispatcher);
+
+    mockSession = Mockito.mock(HttpSession.class);
+    Mockito.when(mockRequest.getSession()).thenReturn(mockSession);
   }
 
   @Test
-  public void testDoGet() throws IOException, ServletException {
+  public void testDoGet_NotLoggedIn() throws IOException, ServletException {
+
+    Mockito.when(mockSession.getAttribute("user")).thenReturn(null);
+
     loginServlet.doGet(mockRequest, mockResponse);
 
     Mockito.verify(mockRequestDispatcher).forward(mockRequest, mockResponse);
+  }
+
+  @Test
+  public void testDoGet_LoggedIn() throws IOException, ServletException {
+    Mockito.when(mockSession.getAttribute("user")).thenReturn("someuser");
+
+    loginServlet.doGet(mockRequest, mockResponse);
+
+    Mockito.verify(mockResponse).sendRedirect("/");
   }
 
   @Test
