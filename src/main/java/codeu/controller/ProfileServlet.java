@@ -1,5 +1,5 @@
 package codeu.controller;
-import java.util.List;
+
 import codeu.model.data.Profile;
 import codeu.model.data.User;
 import codeu.model.store.basic.ProfileStore;
@@ -13,8 +13,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/** This servlet class is responsible the profile pages*/
-public class ProfileServlet extends HttpServlet{
+/** This servlet class is responsible the profile pages */
+public class ProfileServlet extends HttpServlet {
 
   private String name;
   private UserStore userStore;
@@ -42,16 +42,14 @@ public class ProfileServlet extends HttpServlet{
     String username = (String) request.getSession().getAttribute("user");
     request.setAttribute("username", username);
 
-    if(username == null) {
+    if (username == null) {
       response.sendRedirect("/login");
     } else {
       List<Profile> profiles = profileStore.getAllProfiles();
       request.setAttribute("profiles", profiles);
       request.getRequestDispatcher("/WEB-INF/view/profile.jsp").forward(request, response);
     }
-
- }
-
+  }
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -69,12 +67,11 @@ public class ProfileServlet extends HttpServlet{
     }
 
     String profileAbout = request.getParameter("profileAbout");
-    if(profileAbout != null) {
+    if (profileAbout != null) {
       profileStore.updateAbout(username, profileAbout);
     }
 
-    Profile profile =
-      new Profile(UUID.randomUUID(), user.getId(), profileAbout, Instant.now());
+    Profile profile = new Profile(UUID.randomUUID(), user.getId(), profileAbout, Instant.now());
 
     profileStore.addProfile(profile);
     response.sendRedirect("/profile/" + username);
