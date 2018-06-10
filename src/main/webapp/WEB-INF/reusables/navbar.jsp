@@ -8,6 +8,10 @@
     <a href="/login">Login</a>
   <% } %>
   <a href="/about.jsp">About</a>
-  <a href="/admin">Admin</a>
-  <a href="/control_panel">Control Panel</a>
+  <% if (request.getSession().getAttribute("admin") != null
+      && request.getSession().getAttribute("admin") == "true") {
+  %>
+    <a href="/admin">Admin</a>
+    <a href="/control_panel">Control Panel</a>
+  <% } %>
 </nav>
