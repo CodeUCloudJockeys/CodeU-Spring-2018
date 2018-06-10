@@ -10,14 +10,14 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-  public class ProfileServletTest {
+public class ProfileServletTest {
 
   private ProfileServlet profileServlet;
   private HttpServletRequest mockRequest;
   private HttpServletResponse mockResponse;
   private HttpSession mockSession;
   private RequestDispatcher mockRequestDispatcher;
-  
+
   @Before
   public void setup() throws IOException {
     profileServlet = new ProfileServlet();
@@ -26,7 +26,7 @@ import org.mockito.Mockito;
     mockSession = Mockito.mock(HttpSession.class);
     mockRequestDispatcher = Mockito.mock(RequestDispatcher.class);
     Mockito.when(mockRequest.getRequestDispatcher("/WEB-INF/view/chat.jsp"))
-     .thenReturn(mockRequestDispatcher);
+        .thenReturn(mockRequestDispatcher);
     Mockito.when(mockRequest.getSession()).thenReturn(mockSession);
   }
 
@@ -35,8 +35,7 @@ import org.mockito.Mockito;
     Mockito.when(mockSession.getAttribute("user")).thenReturn(null);
     profileServlet.doGet(mockRequest, mockResponse);
 
-    //Checks if the user null, the redirected into login page
+    // Checks if the user null, the redirected into login page
     Mockito.verify(mockResponse).sendRedirect("/login");
   }
-
 }

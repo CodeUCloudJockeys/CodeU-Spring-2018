@@ -82,8 +82,8 @@ public class MessageStore {
   }
 
   /**
-   * Add a new message to the current set of messages known to the application.
-   * This writes the message to the persistent storage.
+   * Add a new message to the current set of messages known to the application. This writes the
+   * message to the persistent storage.
    */
   public void addMessage(Message message) {
     addMessageWithoutPersistentStorage(message);
@@ -92,8 +92,8 @@ public class MessageStore {
   }
 
   /**
-   * Add a new message to the current set of messages known to the application.
-   * This does NOT write the message to the persistent storage.
+   * Add a new message to the current set of messages known to the application. This does NOT write
+   * the message to the persistent storage.
    */
   public void addMessageWithoutPersistentStorage(Message message) {
     UUID id = message.getId();
@@ -115,7 +115,8 @@ public class MessageStore {
     if (conversationIdToMessageIdList.containsKey(conversationId)) {
       // Get all messages from conversation ID
       messagesInConversation =
-          conversationIdToMessageIdList.get(conversationId)
+          conversationIdToMessageIdList
+              .get(conversationId)
               .stream()
               .map(id -> messages.get(id))
               .collect(Collectors.toList());
@@ -134,7 +135,8 @@ public class MessageStore {
     if (authorIdToMessageIdList.containsKey(authorId)) {
       // Get all messages from author ID
       messagesByUser =
-          authorIdToMessageIdList.get(authorId)
+          authorIdToMessageIdList
+              .get(authorId)
               .stream()
               .map(id -> messages.get(id))
               .collect(Collectors.toList());
@@ -150,7 +152,7 @@ public class MessageStore {
   public void setMessages(List<Message> messages) {
     messages.forEach(message -> addMessageWithoutPersistentStorage(message));
   }
-  
+
   private static void addToListInMap(Map<UUID, List<UUID>> map, UUID key, UUID value) {
     if (!map.containsKey(key)) {
       map.put(key, new LinkedList<>());

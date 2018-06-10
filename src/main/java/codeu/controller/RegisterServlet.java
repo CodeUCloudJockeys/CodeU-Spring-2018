@@ -1,18 +1,15 @@
 package codeu.controller;
 
+import codeu.model.data.User;
+import codeu.model.store.basic.UserStore;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.UUID;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.mindrot.jbcrypt.BCrypt;
-
-import codeu.model.data.User;
-import codeu.model.store.basic.UserStore;
 
 public class RegisterServlet extends HttpServlet {
 
@@ -60,8 +57,8 @@ public class RegisterServlet extends HttpServlet {
       request.getRequestDispatcher("/WEB-INF/view/register.jsp").forward(request, response);
       return;
     }
-    
-    String password = request.getParameter("password");    
+
+    String password = request.getParameter("password");
     String hashed = BCrypt.hashpw(password, BCrypt.gensalt());
 
     User user = new User(UUID.randomUUID(), username, hashed, Instant.now());

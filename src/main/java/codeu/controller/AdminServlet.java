@@ -14,7 +14,6 @@
 
 package codeu.controller;
 
-import codeu.model.data.Conversation;
 import codeu.model.data.Message;
 import codeu.model.data.User; // unused for now
 import codeu.model.store.basic.ConversationStore;
@@ -22,7 +21,6 @@ import codeu.model.store.basic.MessageStore;
 import codeu.model.store.basic.UserStore;
 import java.io.IOException;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,9 +46,7 @@ public class AdminServlet extends HttpServlet {
   /** Data items with their labels */
   private Map<String, String> labeledStats;
 
-  /**
-   * Set up state for handling admin page requests.
-   */
+  /** Set up state for handling admin page requests. */
   @Override
   public void init() throws ServletException {
     // Sets up the servlet
@@ -124,17 +120,14 @@ public class AdminServlet extends HttpServlet {
     // UserStore will be in charge of keeping track of the state involved with superlative users.
     List<User> users = userStore.getUserList();
 
-    String newestUserName = getNewestUser(users)
-        .map(User::getName) // Get the name if the user exists
-        .orElse("No users."); // return "No users" if it does not exist.
+    String newestUserName =
+        getNewestUser(users)
+            .map(User::getName) // Get the name if the user exists
+            .orElse("No users."); // return "No users" if it does not exist.
 
-    String mostActiveUserName = getMostActiveUser(users)
-        .map(User::getName)
-        .orElse("No users.");
+    String mostActiveUserName = getMostActiveUser(users).map(User::getName).orElse("No users.");
 
-    String wordiestUserName = getWordiestUser(users)
-        .map(User::getName)
-        .orElse("No users.");
+    String wordiestUserName = getWordiestUser(users).map(User::getName).orElse("No users.");
 
     // Set the stats
     labeledStats.put("Number of users:", Integer.toString(userCount));
@@ -152,8 +145,8 @@ public class AdminServlet extends HttpServlet {
   }
 
   /**
-   * The code below uses the new Java 8 features of Optional and Stream.reduce()
-   * Documentation for both can be found at the following links:
+   * The code below uses the new Java 8 features of Optional and Stream.reduce() Documentation for
+   * both can be found at the following links:
    * https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html
    * https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html#reduce-java.util.function.BinaryOperator-
    */
@@ -162,21 +155,20 @@ public class AdminServlet extends HttpServlet {
    * Gets the maximum user from a list by a given metric, or an empty Optional if the user list is
    * empty.
    *
-   * The odd method signature is to point out it takes a type parameter (namely, the return type of
-   * the metric). It guarantees the return type of the metric is comparable.
-   * A bit of this is explained here:
+   * <p>The odd method signature is to point out it takes a type parameter (namely, the return type
+   * of the metric). It guarantees the return type of the metric is comparable. A bit of this is
+   * explained here:
    * https://stackoverflow.com/questions/21854077/java-generics-method-signature-explanation
    */
-  private <U extends Comparable<? super U>>
-      Optional<User> getMaxUserBy(List<User> users, Function<? super User, U> metric) {
+  private <U extends Comparable<? super U>> Optional<User> getMaxUserBy(
+      List<User> users, Function<? super User, U> metric) {
 
     // Compares the result of applying the metric to the user
     // for example, comparator.comparing(user -> user.getId()) would sort by id.
     Comparator<User> userComparator = Comparator.comparing(metric);
 
     // Return the "maximum" user under the specified metric.
-    return users.stream()
-        .max(userComparator);
+    return users.stream().max(userComparator);
   }
 
   /** Gets the newest user from a list, namely the user with the largest creation second. */
@@ -206,7 +198,9 @@ public class AdminServlet extends HttpServlet {
 
   /** Gets a user's word count */
   private int getUserWordCount(User user) {
-    return messageStore.getMessagesByUser(user.getId()).stream()
+    return messageStore
+        .getMessagesByUser(user.getId())
+        .stream()
         .map(Message::getContent)
         .mapToInt(this::countWords)
         .sum();
