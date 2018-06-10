@@ -217,4 +217,13 @@ public class PersistentDataStore {
     profileEntity.setProperty("creation_time", profile.getCreation().toString());
     datastore.put(profileEntity);
   }
+
+  public void writeThroughAbout(Profile profile, String about) {
+    Entity profileEntity = new Entity("chat-profile", profile.getId().toString());
+    profileEntity.setProperty("uuid", profile.getId().toString());
+    profileEntity.setProperty("profile_uuid", profile.getProfile().toString());
+    profileEntity.setProperty("about", about);
+    profileEntity.setProperty("creation_time", profile.getCreation().toString());
+    datastore.put(profileEntity);
+  }
 }

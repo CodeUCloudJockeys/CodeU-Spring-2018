@@ -38,13 +38,21 @@ public class ProfileStore {
     persistentStorageAgent.writeThrough(profile);
   }
 
-  public Profile getProfile(String about) {
+  public Profile getProfile(String username) {
     for (Profile profile : profiles) {
-      if (profile.getAbout().equals(about)) {
+      if (profile.equals(username)) {
         return profile;
       }
     }
     return null;
+  }
+
+  public void updateAbout(String username, String about) {
+    for (Profile profile : profiles) {
+      if (profile.equals(username)) {
+        persistentStorageAgent.writeThroughAbout(profile, about);
+      }
+    }
   }
 
   public void setProfile(List<Profile> profiles) {
