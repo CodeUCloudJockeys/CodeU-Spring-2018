@@ -55,9 +55,13 @@ public class ControlPanelServlet extends HttpServlet {
     String username = (String) request.getSession().getAttribute("user");
     User user = userStore.getUser(username);
 
-    if (user == null || !user.getIsAdmin()) {
+    if (user == null) {
       // Back to login
       response.sendRedirect("/login");
+      return;
+    } else if (!user.getIsAdmin()) {
+      // Back to site index
+      response.sendRedirect("/");
       return;
     }
 

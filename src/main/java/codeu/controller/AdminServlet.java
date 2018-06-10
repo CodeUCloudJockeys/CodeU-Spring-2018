@@ -98,10 +98,14 @@ public class AdminServlet extends HttpServlet {
     String username = (String) request.getSession().getAttribute("user");
     User user = userStore.getUser(username);
 
-    // If user does not exist or user isn't admin
-    if (user == null || !user.getIsAdmin()) {
+    // If user does not exist
+    if (user == null) {
       // Back to login
       response.sendRedirect("/login");
+      return;
+    } else if (!user.getIsAdmin()) {
+      // Back to site index
+      response.sendRedirect("/");
       return;
     }
 

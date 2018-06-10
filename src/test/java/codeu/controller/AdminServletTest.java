@@ -122,6 +122,7 @@ public class AdminServletTest {
     Mockito.when(mockUserStore.getUser("notadmin")).thenReturn(notAdmin);
     Mockito.when(mockUserStore.getUser("admin")).thenReturn(admin);
     Mockito.when(mockUserStore.getUser("wordy")).thenReturn(wordy);
+    Mockito.when(mockUserStore.getUser("nobody")).thenReturn(null);
     Mockito.when(mockUserStore.getUserList()).thenReturn(userList);
     Mockito.when(mockUserStore.Count()).thenReturn(3);
 
@@ -143,8 +144,8 @@ public class AdminServletTest {
   }
 
   @Test
-  public void testDoGet_NotAdminUsername() throws IOException, ServletException {
-    Mockito.when(mockSession.getAttribute("user")).thenReturn("notadmin");
+  public void testDoGet_NoUser() throws IOException, ServletException {
+    Mockito.when(mockSession.getAttribute("user")).thenReturn("nobody");
 
     adminServlet.doGet(mockRequest, mockResponse);
 
@@ -157,6 +158,23 @@ public class AdminServletTest {
 
     // Verify user is redirected to login page
     Mockito.verify(mockResponse).sendRedirect("/login");
+  }
+
+  @Test
+  public void testDoGet_NotAdminUsername() throws IOException, ServletException {
+    Mockito.when(mockSession.getAttribute("user")).thenReturn("notadmin");
+
+    adminServlet.doGet(mockRequest, mockResponse);
+
+    // Verify stats are NOT added to request
+    Mockito.verify(mockRequest, Mockito.never())
+        .setAttribute(Mockito.eq("labeledStats"), Mockito.any());
+
+    // Verify user is *NOT* forwarded to admin page
+    Mockito.verify(mockRequestDispatcher, Mockito.never()).forward(mockRequest, mockResponse);
+
+    // Verify user is redirected to index page
+    Mockito.verify(mockResponse).sendRedirect("/");
   }
 
   @Test
