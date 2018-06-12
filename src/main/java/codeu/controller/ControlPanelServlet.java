@@ -69,4 +69,35 @@ public class ControlPanelServlet extends HttpServlet {
     // Let the user through
     request.getRequestDispatcher("/WEB-INF/view/control_panel.jsp").forward(request, response);
   }
+
+  @Override
+  public void doPost(HttpServletRequest request, HttpServletResponse response)
+      throws IOException, ServletException {
+
+    String username = (String) request.getSession().getAttribute("user");
+    User user = userStore.getUser(username);
+
+    // If not an admin, redirect and return
+    if (AdminUtil.redirectNonAdmins(user, response)) return;
+
+    // Can currently only add admins. Cannot remove them
+    // TODO: Add admin removal
+    // TODO: Pagination here has become particularly urgent!
+    // TODO: Add tests.
+    Stream<UUID> adminifieds = Arrays.stream(request.getParameterValues("adminifier"))
+        .map(str -> UUID.fromString(str));
+
+    adminifieds.forEach(id -> {
+      User adminified = userStore.getUser(id);
+
+      if (!adminified.getIsAdmin()) {
+        adminified.adminify();
+        userStore.updateUser(user);
+      }
+    });
+
+    response.sendRedirect("/control_panel");
+  }
+
+
 }
