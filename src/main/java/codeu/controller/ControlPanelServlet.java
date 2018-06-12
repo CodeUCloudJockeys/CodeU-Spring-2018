@@ -84,17 +84,22 @@ public class ControlPanelServlet extends HttpServlet {
     // TODO: Add admin removal
     // TODO: Pagination here has become particularly urgent!
     // TODO: Add tests.
-    Stream<UUID> adminifieds = Arrays.stream(request.getParameterValues("adminifier"))
-        .map(str -> UUID.fromString(str));
 
-    adminifieds.forEach(id -> {
-      User adminified = userStore.getUser(id);
+    String[] adminifiedStrings = request.getParameterValues("adminifier");
 
-      if (!adminified.getIsAdmin()) {
-        adminified.adminify();
-        userStore.updateUser(user);
-      }
-    });
+    if (adminifiedStrings != null) {
+      Stream<UUID> adminifieds = Arrays.stream(adminifiedStrings)
+          .map(UUID::fromString);
+
+      adminifieds.forEach(id -> {
+        User adminified = userStore.getUser(id);
+
+        if (!adminified.getIsAdmin()) {
+          adminified.adminify();
+          userStore.updateUser(adminified);
+        }
+      });
+    }
 
     response.sendRedirect("/control_panel");
   }
