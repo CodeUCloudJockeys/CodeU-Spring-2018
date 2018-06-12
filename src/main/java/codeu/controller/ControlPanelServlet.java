@@ -83,7 +83,6 @@ public class ControlPanelServlet extends HttpServlet {
     // Can currently only add admins. Cannot remove them
     // TODO: Add admin removal
     // TODO: Pagination here has become particularly urgent!
-    // TODO: Add tests.
 
     String[] adminifiedStrings = request.getParameterValues("adminifier");
 
