@@ -14,10 +14,15 @@
 
 package codeu.controller;
 
+import codeu.controller.util.AdminUtil;
 import codeu.model.data.User;
 import codeu.model.store.basic.UserStore;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
+import java.util.stream.Stream;
+import javax.servlet.Servlet;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -37,7 +42,6 @@ public class ControlPanelServlet extends HttpServlet {
     // Sets up the servlet
     super.init();
     setUserStore(UserStore.getInstance());
-    userList = userStore.getUserList();
   }
 
   /**
@@ -46,6 +50,7 @@ public class ControlPanelServlet extends HttpServlet {
    */
   void setUserStore(UserStore userStore) {
     this.userStore = userStore;
+    userList = userStore.getUserList();
   }
 
   @Override
@@ -55,15 +60,8 @@ public class ControlPanelServlet extends HttpServlet {
     String username = (String) request.getSession().getAttribute("user");
     User user = userStore.getUser(username);
 
-    if (user == null) {
-      // Back to login
-      response.sendRedirect("/login");
-      return;
-    } else if (!user.getIsAdmin()) {
-      // Back to site index
-      response.sendRedirect("/");
-      return;
-    }
+    // If not an admin, redirect and return
+    if (AdminUtil.redirectNonAdmins(user, response)) return;
 
     // TODO: Add pagination (this will get ridiculous with thousands of users)
     request.setAttribute("userList", userList);
