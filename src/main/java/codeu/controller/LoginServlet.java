@@ -54,6 +54,14 @@ public class LoginServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
+
+    boolean isLoggedIn = (request.getSession().getAttribute("user") != null);
+    if (isLoggedIn) {
+      // Back to site index (the login page makes no sense if user is already logged in)
+      response.sendRedirect("/");
+      return;
+    }
+
     request.getRequestDispatcher("/WEB-INF/view/login.jsp").forward(request, response);
   }
 
@@ -83,6 +91,7 @@ public class LoginServlet extends HttpServlet {
     }
 
     request.getSession().setAttribute("user", username);
+    request.getSession().setAttribute("admin", Boolean.toString(user.getIsAdmin()));
     response.sendRedirect("/conversations");
   }
 }

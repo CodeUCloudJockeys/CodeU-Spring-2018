@@ -12,16 +12,7 @@
 </head>
 <body>
 
-  <nav>
-    <a id="navTitle" href="/">CodeU Chat App</a>
-    <a href="/profile">Profile</a>
-      <% if(request.getSession().getAttribute("user") != null){ %>
-      <a></a>
-      <% } else{ %>
-        <a href="/login">Login</a>
-      <% } %>
-    <a href="/about.jsp">About</a>
-  </nav>
+  <%@ include file="../reusables/navbar.jsp" %>
   
   <div id="container">
     <% String username = (String) request.getAttribute("username");

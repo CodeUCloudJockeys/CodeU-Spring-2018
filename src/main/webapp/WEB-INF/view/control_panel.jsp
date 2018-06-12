@@ -27,17 +27,7 @@ List<User> userList = (List<User>) request.getAttribute("userList");
 </head>
 <body>
 
-  <nav>
-    <a id="navTitle" href="/">CodeU Chat App</a>
-    <a href="/conversations">Conversations</a>
-    <% if(request.getSession().getAttribute("user") != null){ %>
-      <a>Hello <%= request.getSession().getAttribute("user") %>!</a>
-    <% } else{ %>
-      <a href="/login">Login</a>
-    <% } %>
-    <a href="/about.jsp">About</a>
-    <a href="/admin">Admin</a>
-  </nav>
+  <%@ include file="/WEB-INF/reusables/navbar.jsp" %>
 
   <div id="container">
     <h1>Control Panel</h1>
@@ -50,7 +40,7 @@ List<User> userList = (List<User>) request.getAttribute("userList");
 
       <h2>Hello, administrator!</h2>
       <p>Here are the users:</p>
-      <table>
+      <table border=1 frame=void>
         <tr>
           <th>Username</th>
           <th>Admin</th>
