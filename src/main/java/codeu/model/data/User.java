@@ -15,7 +15,11 @@
 package codeu.model.data;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
+import java.util.function.Function;
+import javafx.util.Pair;
 
 /** Class representing a registered user. */
 public class User {
@@ -24,6 +28,14 @@ public class User {
   private final String passwordHash;
   private final Instant creation;
   private boolean isAdmin;
+
+  /**
+   * Used to automate storage of properties.
+   *
+   * When persistently storing a User, all of the Users's properties will be stored using this list,
+   * so when adding properties to User, only the User class needs to be edited!
+   */
+  private List<Pair<String, Function<User, String>>> fieldNamesToStringValues;
 
   /**
    * Constructs a new non-admin User.
@@ -39,6 +51,8 @@ public class User {
     this.passwordHash = passwordHash;
     this.creation = creation;
     this.isAdmin = false;
+
+    initFieldNamesToStringValues();
   }
 
   /**
@@ -56,6 +70,24 @@ public class User {
     this.passwordHash = passwordHash;
     this.creation = creation;
     this.isAdmin = isAdmin;
+
+    initFieldNamesToStringValues();
+  }
+
+  /**
+   * Initializes the map from property names to property values*/
+  private void initFieldNamesToStringValues() {
+    fieldNamesToStringValues = new ArrayList<>();
+
+    // These are all functions and not just values because some of the values can change
+    // across the lifetime of the User object.
+    fieldNamesToStringValues.add(new Pair<>("uuid", (user) -> user.getId().toString()));
+    fieldNamesToStringValues.add(new Pair<>("username", (user) -> user.getName()));
+    fieldNamesToStringValues.add(new Pair<>("password_hash", (user) -> user.getPasswordHash()));
+    fieldNamesToStringValues
+        .add(new Pair<>("creation_time", (user) -> user.getCreationTime().toString()));
+    fieldNamesToStringValues
+        .add(new Pair<>("is_admin", (user) -> Boolean.toString(user.getIsAdmin())));
   }
 
   /** Returns the ID of this User. */
@@ -81,6 +113,26 @@ public class User {
   /** Returns whether the user is an admin. */
   public boolean getIsAdmin() {
     return isAdmin;
+  }
+
+  /**
+   * Returns a list of labels and associated string data
+   */
+  public List<Pair<String,String>> getFieldNamesAndStringValues() {
+    List<Pair<String, String>> output = new ArrayList<>();
+
+    // For each <string, function> pair in fieldNamesToStringValues,
+    // Call the function with the current user as the argument,
+    // store the result in a new list of pairs
+
+    // Put succintly, gets every property name and its current string value and stores them in the
+    // output pair
+    fieldNamesToStringValues
+        .forEach(
+            (pair) -> output.add(new Pair<>(pair.getKey(), pair.getValue().apply(this)))
+        );
+
+    return output;
   }
 
   /**

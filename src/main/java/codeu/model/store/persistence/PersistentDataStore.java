@@ -180,11 +180,9 @@ public class PersistentDataStore {
   /** Write a User object to the Datastore service. */
   public void writeThrough(User user) {
     Entity userEntity = new Entity("chat-users", user.getId().toString());
-    userEntity.setProperty("uuid", user.getId().toString());
-    userEntity.setProperty("username", user.getName());
-    userEntity.setProperty("password_hash", user.getPasswordHash());
-    userEntity.setProperty("creation_time", user.getCreationTime().toString());
-    userEntity.setProperty("is_admin", Boolean.toString(user.getIsAdmin()));
+    user.getFieldNamesAndStringValues()
+        .forEach((pair) -> userEntity.setProperty(pair.getKey(), pair.getValue()));
+
     datastore.put(userEntity);
   }
 
