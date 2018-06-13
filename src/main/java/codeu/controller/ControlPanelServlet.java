@@ -27,15 +27,21 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/** Servlet class responsible for the admin page. */
+/**
+ * Servlet class responsible for the admin page.
+ */
 public class ControlPanelServlet extends HttpServlet {
 
-  /** Store class that gives access to Users. */
+  /**
+   * Store class that gives access to Users.
+   */
   private UserStore userStore;
 
   private List<User> userList;
 
-  /** Set up state. */
+  /**
+   * Set up state.
+   */
   @Override
   public void init() throws ServletException {
     // Sets up the servlet
@@ -60,7 +66,9 @@ public class ControlPanelServlet extends HttpServlet {
     User user = userStore.getUser(username);
 
     // If not an admin, redirect and return
-    if (AdminUtil.redirectNonAdmins(user, response)) return;
+    if (AdminUtil.redirectNonAdmins(user, response)) {
+      return;
+    }
 
     // TODO: Add pagination (this will get ridiculous with thousands of users)
     request.setAttribute("userList", userList);
@@ -77,7 +85,9 @@ public class ControlPanelServlet extends HttpServlet {
     User user = userStore.getUser(username);
 
     // If not an admin, redirect and return
-    if (AdminUtil.redirectNonAdmins(user, response)) return;
+    if (AdminUtil.redirectNonAdmins(user, response)) {
+      return;
+    }
 
     // Can currently only add admins. Cannot remove them
     // TODO: Add admin removal
