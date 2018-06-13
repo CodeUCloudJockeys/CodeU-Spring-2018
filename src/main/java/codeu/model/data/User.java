@@ -15,6 +15,7 @@
 package codeu.model.data;
 
 import java.time.Instant;
+import java.util.Set;
 import java.util.UUID;
 
 /** Class representing a registered user. */
@@ -24,6 +25,7 @@ public class User {
   private final String passwordHash;
   private final Instant creation;
   private boolean isAdmin;
+  private Set<UUID> conversationSet;
 
   /**
    * Constructs a new non-admin User.
@@ -33,11 +35,13 @@ public class User {
    * @param passwordHash the password of this User
    * @param creation the creation time of this User
    */
-  public User(UUID id, String name, String passwordHash, Instant creation) {
+  public User (UUID id, String name, String passwordHash, Instant creation,
+      Set<UUID> conversationSet) {
     this.id = id;
     this.name = name;
     this.passwordHash = passwordHash;
     this.creation = creation;
+    this.conversationSet = conversationSet;
     this.isAdmin = false;
   }
 
@@ -50,11 +54,13 @@ public class User {
    * @param creation the creation time of this User
    * @param isAdmin whether the user is an admin
    */
-  public User(UUID id, String name, String passwordHash, Instant creation, boolean isAdmin) {
+  public User(UUID id, String name, String passwordHash, Instant creation,
+      Set<UUID> conversationSet, boolean isAdmin) {
     this.id = id;
     this.name = name;
     this.passwordHash = passwordHash;
     this.creation = creation;
+    this.conversationSet = conversationSet;
     this.isAdmin = isAdmin;
   }
 
@@ -76,6 +82,21 @@ public class User {
   /** Returns the creation time of this User. */
   public Instant getCreationTime() {
     return creation;
+  }
+
+  /** Returns the Set of conversations the user is whiteSeted in */
+  public Set<UUID> getConversationSet() {
+    return conversationSet;
+  }
+
+  /** Adds the user to a conversation */
+  public void addToConversation(UUID id) {
+    conversationSet.add(id);
+  }
+
+  /** Removes the user from a conversation */
+  public void removeFromConversation(UUID id) {
+    conversationSet.remove(id);
   }
 
   /** Returns whether the user is an admin. */
