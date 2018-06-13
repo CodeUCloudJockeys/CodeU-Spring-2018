@@ -14,7 +14,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Admin Page</title>
+    <title>Activity Feed Page</title>
     <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
