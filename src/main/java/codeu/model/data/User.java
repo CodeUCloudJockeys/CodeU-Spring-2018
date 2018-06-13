@@ -81,9 +81,12 @@ public class User {
 
     // These are all functions and not just values because some of the values can change
     // across the lifetime of the User object.
-    fieldNamesToStringValues.add(new Pair<>("uuid", (user) -> user.getId().toString()));
-    fieldNamesToStringValues.add(new Pair<>("username", (user) -> user.getName()));
-    fieldNamesToStringValues.add(new Pair<>("password_hash", (user) -> user.getPasswordHash()));
+    fieldNamesToStringValues
+        .add(new Pair<>("uuid", (user) -> user.getId().toString()));
+    fieldNamesToStringValues
+        .add(new Pair<>("username", (user) -> user.getName()));
+    fieldNamesToStringValues
+        .add(new Pair<>("password_hash", (user) -> user.getPasswordHash()));
     fieldNamesToStringValues
         .add(new Pair<>("creation_time", (user) -> user.getCreationTime().toString()));
     fieldNamesToStringValues
