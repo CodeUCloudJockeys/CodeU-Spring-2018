@@ -40,8 +40,9 @@ public class User {
     this.name = name;
     this.passwordHash = passwordHash;
     this.creation = creation;
-    this.conversationSet = new HashSet<>();
     this.isAdmin = false;
+
+    this.conversationSet = new HashSet<>();
   }
 
   /**
@@ -58,8 +59,9 @@ public class User {
     this.name = name;
     this.passwordHash = passwordHash;
     this.creation = creation;
-    this.conversationSet = new HashSet<>();
     this.isAdmin = isAdmin;
+
+    this.conversationSet = new HashSet<>();
   }
 
   /** Returns the ID of this User. */

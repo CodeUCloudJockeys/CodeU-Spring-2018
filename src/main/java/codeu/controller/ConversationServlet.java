@@ -117,6 +117,10 @@ public class ConversationServlet extends HttpServlet {
         new Conversation(UUID.randomUUID(), user.getId(), conversationTitle, Instant.now());
 
     conversationStore.addConversation(conversation);
+
+    // Users are always whitelisted in conversations they create
+    user.addToConversation(conversation.getId());
+
     response.sendRedirect("/chat/" + conversationTitle);
   }
 }

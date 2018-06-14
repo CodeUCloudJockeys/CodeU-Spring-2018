@@ -18,6 +18,7 @@ import codeu.model.data.Conversation;
 import codeu.model.data.Message;
 import codeu.model.data.Profile;
 import codeu.model.data.User;
+import com.google.appengine.api.datastore.Blob;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
@@ -26,8 +27,10 @@ import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
+import org.apache.commons.lang3.SerializationUtils;
 
 /**
  * This class handles all interactions with Google App Engine's Datastore service. On startup it
@@ -68,7 +71,11 @@ public class PersistentDataStore {
         String password = (String) entity.getProperty("password_hash");
         Instant creationTime = Instant.ofEpochMilli((long) entity.getProperty("creation_time"));
         boolean isAdmin = (boolean) entity.getProperty("is_admin");
+
+        HashSet<UUID> conversationIdSet = blobToIdSet((Blob) entity.getProperty("conversation_ids"));
+
         User user = new User(uuid, userName, password, creationTime, isAdmin);
+        user.setConversationSet(conversationIdSet);
         users.add(user);
       } catch (Exception e) {
         // In a production environment, errors should be very rare. Errors which may
@@ -185,6 +192,8 @@ public class PersistentDataStore {
     userEntity.setProperty("password_hash", user.getPasswordHash());
     userEntity.setProperty("creation_time", user.getCreationTime().toEpochMilli());
     userEntity.setProperty("is_admin", user.getIsAdmin());
+
+    userEntity.setProperty("conversation_ids", idSetToBlob(user.getConversationSet()));
     datastore.put(userEntity);
   }
 
@@ -225,5 +234,14 @@ public class PersistentDataStore {
     profileEntity.setProperty("about", about);
     profileEntity.setProperty("creation_time", profile.getCreation().toEpochMilli());
     datastore.put(profileEntity);
+  }
+
+  // TODO: Test these
+  private Blob idSetToBlob(HashSet<UUID> idSet) {
+    return new Blob(SerializationUtils.serialize(idSet));
+  }
+
+  private HashSet<UUID> blobToIdSet(Blob blob) {
+    return SerializationUtils.deserialize(blob.getBytes());
   }
 }
