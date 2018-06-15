@@ -63,11 +63,15 @@ public class UserStore {
   /** A map from names to IDs, so user IDs can be fetched from usernames quickly. */
   private Map<String, UUID> nameToId;
 
+  /** A list of conversations the user is allowed to enter * */
+  private List<String> convoTitles;
+
   /** This class is a singleton, so its constructor is private. Call getInstance() instead. */
   private UserStore(PersistentStorageAgent persistentStorageAgent) {
     this.persistentStorageAgent = persistentStorageAgent;
     users = new HashMap<>();
     nameToId = new HashMap<>();
+    convoTitles = new ArrayList<>();
   }
 
   /** Amount of users */
@@ -130,6 +134,16 @@ public class UserStore {
   /** Get a list with all the users */
   public List<User> getUserList() {
     return new ArrayList<>(users.values());
+  }
+
+  /** Add a conversation the users can access */
+  public void addPrivateConversation(String convoTitle) {
+    convoTitles.add(convoTitle);
+  }
+
+  /** Get a conversation the users can access */
+  public List<String> getPrivateConversation() {
+    return convoTitles;
   }
 
   /**

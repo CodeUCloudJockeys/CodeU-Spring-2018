@@ -130,6 +130,7 @@ public class ChatServlet extends HttpServlet {
       return;
     }
 
+    List<String> convoList = userStore.getPrivateConversation();
     String requestUrl = request.getRequestURI();
     String conversationTitle = requestUrl.substring("/chat/".length());
 
@@ -138,6 +139,18 @@ public class ChatServlet extends HttpServlet {
       // couldn't find conversation, redirect to conversation list
       response.sendRedirect("/conversations");
       return;
+    }
+
+    boolean privateChat = false;
+    for (int i = 0; i < convoList.size(); i++) {
+      if (convoList.get(i).equals(conversationTitle)) {
+        privateChat = true;
+        break;
+      }
+    }
+
+    if (privateChat == false) {
+      response.sendRedirect("/login");
     }
 
     String messageContent = request.getParameter("message");
