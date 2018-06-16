@@ -161,12 +161,12 @@ public class UserStore {
 
 	if(privateChats.containsKey(user.getId()))
 	{
-		List<String> titles = privateChats.get(user.getId());
-		for (String title : titles) {
-		      if (title.equals(convoTitle)){
-		        return true;
-		      }
+	  List<String> titles = privateChats.get(user.getId());
+	  for (String title : titles) {
+	    if (title.equals(convoTitle)){
+		  return true;
 		}
+	  }
 	}
     return false;
   }
