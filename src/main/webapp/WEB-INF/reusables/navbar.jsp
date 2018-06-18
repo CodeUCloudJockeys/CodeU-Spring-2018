@@ -14,4 +14,5 @@
     <a href="/admin">Admin</a>
     <a href="/control_panel">Control Panel</a>
   <% } %>
+    <a href="activityfeed">Activity</a>
 </nav>

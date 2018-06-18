@@ -11,5 +11,18 @@
   limitations under the License.
 --%>
 <%-- still trying to get the hang of jsp, not sure if this is correctly implemented --%>
- 
-    <p>This is the activity feed page </p>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Activity Feed Page</title>
+    <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+
+<%@ include file="/WEB-INF/reusables/navbar.jsp" %>
+
+<div id="container">
+    <p>This is the activity feed page</p>
+</div>
+</body>
+</html>
