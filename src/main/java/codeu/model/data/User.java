@@ -15,6 +15,7 @@
 package codeu.model.data;
 
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.UUID;
 
 /** Class representing a registered user. */
@@ -24,6 +25,7 @@ public class User {
   private final String passwordHash;
   private final Instant creation;
   private boolean isAdmin;
+  private HashSet<UUID> conversationSet;
 
   /**
    * Constructs a new non-admin User.
@@ -33,12 +35,14 @@ public class User {
    * @param passwordHash the password of this User
    * @param creation the creation time of this User
    */
-  public User(UUID id, String name, String passwordHash, Instant creation) {
+  public User (UUID id, String name, String passwordHash, Instant creation) {
     this.id = id;
     this.name = name;
     this.passwordHash = passwordHash;
     this.creation = creation;
     this.isAdmin = false;
+
+    this.conversationSet = new HashSet<>();
   }
 
   /**
@@ -56,6 +60,8 @@ public class User {
     this.passwordHash = passwordHash;
     this.creation = creation;
     this.isAdmin = isAdmin;
+
+    this.conversationSet = new HashSet<>();
   }
 
   /** Returns the ID of this User. */
@@ -76,6 +82,25 @@ public class User {
   /** Returns the creation time of this User. */
   public Instant getCreationTime() {
     return creation;
+  }
+
+  /** Returns the Set of conversations the user is whiteSeted in */
+  public HashSet<UUID> getConversationSet() {
+    return conversationSet;
+  }
+
+  public void setConversationSet(HashSet<UUID> conversationSet) {
+    this.conversationSet = conversationSet;
+  }
+
+  /** Adds the user to a conversation */
+  public void addToConversation(UUID id) {
+    conversationSet.add(id);
+  }
+
+  /** Removes the user from a conversation */
+  public void removeFromConversation(UUID id) {
+    conversationSet.remove(id);
   }
 
   /** Returns whether the user is an admin. */
