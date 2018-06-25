@@ -140,6 +140,12 @@ public class ChatServlet extends HttpServlet {
       return;
     }
 
+    boolean privateChat = userStore.getPrivateConversation(conversationTitle, user);
+
+    if (privateChat == false) {
+      response.sendRedirect("/login");
+    }
+
     String messageContent = request.getParameter("message");
 
     // this removes any HTML from the message content

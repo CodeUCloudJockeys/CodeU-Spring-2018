@@ -63,11 +63,19 @@ public class UserStore {
   /** A map from names to IDs, so user IDs can be fetched from usernames quickly. */
   private Map<String, UUID> nameToId;
 
+  /** A list of conversations the user is allowed to enter * */
+  private List<String> convoTitles;
+  
+  /** A map of IDs to list of conversation titles* */
+  private Map<UUID, List<String>> privateChats;
+
+
   /** This class is a singleton, so its constructor is private. Call getInstance() instead. */
   private UserStore(PersistentStorageAgent persistentStorageAgent) {
     this.persistentStorageAgent = persistentStorageAgent;
     users = new HashMap<>();
     nameToId = new HashMap<>();
+    convoTitles = new ArrayList<>();
   }
 
   /** Amount of users */
@@ -132,6 +140,12 @@ public class UserStore {
     return new ArrayList<>(users.values());
   }
 
+  /** Adds a list of titles to a user */
+  public void addPrivateConversation(User user, String convoTitle) {
+	this.convoTitles.add(convoTitle);
+    privateChats.put(user.getId(), convoTitles);
+  }
+
   /**
    * Sets the Map of Users stored by this UserStore. This should only be called once, when the data
    * is loaded from Datastore.
@@ -140,4 +154,21 @@ public class UserStore {
     // For each user in the list, add it without writing it to persistent storage.
     userList.forEach(this::addUserWithoutPersistentStorage);
   }
+  
+  /** Get a list with all the private conversations a user has */
+  public boolean getPrivateConversation(String convoTitle, User user) {
+	/** Redundant code, will have to change this when other prototype is merged */
+
+	if(privateChats.containsKey(user.getId()))
+	{
+	  List<String> titles = privateChats.get(user.getId());
+	  for (String title : titles) {
+	    if (title.equals(convoTitle)){
+		  return true;
+		}
+	  }
+	}
+    return false;
+  }
+
 }
