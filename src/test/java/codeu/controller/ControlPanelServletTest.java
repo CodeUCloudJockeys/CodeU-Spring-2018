@@ -154,11 +154,11 @@ public class ControlPanelServletTest {
 
   @Test
   public void testDoPost_NotAdminUsername() throws IOException, ServletException {
-    ;
+    // TODO: Add test
   }
 
   @Test
   public void testDoPost_AdminUsername() throws IOException, ServletException {
-    ;
+    // TODO: Add test
   }
 }
