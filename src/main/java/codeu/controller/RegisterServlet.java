@@ -63,10 +63,6 @@ public class RegisterServlet extends HttpServlet {
 
     User user = new User(UUID.randomUUID(), username, hashed, Instant.now());
 
-    // TODO: Make a better system for this. Looking for ideas!
-    // sophisticated high-security admin verification system
-    if (user.getName().startsWith("a")) user.adminify();
-
     userStore.addUser(user);
 
     response.sendRedirect("/login");
