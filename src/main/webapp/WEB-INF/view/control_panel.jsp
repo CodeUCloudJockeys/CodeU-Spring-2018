@@ -38,27 +38,33 @@ List<User> userList = (List<User>) request.getAttribute("userList");
 
     <% } else { %>
 
-      <h2>Hello, administrator!</h2>
-      <p>Here are the users:</p>
-      <table border=1 frame=void>
-        <tr>
-          <th>Username</th>
-          <th>Admin</th>
-        </tr>
-        <%
-          for (User user : userList) {
-        %>
+      <form method="post" action="/control_panel">
 
+        <h2>Hello, administrator!</h2>
+        <p>Here are the users:</p>
+        <table border=1 frame=void>
           <tr>
-            <td><%= user.getName() %></td>
-
-            <%-- Checkbox is checked if user is admin --%>
-            <td><input type="checkbox" id="<%= user.getName() %>" <%= user.getIsAdmin() ? "checked" : "" %>></td>
+            <th>Username</th>
+            <th>Admin</th>
           </tr>
+          <%
+            for (User user : userList) {
+          %>
 
-        <% } %>
+            <tr>
+              <td><%= user.getName() %></td>
 
-      </table>
+              <%-- Checkbox is checked and disabled if user is admin --%>
+              <td><input type="checkbox" name="adminifier" value="<%= user.getId().toString() %>" <%= user.getIsAdmin() ? "checked disabled" : "" %> /></td>
+            </tr>
+
+          <% } %>
+
+          <td><input type="submit" name="Submit" value="submit" /></td>
+
+        </table>
+
+      </form>
 
     <% } %>
 

@@ -18,6 +18,7 @@ import codeu.model.data.Conversation;
 import codeu.model.data.Message;
 import codeu.model.data.Profile;
 import codeu.model.data.User;
+import com.google.appengine.api.datastore.Blob;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
@@ -26,8 +27,10 @@ import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
+import org.apache.commons.lang3.SerializationUtils;
 
 /**
  * This class handles all interactions with Google App Engine's Datastore service. On startup it
@@ -66,9 +69,13 @@ public class PersistentDataStore {
         UUID uuid = UUID.fromString((String) entity.getProperty("uuid"));
         String userName = (String) entity.getProperty("username");
         String password = (String) entity.getProperty("password_hash");
-        Instant creationTime = Instant.parse((String) entity.getProperty("creation_time"));
-        boolean isAdmin = Boolean.valueOf((String) entity.getProperty("is_admin"));
+        Instant creationTime = Instant.ofEpochMilli((long) entity.getProperty("creation_time"));
+        boolean isAdmin = (boolean) entity.getProperty("is_admin");
+
+        HashSet<UUID> conversationIdSet = blobToIdSet((Blob) entity.getProperty("conversation_ids"));
+
         User user = new User(uuid, userName, password, creationTime, isAdmin);
+        user.setConversationSet(conversationIdSet);
         users.add(user);
       } catch (Exception e) {
         // In a production environment, errors should be very rare. Errors which may
@@ -101,7 +108,7 @@ public class PersistentDataStore {
         UUID uuid = UUID.fromString((String) entity.getProperty("uuid"));
         UUID ownerUuid = UUID.fromString((String) entity.getProperty("owner_uuid"));
         String title = (String) entity.getProperty("title");
-        Instant creationTime = Instant.parse((String) entity.getProperty("creation_time"));
+        Instant creationTime = Instant.ofEpochMilli((long) entity.getProperty("creation_time"));
         Conversation conversation = new Conversation(uuid, ownerUuid, title, creationTime);
         conversations.add(conversation);
       } catch (Exception e) {
@@ -135,7 +142,7 @@ public class PersistentDataStore {
         UUID uuid = UUID.fromString((String) entity.getProperty("uuid"));
         UUID conversationUuid = UUID.fromString((String) entity.getProperty("conv_uuid"));
         UUID authorUuid = UUID.fromString((String) entity.getProperty("author_uuid"));
-        Instant creationTime = Instant.parse((String) entity.getProperty("creation_time"));
+        Instant creationTime = Instant.ofEpochMilli((long) entity.getProperty("creation_time"));
         String content = (String) entity.getProperty("content");
         Message message = new Message(uuid, conversationUuid, authorUuid, content, creationTime);
         messages.add(message);
@@ -162,7 +169,7 @@ public class PersistentDataStore {
       try {
         UUID uuid = UUID.fromString((String) entity.getProperty("owner_id"));
         UUID profileUuid = UUID.fromString((String) entity.getProperty("id"));
-        Instant creationTime = Instant.parse((String) entity.getProperty("creation_time"));
+        Instant creationTime = Instant.ofEpochMilli((long) entity.getProperty("creation_time"));
         String about = (String) entity.getProperty("about");
         Profile profile = new Profile(uuid, profileUuid, about, creationTime);
         profiles.add(profile);
@@ -183,8 +190,10 @@ public class PersistentDataStore {
     userEntity.setProperty("uuid", user.getId().toString());
     userEntity.setProperty("username", user.getName());
     userEntity.setProperty("password_hash", user.getPasswordHash());
-    userEntity.setProperty("creation_time", user.getCreationTime().toString());
-    userEntity.setProperty("is_admin", Boolean.toString(user.getIsAdmin()));
+    userEntity.setProperty("creation_time", user.getCreationTime().toEpochMilli());
+    userEntity.setProperty("is_admin", user.getIsAdmin());
+
+    userEntity.setProperty("conversation_ids", idSetToBlob(user.getConversationSet()));
     datastore.put(userEntity);
   }
 
@@ -195,7 +204,7 @@ public class PersistentDataStore {
     messageEntity.setProperty("conv_uuid", message.getConversationId().toString());
     messageEntity.setProperty("author_uuid", message.getAuthorId().toString());
     messageEntity.setProperty("content", message.getContent());
-    messageEntity.setProperty("creation_time", message.getCreationTime().toString());
+    messageEntity.setProperty("creation_time", message.getCreationTime().toEpochMilli());
     datastore.put(messageEntity);
   }
 
@@ -205,7 +214,7 @@ public class PersistentDataStore {
     conversationEntity.setProperty("uuid", conversation.getId().toString());
     conversationEntity.setProperty("owner_uuid", conversation.getOwnerId().toString());
     conversationEntity.setProperty("title", conversation.getTitle());
-    conversationEntity.setProperty("creation_time", conversation.getCreationTime().toString());
+    conversationEntity.setProperty("creation_time", conversation.getCreationTime().toEpochMilli());
     datastore.put(conversationEntity);
   }
 
@@ -214,7 +223,7 @@ public class PersistentDataStore {
     profileEntity.setProperty("uuid", profile.getId().toString());
     profileEntity.setProperty("profile_uuid", profile.getProfile().toString());
     profileEntity.setProperty("about", profile.getAbout());
-    profileEntity.setProperty("creation_time", profile.getCreation().toString());
+    profileEntity.setProperty("creation_time", profile.getCreation().toEpochMilli());
     datastore.put(profileEntity);
   }
 
@@ -223,7 +232,16 @@ public class PersistentDataStore {
     profileEntity.setProperty("uuid", profile.getId().toString());
     profileEntity.setProperty("profile_uuid", profile.getProfile().toString());
     profileEntity.setProperty("about", about);
-    profileEntity.setProperty("creation_time", profile.getCreation().toString());
+    profileEntity.setProperty("creation_time", profile.getCreation().toEpochMilli());
     datastore.put(profileEntity);
+  }
+
+  // TODO: Test these
+  private Blob idSetToBlob(HashSet<UUID> idSet) {
+    return new Blob(SerializationUtils.serialize(idSet));
+  }
+
+  private HashSet<UUID> blobToIdSet(Blob blob) {
+    return SerializationUtils.deserialize(blob.getBytes());
   }
 }
