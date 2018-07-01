@@ -26,9 +26,10 @@ public class Conversation {
   private final UUID owner;
   private final Instant creation;
   private final String title;
+  private final boolean isPrivate;
 
   /**
-   * Constructs a new Conversation.
+   * Constructs a new public Conversation.
    *
    * @param id the ID of this Conversation
    * @param owner the ID of the User who created this Conversation
@@ -40,6 +41,24 @@ public class Conversation {
     this.owner = owner;
     this.creation = creation;
     this.title = title;
+    this.isPrivate = false;
+  }
+
+  /**
+   * Constructs a new Conversation, specifying whether it is private or not.
+   *
+   * @param id the ID of this Conversation
+   * @param owner the ID of the User who created this Conversation
+   * @param title the title of this Conversation
+   * @param creation the creation time of this Conversation
+   * @param isPrivate whether the conversation is private or not
+   */
+  public Conversation(UUID id, UUID owner, String title, Instant creation, boolean isPrivate) {
+    this.id = id;
+    this.owner = owner;
+    this.creation = creation;
+    this.title = title;
+    this.isPrivate = isPrivate;
   }
 
   /** Returns the ID of this Conversation. */
@@ -60,6 +79,11 @@ public class Conversation {
   /** Returns the creation time of this Conversation. */
   public Instant getCreationTime() {
     return creation;
+  }
+
+  /** Returns whether the conversation is private or not */
+  public boolean getIsPrivate() {
+    return isPrivate;
   }
 
   /** Override equality, so conversations are compared based on their ID */
