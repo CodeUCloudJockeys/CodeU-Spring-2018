@@ -22,6 +22,8 @@ import java.io.IOException;
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -70,8 +72,24 @@ public class ConversationServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
-    List<Conversation> conversations = conversationStore.getAllConversations();
-    request.setAttribute("conversations", conversations);
+
+    Stream<Conversation> visibleConversationStream =
+        conversationStore.getAllConversations().stream();
+
+    String username = (String) request.getSession().getAttribute("user");
+    User user = userStore.getUser(username);
+
+    if (user == null) {
+      // user is not logged in properly, only show public conversations
+      visibleConversationStream = visibleConversationStream
+          .filter(c -> !c.getIsPrivate());
+    } else {
+      // User is logged in properly, show public conversations and conversations they belong to
+      visibleConversationStream = visibleConversationStream
+          .filter(c -> !c.getIsPrivate() || user.isInConversation(c.getId()));
+    }
+
+    request.setAttribute("conversations", visibleConversationStream.collect(Collectors.toList()));
     request.getRequestDispatcher("/WEB-INF/view/conversations.jsp").forward(request, response);
   }
 
@@ -115,8 +133,6 @@ public class ConversationServlet extends HttpServlet {
 
     Conversation conversation =
         new Conversation(UUID.randomUUID(), user.getId(), conversationTitle, Instant.now());
-
-    userStore.addPrivateConversation(user, conversationTitle);
     conversationStore.addConversation(conversation);
 
     // Users are always whitelisted in conversations they create
