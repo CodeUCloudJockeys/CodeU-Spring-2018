@@ -140,10 +140,10 @@ public class ChatServlet extends HttpServlet {
       return;
     }
 
-    boolean privateChat = userStore.getPrivateConversation(conversationTitle, user);
-
-    if (privateChat == false) {
-      response.sendRedirect("/login");
+    // User is not in the conversation, and the conversation is private
+    if (conversation.getIsPrivate() && !user.isInConversation(conversation.getId())) {
+      // redirect to conversation list
+      response.sendRedirect("/conversations");
     }
 
     String messageContent = request.getParameter("message");

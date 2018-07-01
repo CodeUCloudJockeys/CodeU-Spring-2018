@@ -84,9 +84,8 @@ public class User {
     return creation;
   }
 
-  /** Returns the Set of conversations the user is whiteSeted in */
-  public HashSet<UUID> getConversationSet() {
-    return conversationSet;
+  public boolean isInConversation(UUID conversationId) {
+    return conversationSet.contains(conversationId);
   }
 
   public void setConversationSet(HashSet<UUID> conversationSet) {
