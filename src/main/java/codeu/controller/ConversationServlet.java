@@ -86,7 +86,7 @@ public class ConversationServlet extends HttpServlet {
     } else {
       // User is logged in properly, show public conversations and conversations they belong to
       visibleConversationStream = visibleConversationStream
-          .filter(c -> !c.getIsPrivate() || user.isInConversation(c.getId()));
+          .filter(user::isInConversation);
     }
 
     request.setAttribute("conversations", visibleConversationStream.collect(Collectors.toList()));
@@ -136,7 +136,7 @@ public class ConversationServlet extends HttpServlet {
     conversationStore.addConversation(conversation);
 
     // Users are always whitelisted in conversations they create
-    user.addToConversation(conversation.getId());
+    user.addToConversation(conversation);
 
     response.sendRedirect("/chat/" + conversationTitle);
   }
