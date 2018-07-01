@@ -70,6 +70,7 @@ public class ChatServletTest {
     chatServlet.setUserStore(mockUserStore);
   }
 
+  // TODO: Add more tests to testDoGet()
   @Test
   public void testDoGet() throws IOException, ServletException {
     Mockito.when(mockRequest.getRequestURI()).thenReturn("/chat/test_conversation");
