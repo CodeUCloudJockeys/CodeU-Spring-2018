@@ -87,13 +87,28 @@ public class ChatServlet extends HttpServlet {
     String requestUrl = request.getRequestURI();
     String conversationTitle = requestUrl.substring("/chat/".length());
 
-    // TODO: Filter away users per conversation
     Conversation conversation = conversationStore.getConversationWithTitle(conversationTitle);
     if (conversation == null) {
       // couldn't find conversation, redirect to conversation list
       System.out.println("Conversation was null: " + conversationTitle);
       response.sendRedirect("/conversations");
       return;
+    }
+
+    String username = (String) request.getSession().getAttribute("user");
+    User user = userStore.getUser(username);
+    if (user == null) {
+      // user not found or not logged in, don't let them look at conversation if it's private
+      if (conversation.getIsPrivate()) {
+        response.sendRedirect("/login");
+        return;
+      }
+    } else {
+      // User is not in the conversation
+      if (!user.isInConversation(conversation)) {
+        // redirect to conversation list
+        response.sendRedirect("/conversations");
+      }
     }
 
     UUID conversationId = conversation.getId();
@@ -117,15 +132,9 @@ public class ChatServlet extends HttpServlet {
       throws IOException, ServletException {
 
     String username = (String) request.getSession().getAttribute("user");
-    if (username == null) {
-      // user is not logged in, don't let them add a message
-      response.sendRedirect("/login");
-      return;
-    }
-
     User user = userStore.getUser(username);
     if (user == null) {
-      // user was not found, don't let them add a message
+      // user not found or not logged in, don't let them add a message
       response.sendRedirect("/login");
       return;
     }
@@ -140,8 +149,8 @@ public class ChatServlet extends HttpServlet {
       return;
     }
 
-    // User is not in the conversation, and the conversation is private
-    if (conversation.getIsPrivate() && !user.isInConversation(conversation.getId())) {
+    // User is not in the conversation
+    if (!user.isInConversation(conversation)) {
       // redirect to conversation list
       response.sendRedirect("/conversations");
     }
