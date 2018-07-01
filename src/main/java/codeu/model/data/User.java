@@ -84,10 +84,16 @@ public class User {
     return creation;
   }
 
+  /** Returns whether the user is in a conversation. */
   public boolean isInConversation(UUID conversationId) {
     return conversationSet.contains(conversationId);
   }
 
+  public HashSet<UUID> getConversationSet() {
+    return conversationSet;
+  }
+
+  /** Sets the set of conversations. */
   public void setConversationSet(HashSet<UUID> conversationSet) {
     this.conversationSet = conversationSet;
   }
