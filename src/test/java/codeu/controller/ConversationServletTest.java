@@ -44,6 +44,9 @@ public class ConversationServletTest {
   private ConversationStore mockConversationStore;
   private UserStore mockUserStore;
 
+  private Conversation publicConversation;
+  private Conversation privateConversation;
+
   @Before
   public void setup() {
     conversationServlet = new ConversationServlet();
@@ -60,22 +63,44 @@ public class ConversationServletTest {
     mockConversationStore = Mockito.mock(ConversationStore.class);
     conversationServlet.setConversationStore(mockConversationStore);
 
+    publicConversation = new Conversation(
+        UUID.randomUUID(), UUID.randomUUID(),
+        "test_public_conversation", Instant.now(), false);
+
+    privateConversation = new Conversation(
+        UUID.randomUUID(), UUID.randomUUID(),
+        "test_private_conversation", Instant.now(), true);
+
     mockUserStore = Mockito.mock(UserStore.class);
     conversationServlet.setUserStore(mockUserStore);
   }
 
   @Test
-  public void testDoGet() throws IOException, ServletException {
+  public void testDoGet_UserNotLoggedIn() throws IOException, ServletException {
     List<Conversation> fakeConversationList = new ArrayList<>();
-    fakeConversationList.add(
-        new Conversation(UUID.randomUUID(), UUID.randomUUID(), "test_conversation", Instant.now()));
+    fakeConversationList.add(publicConversation);
+    fakeConversationList.add(privateConversation);
+
+    List<Conversation> publicConversationList = new ArrayList<>();
+    publicConversationList.add(publicConversation);
+
     Mockito.when(mockConversationStore.getAllConversations()).thenReturn(fakeConversationList);
 
     conversationServlet.doGet(mockRequest, mockResponse);
 
-    Mockito.verify(mockRequest).setAttribute("conversations", fakeConversationList);
+    // For storing whatever is passed as the conversation list
+    ArgumentCaptor<List> argumentCaptor = ArgumentCaptor.forClass(List.class);
+
+    Mockito.verify(mockRequest)
+        .setAttribute(Mockito.eq("conversations"), argumentCaptor.capture());
+
+    // Compare with what is expected
+    Assert.assertEquals(publicConversationList, argumentCaptor.getValue());
+
     Mockito.verify(mockRequestDispatcher).forward(mockRequest, mockResponse);
   }
+
+  // TODO: Add more tests
 
   @Test
   public void testDoPost_UserNotLoggedIn() throws IOException, ServletException {
