@@ -3,6 +3,8 @@
     
 <%@ page import="java.util.List" %>
 <%@ page import="codeu.model.data.Profile" %>
+<%@ page import="codeu.model.store.basic.ProfileStore" %>
+
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -26,18 +28,14 @@
   <% List<Profile> profiles = (List<Profile>) request.getAttribute("profiles");
     if(profiles == null){
   %>
-    <p>Create a profile to get started.</p>
+    <p>Welcome.</p>
   <% } else{
   %>
     <%
       for(Profile profile : profiles){
       String user = (String) request.getSession().getAttribute("user");
     %>
-  
-      <% if(profile.getProfile().equals(user)){
-      %>
         <a><%= profile.getAbout() %></a>
-      <% } %>
     <%} %>
   <% } %>
   <hr/>

@@ -70,6 +70,10 @@ public class ProfileServlet extends HttpServlet {
     if (profileAbout != null) {
       profileStore.updateAbout(user.getId(), profileAbout);
     }
+    else
+    {
+      profileStore.updateAbout(user.getId(), "Enter an About Me.");
+    }
 
     Profile profile = new Profile(UUID.randomUUID(), user.getId(), profileAbout, Instant.now());
 

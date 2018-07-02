@@ -55,6 +55,15 @@ public class ProfileStore {
       }
     }
   }
+  
+  public String getAbout(UUID id){
+    for(Profile profile: profiles) {
+      if(profile.getId().equals(id)){
+        return profile.getAbout();
+      }
+    }
+    return null;
+  }
 
   public void setProfile(List<Profile> profiles) {
     this.profiles = profiles;
