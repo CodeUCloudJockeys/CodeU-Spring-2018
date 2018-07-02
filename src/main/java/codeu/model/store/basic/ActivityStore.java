@@ -70,7 +70,7 @@ public class ActivityStore {
     private Map<Type, UUID> typeToId;
 
     /** This class is a singleton, so its constructor is private. Call getInstance() instead. */
-    private ConversationStore(PersistentStorageAgent persistentStorageAgent) {
+    private ActivityStore(PersistentStorageAgent persistentStorageAgent) {
         this.persistentStorageAgent = persistentStorageAgent;
         activities = new HashMap<>();
         typeToId = new HashMap<>();
@@ -93,16 +93,16 @@ public class ActivityStore {
      * writes the activity to the persistent storage.
      */
     public void addActivity(Activity activity) {
-        addConversationWithoutPersistentStorage(activity);
+        addActivityWithoutPersistentStorage(activity);
 
         persistentStorageAgent.writeThrough(activity);
     }
 
     /**
-     * Add a new activity to the current map of conversations known to the application. This does
+     * Add a new activity to the current map of activities known to the application. This does
      * NOT write the activity to the persistent storage.
      */
-    public void addActiityWithoutPersistentStorage(Activity activity) {
+    public void addActivityWithoutPersistentStorage(Activity activity) {
         activities.put(activity.getId(), activity);
         typeToId.put(activity.getType(), activity.getId());
     }
@@ -119,7 +119,7 @@ public class ActivityStore {
         return new ArrayList<>(activities.values());
     }
 
-    /** Sets the Map of Conversations stored by this ConversationStore. */
+    /** Sets the Map of Activity stored by this ActivityStore. */
     public void setActivities(List<Activity> activityList) {
         // For each activity in the list, add it without writing it to persistent storage.
         activityList.forEach(activity -> addActivityWithoutPersistentStorage(activity));

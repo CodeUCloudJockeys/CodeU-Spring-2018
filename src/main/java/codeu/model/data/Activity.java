@@ -23,7 +23,6 @@ import java.util.UUID;
  */
 public class Activity {
     private final UUID activityId;
-    private final UUID activityOwner;
     private final Instant activityCreation;
     private final Type activityType;
 
@@ -31,13 +30,11 @@ public class Activity {
      * Constructs a new Activity
      *
      * @param activityId the ID of this Activity
-     * @param activityOwner the ID of the User who created this Activity
      * @param activityCreation the creation time of this activity
      * @param activityType the type of activity (i.e. message, user, etc)
      * */
-    public Activity(UUID activityId, UUID activityOwner, Instant activityCreation, Type activityType) {
+    public Activity(UUID activityId, Instant activityCreation, Type activityType) {
         this.activityId = activityId;
-        this.activityOwner = activityOwner;
         this.activityCreation = activityCreation;
         this.activityType = activityType;
     }
@@ -48,13 +45,7 @@ public class Activity {
         return activityId;
     }
 
-    /** Returns the ID of the User who created this Conversation. */
-    public UUID getOwnerId() {
-
-        return activityOwner;
-    }
-
-    /** Returns the title of this Conversation. */
+    /** Returns the creation time of the Activity */
     public Instant getCreationTime() {
 
         return activityCreation;
