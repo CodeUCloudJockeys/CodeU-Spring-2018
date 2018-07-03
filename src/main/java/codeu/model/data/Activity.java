@@ -14,7 +14,6 @@
 
 package codeu.model.data;
 
-import java.lang.reflect.Type;
 import java.time.Instant;
 import java.util.UUID;
 
@@ -51,10 +50,12 @@ public class Activity {
         return activityCreation;
     }
 
-    /** Returns the creation time of this Conversation. */
-    public Type getType() {
+    /** Returns the type of the Activity */
+    public enum Type {
 
-        return activityType;
+        userJoined(),
+        conversationCreated(),
+        messageSent()
     }
 
     /** Override equality, so activities are compared based on their ID */
