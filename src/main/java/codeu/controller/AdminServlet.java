@@ -14,8 +14,9 @@
 
 package codeu.controller;
 
+import codeu.controller.util.AdminUtil;
 import codeu.model.data.Message;
-import codeu.model.data.User; // unused for now
+import codeu.model.data.User;
 import codeu.model.store.basic.ConversationStore;
 import codeu.model.store.basic.MessageStore;
 import codeu.model.store.basic.UserStore;
@@ -98,16 +99,8 @@ public class AdminServlet extends HttpServlet {
     String username = (String) request.getSession().getAttribute("user");
     User user = userStore.getUser(username);
 
-    // If user does not exist
-    if (user == null) {
-      // Back to login
-      response.sendRedirect("/login");
-      return;
-    } else if (!user.getIsAdmin()) {
-      // Back to site index
-      response.sendRedirect("/");
-      return;
-    }
+    // If not an admin, redirect and return
+    if (AdminUtil.redirectNonAdmins(user, response)) return;
 
     int userCount = userStore.Count();
     int messageCount = messageStore.Count();

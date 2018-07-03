@@ -4,6 +4,7 @@ import codeu.model.data.Profile;
 import codeu.model.store.persistence.PersistentStorageAgent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class ProfileStore {
 
@@ -38,18 +39,18 @@ public class ProfileStore {
     persistentStorageAgent.writeThrough(profile);
   }
 
-  public Profile getProfile(String username) {
+  public Profile getProfile(UUID id) {
     for (Profile profile : profiles) {
-      if (profile.equals(username)) {
+      if (profile.getId().equals(id)) {
         return profile;
       }
     }
     return null;
   }
 
-  public void updateAbout(String username, String about) {
+  public void updateAbout(UUID id, String about) {
     for (Profile profile : profiles) {
-      if (profile.equals(username)) {
+      if (profile.getId().equals(id)) {
         persistentStorageAgent.writeThroughAbout(profile, about);
       }
     }

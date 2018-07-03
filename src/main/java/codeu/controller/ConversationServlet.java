@@ -100,7 +100,7 @@ public class ConversationServlet extends HttpServlet {
     }
 
     String conversationTitle = request.getParameter("conversationTitle");
-    if (!conversationTitle.matches("[\\w*]*")) {
+    if (!conversationTitle.matches("[\\w]*")) {
       request.setAttribute("error", "Please enter only letters and numbers.");
       request.getRequestDispatcher("/WEB-INF/view/conversations.jsp").forward(request, response);
       return;
@@ -116,7 +116,12 @@ public class ConversationServlet extends HttpServlet {
     Conversation conversation =
         new Conversation(UUID.randomUUID(), user.getId(), conversationTitle, Instant.now());
 
+    userStore.addPrivateConversation(user, conversationTitle);
     conversationStore.addConversation(conversation);
+
+    // Users are always whitelisted in conversations they create
+    user.addToConversation(conversation.getId());
+
     response.sendRedirect("/chat/" + conversationTitle);
   }
 }
