@@ -1,6 +1,8 @@
 package codeu.controller;
 
+import codeu.model.data.Activity;
 import codeu.model.data.User;
+import codeu.model.store.basic.ActivityStore;
 import codeu.model.store.basic.UserStore;
 import java.io.IOException;
 import java.time.Instant;
@@ -16,6 +18,10 @@ public class RegisterServlet extends HttpServlet {
   /** Store class that gives access to Users. */
   private UserStore userStore;
 
+  /**Store class for activitites */
+
+  private ActivityStore activityStore;
+
   /**
    * Set up state for handling registration-related requests. This method is only called when
    * running in a server, not when running in a test.
@@ -24,6 +30,7 @@ public class RegisterServlet extends HttpServlet {
   public void init() throws ServletException {
     super.init();
     setUserStore(UserStore.getInstance());
+    setActivityStore(ActivityStore.getInstance());
   }
 
   /**
@@ -32,6 +39,10 @@ public class RegisterServlet extends HttpServlet {
    */
   void setUserStore(UserStore userStore) {
     this.userStore = userStore;
+  }
+
+  void setActivityStore(ActivityStore activityStore){
+    this.activityStore = activityStore;
   }
 
   @Override
@@ -62,8 +73,9 @@ public class RegisterServlet extends HttpServlet {
     String hashed = BCrypt.hashpw(password, BCrypt.gensalt());
 
     User user = new User(UUID.randomUUID(), username, hashed, Instant.now());
-
+    Activity activity = new Activity (UUID.randomUUID(), Instant.now(), username + " was Registered");
     userStore.addUser(user);
+    activityStore.addActivity(activity);
 
     response.sendRedirect("/login");
   }

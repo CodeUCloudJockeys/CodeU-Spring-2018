@@ -14,7 +14,7 @@
 
 package codeu.model.data;
 
-import java.lang.reflect.Type;
+import java.lang.String;
 import java.time.Instant;
 import java.util.UUID;
 
@@ -24,19 +24,19 @@ import java.util.UUID;
 public class Activity {
     private final UUID activityId;
     private final Instant activityCreation;
-    private final Type activityType;
+    private final String activityMessage;
 
     /**
      * Constructs a new Activity
      *
      * @param activityId the ID of this Activity
      * @param activityCreation the creation time of this activity
-     * @param activityType the type of activity (i.e. message, user, etc)
+     * @param activityMessage the type of activity (i.e. message, user, etc)
      * */
-    public Activity(UUID activityId, Instant activityCreation, Type activityType) {
+    public Activity(UUID activityId, Instant activityCreation, String activityMessage) {
         this.activityId = activityId;
         this.activityCreation = activityCreation;
-        this.activityType = activityType;
+        this.activityMessage = activityMessage;
     }
 
     /** Returns the ID of this Activity */
@@ -52,8 +52,10 @@ public class Activity {
     }
 
     /** Gets the type of the Activity */
-    public Type getType(){
-        return activityType;
+    public String getActivityMessage(){
+
+        return activityMessage;
+
     }
 
     /** Override equality, so activities are compared based on their ID */

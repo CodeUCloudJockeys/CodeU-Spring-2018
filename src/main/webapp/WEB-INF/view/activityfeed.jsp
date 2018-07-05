@@ -10,7 +10,8 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 --%>
-<%-- still trying to get the hang of jsp, not sure if this is correctly implemented --%>
+<%@ page import="java.util.List" %>
+<%@ page import="codeu.model.data.Activity" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -22,7 +23,25 @@
 <%@ include file="/WEB-INF/reusables/navbar.jsp" %>
 
 <div id="container">
-    <p>This is the activity feed page</p>
+    <h1>Activity</h1>
+    <%
+    List<Activity> activities = (List<Activity>) request.getAttribute("activities");
+    if(activities == null || activities.isEmpty()){
+    %>
+    <p>There is no activity to be displayed</p>
+    <%
+    }else{
+    %>
+      <ul class="mdl-list">
+    <%
+        for(Activity activity : activities){
+    %>
+          <li><%=activity.getActivityMessage()%></li>
+    <%
+        }
+    }
+    %>
+      </ul>
 </div>
 </body>
 </html>

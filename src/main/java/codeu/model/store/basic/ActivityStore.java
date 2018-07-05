@@ -89,7 +89,7 @@ public class ActivityStore {
     }
 
     /**
-     * Add a new activity to the current map of conversations known to the application. This
+     * Add a new activity to the current map of activities known to the application. This
      * writes the activity to the persistent storage.
      */
     public void addActivity(Activity activity) {
@@ -104,7 +104,6 @@ public class ActivityStore {
      */
     public void addActivityWithoutPersistentStorage(Activity activity) {
         activities.put(activity.getId(), activity);
-        typeToId.put(activity.getType(), activity.getId());
     }
 
     /** Find and return the Activity with the given title. */

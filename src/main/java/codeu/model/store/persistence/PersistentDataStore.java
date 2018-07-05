@@ -196,14 +196,13 @@ public class PersistentDataStore {
     //Retrieve all activities from the datastore
     Query query = new Query("chat-activity").addSort("creation_time", SortDirection.ASCENDING);
     PreparedQuery results = datastore.prepare(query);
-
     for (Entity entity : results.asIterable()) {
       try {
         UUID uuid = UUID.fromString((String) entity.getProperty("activityId"));
         Instant creationTime = Instant.parse((String) entity.getProperty("activityCreation"));
-        Type type = Type.fromString((String) entity.getProperty("activityType"));
+        String message = (String) entity.getProperty("activityMessage");
 
-        Activity activity = new Activity(uuid, creationTime, type);
+        Activity activity = new Activity(uuid, creationTime, message);
         activities.add(activity);
       } catch (Exception e) {
         // In a production environment, errors should be very rare. Errors which may
@@ -271,7 +270,7 @@ public class PersistentDataStore {
   public void writeThrough (Activity activity) {
     Entity activityEntity = new Entity("chat-activity", activity.getId().toString());
     activityEntity.setProperty("activityId", activity.getId().toString());
-    activityEntity.setProperty("activityType", activity.getType().toString());
+    activityEntity.setProperty("activityMessage", activity.getActivityMessage());
     activityEntity.setProperty("activityCreation", activity.getCreationTime().toString());
     datastore.put(activityEntity);
   }
