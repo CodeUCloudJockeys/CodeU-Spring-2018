@@ -80,7 +80,7 @@ public class PersistentDataStore {
         HashSet<UUID> conversationIdSet = blobToIdSet((Blob) entity.getProperty("conversation_ids"));
 
         User user = new User(uuid, userName, password, creationTime, isAdmin);
-        user.setConversationSet(conversationIdSet);
+        user.setConversationIdSet(conversationIdSet);
         users.add(user);
       } catch (Exception e) {
         // In a production environment, errors should be very rare. Errors which may
@@ -224,7 +224,7 @@ public class PersistentDataStore {
     userEntity.setProperty("creation_time", user.getCreationTime().toEpochMilli());
     userEntity.setProperty("is_admin", user.getIsAdmin());
 
-    userEntity.setProperty("conversation_ids", idSetToBlob(user.getConversationSet()));
+    userEntity.setProperty("conversation_ids", idSetToBlob(user.getConversationIdSet()));
     datastore.put(userEntity);
   }
 

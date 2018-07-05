@@ -25,7 +25,7 @@ public class User {
   private final String passwordHash;
   private final Instant creation;
   private boolean isAdmin;
-  private HashSet<UUID> conversationSet;
+  private HashSet<UUID> conversationIdSet;
 
   /**
    * Constructs a new non-admin User.
@@ -42,7 +42,7 @@ public class User {
     this.creation = creation;
     this.isAdmin = false;
 
-    this.conversationSet = new HashSet<>();
+    this.conversationIdSet = new HashSet<>();
   }
 
   /**
@@ -61,7 +61,7 @@ public class User {
     this.creation = creation;
     this.isAdmin = isAdmin;
 
-    this.conversationSet = new HashSet<>();
+    this.conversationIdSet = new HashSet<>();
   }
 
   /** Returns the ID of this User. */
@@ -84,23 +84,33 @@ public class User {
     return creation;
   }
 
-  /** Returns the Set of conversations the user is whiteSeted in */
-  public HashSet<UUID> getConversationSet() {
-    return conversationSet;
+  /** Returns whether the user is in a conversation. */
+  public boolean isInConversation(Conversation conversation) {
+    // Users are always part of public conversations.
+    return !conversation.getIsPrivate() || conversationIdSet.contains(conversation.getId());
   }
 
-  public void setConversationSet(HashSet<UUID> conversationSet) {
-    this.conversationSet = conversationSet;
+  public HashSet<UUID> getConversationIdSet() {
+    return conversationIdSet;
+  }
+
+  /** Sets the set of conversation IDs. */
+  public void setConversationIdSet(HashSet<UUID> conversationIdSet) {
+    this.conversationIdSet = conversationIdSet;
   }
 
   /** Adds the user to a conversation */
-  public void addToConversation(UUID id) {
-    conversationSet.add(id);
+  public void addToConversation(Conversation conversation) {
+    // Users already belong to public conversations, so don't uselessly add to conversation
+    // if it isn't private.
+    if (conversation.getIsPrivate()) {
+      conversationIdSet.add(conversation.getId());
+    }
   }
 
   /** Removes the user from a conversation */
-  public void removeFromConversation(UUID id) {
-    conversationSet.remove(id);
+  public void removeFromConversation(Conversation conversation) {
+    conversationIdSet.remove(conversation.getId());
   }
 
   /** Returns whether the user is an admin. */
