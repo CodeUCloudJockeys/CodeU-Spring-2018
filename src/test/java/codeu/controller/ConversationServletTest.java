@@ -65,11 +65,11 @@ public class ConversationServletTest {
 
     publicConversation = new Conversation(
         UUID.randomUUID(), UUID.randomUUID(),
-        "test_public_conversation", Instant.now(), false);
+        "test_public_conversation", Instant.now(), false, "test_user_added");
 
     privateConversation = new Conversation(
         UUID.randomUUID(), UUID.randomUUID(),
-        "test_private_conversation", Instant.now(), true);
+        "test_private_conversation", Instant.now(), true, "test_user_added");
 
     mockUserStore = Mockito.mock(UserStore.class);
     conversationServlet.setUserStore(mockUserStore);
