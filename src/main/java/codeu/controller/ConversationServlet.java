@@ -142,7 +142,7 @@ public class ConversationServlet extends HttpServlet {
     }
 
     Conversation conversation =
-        new Conversation(UUID.randomUUID(), user.getId(), conversationTitle, Instant.now());
+        new Conversation(UUID.randomUUID(), user.getId(), conversationTitle, Instant.now(), conversationUser);
     conversationStore.addConversation(conversation);
 
     // Users are always whitelisted in conversations they create

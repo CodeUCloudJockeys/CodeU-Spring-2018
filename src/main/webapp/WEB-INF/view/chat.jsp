@@ -52,6 +52,7 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
 
     <h1><%= conversation.getTitle() %>
       <a href="" style="float: right">&#8635;</a></h1>
+    <h3><%=conversation.getConversationUser()%></h3>
 
     <hr/>
 
