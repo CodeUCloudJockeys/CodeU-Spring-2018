@@ -28,6 +28,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.swing.*;
 
 /** Servlet class responsible for the conversations page. */
 public class ConversationServlet extends HttpServlet {
@@ -118,16 +119,25 @@ public class ConversationServlet extends HttpServlet {
     }
 
     String conversationTitle = request.getParameter("conversationTitle");
+    String conversationUser = request.getParameter("conversationUser");
+    User userAdded = userStore.getUser(conversationUser);
     if (!conversationTitle.matches("[\\w]*")) {
       request.setAttribute("error", "Please enter only letters and numbers.");
       request.getRequestDispatcher("/WEB-INF/view/conversations.jsp").forward(request, response);
       return;
     }
 
-    if (conversationStore.isTitleTaken(conversationTitle)) {
+    if (conversationStore.isTitleTaken(conversationTitle) && userAdded != null) {
       // conversation title is already taken, just go into that conversation instead of creating a
-      // new one
+      // new one unless the entered user does not exist
       response.sendRedirect("/chat/" + conversationTitle);
+      return;
+    }
+
+    //Checks whether or not the user being added to the conversation exists
+    if(userAdded == null){
+      request.setAttribute("error", "That username does not exist");
+      request.getRequestDispatcher("/WEB-INF/view/conversations.jsp").forward(request, response);
       return;
     }
 

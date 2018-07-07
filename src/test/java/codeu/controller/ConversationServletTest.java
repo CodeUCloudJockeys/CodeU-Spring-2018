@@ -145,9 +145,12 @@ public class ConversationServletTest {
   public void testDoPost_ConversationNameTaken() throws IOException, ServletException {
     Mockito.when(mockRequest.getParameter("conversationTitle")).thenReturn("test_conversation");
     Mockito.when(mockSession.getAttribute("user")).thenReturn("test_username");
+    Mockito.when(mockRequest.getParameter("conversationUser")).thenReturn("test_user_added");
 
     User fakeUser = new User(UUID.randomUUID(), "test_username", "test_username", Instant.now());
+    User fakeUserAdded = new User(UUID.randomUUID(), "test_user_addded", "test_user_added", Instant.now());
     Mockito.when(mockUserStore.getUser("test_username")).thenReturn(fakeUser);
+    Mockito.when(mockUserStore.getUser("test_user_added")).thenReturn(fakeUserAdded);
 
     Mockito.when(mockConversationStore.isTitleTaken("test_conversation")).thenReturn(true);
 
@@ -161,10 +164,13 @@ public class ConversationServletTest {
   @Test
   public void testDoPost_NewConversation() throws IOException, ServletException {
     Mockito.when(mockRequest.getParameter("conversationTitle")).thenReturn("test_conversation");
+    Mockito.when(mockRequest.getParameter("conversationUser")).thenReturn("test_user_added");
     Mockito.when(mockSession.getAttribute("user")).thenReturn("test_username");
 
     User fakeUser = new User(UUID.randomUUID(), "test_username", "test_username", Instant.now());
+    User fakeUserAdded = new User(UUID.randomUUID(), "test_user_added", "test_user_added", Instant.now());
     Mockito.when(mockUserStore.getUser("test_username")).thenReturn(fakeUser);
+    Mockito.when(mockUserStore.getUser("test_user_added")).thenReturn(fakeUserAdded);
 
     Mockito.when(mockConversationStore.isTitleTaken("test_conversation")).thenReturn(false);
 

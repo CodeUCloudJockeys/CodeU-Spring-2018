@@ -37,12 +37,13 @@
       <form action="/conversations" method="POST">
           <div class="form-group">
             <label class="form-control-label">Title:</label>
-          <input type="text" name="conversationTitle">
-        </div>
+            <input type="text" name="conversationTitle">
+            <label class="form-control-label">Add Users:</label>
+            <input type="text" name="conversationUser">
+          </div>
 
         <button type="submit">Create</button>
       </form>
-
       <hr/>
     <% } %>
 
