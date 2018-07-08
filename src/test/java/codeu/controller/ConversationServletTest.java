@@ -49,6 +49,8 @@ public class ConversationServletTest {
   private Conversation publicConversation;
   private Conversation privateConversation;
 
+  private User fakeUserAdded;
+
   @Before
   public void setup() {
     conversationServlet = new ConversationServlet();
@@ -75,6 +77,9 @@ public class ConversationServletTest {
 
     mockUserStore = Mockito.mock(UserStore.class);
     conversationServlet.setUserStore(mockUserStore);
+
+    fakeUserAdded = new User(UUID.randomUUID(), "test_user_addded", "test_user_added", Instant.now());
+    Mockito.when(mockUserStore.getUser("test_user_added")).thenReturn(fakeUserAdded);
   }
 
   @Test
@@ -150,9 +155,7 @@ public class ConversationServletTest {
     Mockito.when(mockRequest.getParameter("conversationUserAdded")).thenReturn("test_user_added");
 
     User fakeUser = new User(UUID.randomUUID(), "test_username", "test_username", Instant.now());
-    User fakeUserAdded = new User(UUID.randomUUID(), "test_user_addded", "test_user_added", Instant.now());
     Mockito.when(mockUserStore.getUser("test_username")).thenReturn(fakeUser);
-    Mockito.when(mockUserStore.getUser("test_user_added")).thenReturn(fakeUserAdded);
 
     Mockito.when(mockConversationStore.isTitleTaken("test_conversation")).thenReturn(true);
 
@@ -170,10 +173,7 @@ public class ConversationServletTest {
     Mockito.when(mockSession.getAttribute("user")).thenReturn("test_username");
 
     User fakeUser = new User(UUID.randomUUID(), "test_username", "test_username", Instant.now());
-    User fakeUserAdded = new User(UUID.randomUUID(), "test_user_added", "test_user_added", Instant.now());
     Mockito.when(mockUserStore.getUser("test_username")).thenReturn(fakeUser);
-    Mockito.when(mockUserStore.getUser("test_user_added")).thenReturn(fakeUserAdded);
-
     Mockito.when(mockConversationStore.isTitleTaken("test_conversation")).thenReturn(false);
 
     ActivityStore mockActivityStore = Mockito.mock(ActivityStore.class);
