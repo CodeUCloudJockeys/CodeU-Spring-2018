@@ -138,17 +138,17 @@ public class ConversationServlet extends HttpServlet {
       return;
     }
 
-    if (conversationStore.isTitleTaken(conversationTitle) && userAdded != null) {
-      // conversation title is already taken, just go into that conversation instead of creating a
-      // new one unless the entered user does not exist
-      response.sendRedirect("/chat/" + conversationTitle);
-      return;
-    }
-
     //Checks whether or not the user being added to the conversation exists
     if(userAdded == null){
       request.setAttribute("error", "That username does not exist");
       request.getRequestDispatcher("/WEB-INF/view/conversations.jsp").forward(request, response);
+      return;
+    }
+
+    if (conversationStore.isTitleTaken(conversationTitle)) {
+      // conversation title is already taken, just go into that conversation instead of creating a
+      // new one unless the entered user does not exist
+      response.sendRedirect("/chat/" + conversationTitle);
       return;
     }
 
