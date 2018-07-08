@@ -62,6 +62,6 @@ public class ActivityFeedServlet extends HttpServlet {
     List<Activity> activities = activityStore.getAllActivities();
     request.setAttribute("activities", activities);
     request.getRequestDispatcher("/WEB-INF/view/activityfeed.jsp").forward(request, response);
-    }
+  }
 
   }
