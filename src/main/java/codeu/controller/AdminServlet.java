@@ -122,9 +122,15 @@ public class AdminServlet extends HttpServlet {
             .map(User::getName) // Get the name if the user exists
             .orElse("No users."); // return "No users" if it does not exist.
 
-    String mostActiveUserName = getMostActiveUser(users).map(User::getName).orElse("No users.");
+    String mostActiveUserName =
+        getMostActiveUser(users)
+            .map(User::getName)
+            .orElse("No users.");
 
-    String wordiestUserName = getWordiestUser(users).map(User::getName).orElse("No users.");
+    String wordiestUserName =
+        getWordiestUser(users)
+            .map(User::getName)
+            .orElse("No users.");
 
     // Set the stats
     labeledStats.put("Number of users:", Integer.toString(userCount));
