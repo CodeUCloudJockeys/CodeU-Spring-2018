@@ -51,7 +51,7 @@ public class ProfileStore {
   public void updateAbout(UUID id, String about) {
     for (Profile profile : profiles) {
       if (profile.getId().equals(id)) {
-        persistentStorageAgent.writeThroughAbout(profile, about);
+        persistentStorageAgent.writeThrough(profile, about);
       }
     }
   }
