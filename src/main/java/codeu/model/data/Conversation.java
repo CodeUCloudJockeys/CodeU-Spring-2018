@@ -27,7 +27,7 @@ public class Conversation {
   private final Instant creation;
   private final String title;
   private final boolean isPrivate;
-  private final String conversationUser;
+  private final String conversationUserAdded;
 
   /**
    * Constructs a new public Conversation.
@@ -37,13 +37,13 @@ public class Conversation {
    * @param title the title of this Conversation
    * @param creation the creation time of this Conversation
    */
-  public Conversation(UUID id, UUID owner, String title, Instant creation, String conversationUser) {
+  public Conversation(UUID id, UUID owner, String title, Instant creation, String conversationUserAdded) {
     this.id = id;
     this.owner = owner;
     this.creation = creation;
     this.title = title;
     this.isPrivate = false;
-    this.conversationUser = conversationUser;
+    this.conversationUserAdded = conversationUserAdded;
   }
 
   /**
@@ -54,14 +54,15 @@ public class Conversation {
    * @param title the title of this Conversation
    * @param creation the creation time of this Conversation
    * @param isPrivate whether the conversation is private or not
+   * @param conversationUserAdded the user added to the conversation in the conversation jsp file
    */
-  public Conversation(UUID id, UUID owner, String title, Instant creation, boolean isPrivate, String conversationUser) {
+  public Conversation(UUID id, UUID owner, String title, Instant creation, boolean isPrivate, String conversationUserAdded) {
     this.id = id;
     this.owner = owner;
     this.creation = creation;
     this.title = title;
     this.isPrivate = isPrivate;
-    this.conversationUser = conversationUser;
+    this.conversationUserAdded = conversationUserAdded;
   }
 
   /** Returns the ID of this Conversation. */
@@ -89,8 +90,8 @@ public class Conversation {
     return isPrivate;
   }
   /**Returns the users in the conversation */
-  public String getConversationUser(){
-    return conversationUser;
+  public String getConversationUserAdded(){
+    return conversationUserAdded;
   }
 
   /** Override equality, so conversations are compared based on their ID */

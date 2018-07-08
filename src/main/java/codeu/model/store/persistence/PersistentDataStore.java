@@ -246,7 +246,7 @@ public class PersistentDataStore {
     conversationEntity.setProperty("owner_uuid", conversation.getOwnerId().toString());
     conversationEntity.setProperty("title", conversation.getTitle());
     conversationEntity.setProperty("creation_time", conversation.getCreationTime().toEpochMilli());
-    conversationEntity.setProperty("conversationUser", conversation.getConversationUser());
+    conversationEntity.setProperty("conversationUser", conversation.getConversationUserAdded());
     datastore.put(conversationEntity);
   }
 

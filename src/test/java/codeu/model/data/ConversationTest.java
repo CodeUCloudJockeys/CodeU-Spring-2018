@@ -35,6 +35,6 @@ public class ConversationTest {
     Assert.assertEquals(owner, conversation.getOwnerId());
     Assert.assertEquals(title, conversation.getTitle());
     Assert.assertEquals(creation, conversation.getCreationTime());
-    Assert.assertEquals(conversationUser, conversation.getConversationUser() );
+    Assert.assertEquals(conversationUser, conversation.getConversationUserAdded() );
   }
 }
