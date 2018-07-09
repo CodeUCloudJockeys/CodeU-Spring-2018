@@ -83,7 +83,7 @@ Boolean isOwner = (Boolean) request.getAttribute("is_owner");
     <% } %>
 
     <hr/>
-    <% if (isOwner && conversation.isPrivate()) { %>
+    <% if (isOwner && conversation.getIsPrivate()) { %>
     <form action="/chat/<%= conversation.getTitle() %>" method="POST">
         <input type="text" name="add_users">
         <br/>
