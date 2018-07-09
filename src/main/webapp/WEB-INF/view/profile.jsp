@@ -18,8 +18,7 @@
   <%@ include file="../reusables/navbar.jsp" %>
   
   <div id="container">
-    <% String username = (String) request.getAttribute("username");
- 	if(request.getSession().getAttribute("user") != null){ %>
+    <% if(request.getSession().getAttribute("user") != null){ %>
       <a>Hi my name is <%= request.getSession().getAttribute("user") %>!</a>
       <p>About me:</p>
       <hr/>
