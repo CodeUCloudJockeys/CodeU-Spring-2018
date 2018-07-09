@@ -31,8 +31,8 @@
   <% } else{
   %>
     <%
-      for(Profile profile : profiles){
       String user = (String) request.getSession().getAttribute("user");
+      for(Profile profile : profiles){
     %>
         <a><%= profile.getAbout() %></a>
     <%} %>
