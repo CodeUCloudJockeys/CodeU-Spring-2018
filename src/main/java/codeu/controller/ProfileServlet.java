@@ -69,9 +69,7 @@ public class ProfileServlet extends HttpServlet {
     String profileAbout = request.getParameter("profileAbout");
     if (profileAbout != null) {
       profileStore.updateAbout(user.getId(), profileAbout);
-    }
-    else
-    {
+    } else {
       profileStore.updateAbout(user.getId(), "Enter an About Me.");
     }
 
