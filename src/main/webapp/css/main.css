@@ -35,6 +35,17 @@ nav a {
   text-decoration: none;
 }
 
+nav input{
+  display:inline-block;
+  color: white;
+  display: inline-block;
+  font-size: 24px;
+  border-color: transparent;
+  top: 0px;
+  margin: 0vw 0vw 0vw 90vw;
+  background: #283593;
+}
+
 #navTitle {
   font-size: 36px;
 }
@@ -56,3 +67,5 @@ input {
 button {
   font-size: 18px;
 }
+
+
