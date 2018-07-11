@@ -15,4 +15,7 @@
     <a href="/control_panel">Control Panel</a>
   <% } %>
     <a href="/activityfeed">Activity</a>
+  <form action="/logout" method="POST">
+    <input id="logout" type="submit" value="Logout">
+  </form>
 </nav>
