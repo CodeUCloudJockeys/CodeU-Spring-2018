@@ -20,6 +20,7 @@
 <%
 Conversation conversation = (Conversation) request.getAttribute("conversation");
 List<Message> messages = (List<Message>) request.getAttribute("messages");
+Boolean isOwner = (Boolean) request.getAttribute("is_owner");
 %>
 
 <!DOCTYPE html>
@@ -83,7 +84,13 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
     <% } %>
 
     <hr/>
-
+    <% if (isOwner && conversation.getIsPrivate()) { %>
+    <form action="/chat/<%= conversation.getTitle() %>" method="POST">
+        <input type="text" name="add_users">
+        <br/>
+        <button type="submit">Add Users</button>
+    </form>
+    <% } %>
   </div>
 
 </body>

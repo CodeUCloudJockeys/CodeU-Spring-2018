@@ -114,8 +114,8 @@ public class PersistentStorageAgent {
     persistentDataStore.writeThrough(profile);
   }
 
-  public void writeThroughAbout(Profile profile, String about) {
-    persistentDataStore.writeThroughAbout(profile, about);
+  public void writeThrough(Profile profile, String about) {
+    persistentDataStore.writeThrough(profile, about);
   }
 
   public void writeThrough(Activity activity){

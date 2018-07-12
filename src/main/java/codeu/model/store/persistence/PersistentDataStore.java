@@ -259,7 +259,7 @@ public class PersistentDataStore {
     datastore.put(profileEntity);
   }
 
-  public void writeThroughAbout(Profile profile, String about) {
+  public void writeThrough(Profile profile, String about) {
     Entity profileEntity = new Entity("chat-profile", profile.getId().toString());
     profileEntity.setProperty("uuid", profile.getId().toString());
     profileEntity.setProperty("profile_uuid", profile.getProfile().toString());

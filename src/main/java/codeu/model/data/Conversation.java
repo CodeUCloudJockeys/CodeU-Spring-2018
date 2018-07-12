@@ -27,7 +27,6 @@ public class Conversation {
   private final Instant creation;
   private final String title;
   private final boolean isPrivate;
-  private final String conversationUserAdded;
 
   /**
    * Constructs a new public Conversation.
@@ -43,7 +42,6 @@ public class Conversation {
     this.creation = creation;
     this.title = title;
     this.isPrivate = false;
-    this.conversationUserAdded = conversationUserAdded;
   }
 
   /**
@@ -54,15 +52,13 @@ public class Conversation {
    * @param title the title of this Conversation
    * @param creation the creation time of this Conversation
    * @param isPrivate whether the conversation is private or not
-   * @param conversationUserAdded the user added to the conversation in the conversation jsp file
    */
-  public Conversation(UUID id, UUID owner, String title, Instant creation, boolean isPrivate, String conversationUserAdded) {
+  public Conversation(UUID id, UUID owner, String title, Instant creation, boolean isPrivate) {
     this.id = id;
     this.owner = owner;
     this.creation = creation;
     this.title = title;
     this.isPrivate = isPrivate;
-    this.conversationUserAdded = conversationUserAdded;
   }
 
   /** Returns the ID of this Conversation. */
@@ -89,9 +85,11 @@ public class Conversation {
   public boolean getIsPrivate() {
     return isPrivate;
   }
+  
   /**Returns the users in the conversation */
-  public String getConversationUserAdded(){
-    return conversationUserAdded;
+  public String getConversationWhitelistUsernames(){
+    // TODO: Complete this
+    return "";
   }
 
   /** Override equality, so conversations are compared based on their ID */

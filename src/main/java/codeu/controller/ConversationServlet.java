@@ -153,11 +153,13 @@ public class ConversationServlet extends HttpServlet {
     }
 
     Conversation conversation =
-        new Conversation(UUID.randomUUID(), user.getId(), conversationTitle, Instant.now(), conversationUserAdded);
+        new Conversation(UUID.randomUUID(), user.getId(), conversationTitle, Instant.now());
+    
     conversationStore.addConversation(conversation);
 
     // Users are always whitelisted in conversations they create
     user.addToConversation(conversation);
+
     // Adds conversation to activity feed page
     Activity activity = new Activity(UUID.randomUUID(), Instant.now(), "New conversation: " + conversationTitle);
     activityStore.addActivity(activity);

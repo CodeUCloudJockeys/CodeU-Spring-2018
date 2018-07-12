@@ -24,6 +24,7 @@ import codeu.model.store.basic.MessageStore;
 import codeu.model.store.basic.UserStore;
 import java.io.IOException;
 import java.time.Instant;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import javax.servlet.ServletException;
@@ -126,20 +127,29 @@ public class ChatServlet extends HttpServlet {
     }
 
     UUID conversationId = conversation.getId();
+    boolean isOwner = (user != null) &&
+        conversation.getOwnerId() == user.getId();
 
     // TODO: Add pagination -- this will get insane with more than a few hundred messages
     List<Message> messages = messageStore.getMessagesInConversation(conversationId);
 
     request.setAttribute("conversation", conversation);
     request.setAttribute("messages", messages);
+    request.setAttribute("is_owner", isOwner);
     request.getRequestDispatcher("/WEB-INF/view/chat.jsp").forward(request, response);
   }
 
   /**
    * This function fires when a user submits the form on the chat page. It gets the logged-in
-   * username from the session, the conversation title from the URL, and the chat message from the
-   * submitted form data. It creates a new Message from that data, adds it to the model, and then
+   * username from the session and the conversation title from the URL.
+   *
+   * It may get a chat message from the submitted form data, or get a space-delimited list of
+   * usernames.
+   *
+   * In the former case, it creates a new Message from that data, adds it to the model, and then
    * redirects back to the chat page.
+   *
+   * In the latter case, it adds the users named in the list to the conversation.
    */
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -170,7 +180,21 @@ public class ChatServlet extends HttpServlet {
     }
 
     String messageContent = request.getParameter("message");
+    if (messageContent != null) {
+      HandleMessage(messageContent, conversation, user);
+    }
 
+    // User can only add users if user is owner and conversation is private
+    if (conversation.getOwnerId() == user.getId() && conversation.getIsPrivate()) {
+      String usernamesToAdd = request.getParameter("add_users");
+      HandleAddingUsers(usernamesToAdd, conversation);
+    }
+
+    // redirect to a GET request
+    response.sendRedirect("/chat/" + conversationTitle);
+  }
+
+  private void HandleMessage(String messageContent, Conversation conversation, User user) {
     // this removes any HTML from the message content
     String cleanedMessageContent = Jsoup.clean(messageContent, Whitelist.none());
 
@@ -183,11 +207,18 @@ public class ChatServlet extends HttpServlet {
             Instant.now());
 
     messageStore.addMessage(message);
+
     //adds messages to activity feed page
     Activity activity = new Activity(UUID.randomUUID(), Instant.now(), "New message in " + conversationTitle + ": " + messageContent );
     activityStore.addActivity(activity);
+  }
 
-    // redirect to a GET request
-    response.sendRedirect("/chat/" + conversationTitle);
+  private void HandleAddingUsers(String usernamesToAdd, Conversation conversation) {
+    // Get all users from the spacebar-separated username list
+    Arrays.stream(usernamesToAdd.trim().split("\\s+"))
+        .distinct()                          // Remove duplicate usernames
+        .filter(userStore::isUserRegistered) // Remove invalid usernames
+        .map(userStore::getUser)             // Get users from usernames
+        .forEach(user -> user.addToConversation(conversation)); // add each user to the conversation
   }
 }
