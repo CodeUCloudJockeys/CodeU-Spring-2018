@@ -36,7 +36,7 @@ public class Conversation {
    * @param title the title of this Conversation
    * @param creation the creation time of this Conversation
    */
-  public Conversation(UUID id, UUID owner, String title, Instant creation) {
+  public Conversation(UUID id, UUID owner, String title, Instant creation, String conversationUserAdded) {
     this.id = id;
     this.owner = owner;
     this.creation = creation;
@@ -84,6 +84,12 @@ public class Conversation {
   /** Returns whether the conversation is private or not */
   public boolean getIsPrivate() {
     return isPrivate;
+  }
+  
+  /**Returns the users in the conversation */
+  public String getConversationWhitelistUsernames(){
+    // TODO: Complete this
+    return "";
   }
 
   /** Override equality, so conversations are compared based on their ID */

@@ -14,6 +14,8 @@
 
 package codeu.model.store.persistence;
 
+
+import codeu.model.data.*;
 import codeu.model.data.Conversation;
 import codeu.model.data.Message;
 import codeu.model.data.Profile;
@@ -30,7 +32,10 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
+import java.lang.reflect.Type;
+
 import org.apache.commons.lang3.SerializationUtils;
+
 
 /**
  * This class handles all interactions with Google App Engine's Datastore service. On startup it
@@ -109,7 +114,8 @@ public class PersistentDataStore {
         UUID ownerUuid = UUID.fromString((String) entity.getProperty("owner_uuid"));
         String title = (String) entity.getProperty("title");
         Instant creationTime = Instant.ofEpochMilli((long) entity.getProperty("creation_time"));
-        Conversation conversation = new Conversation(uuid, ownerUuid, title, creationTime);
+        String conversationUser = (String) entity.getProperty("conversationUSer");
+        Conversation conversation = new Conversation(uuid, ownerUuid, title, creationTime, conversationUser);
         conversations.add(conversation);
       } catch (Exception e) {
         // In a production environment, errors should be very rare. Errors which may
@@ -184,6 +190,31 @@ public class PersistentDataStore {
     return profiles;
   }
 
+  public List<Activity> loadActivities() throws PersistentDataStoreException {
+
+    List<Activity> activities = new ArrayList<>();
+
+    //Retrieve all activities from the datastore
+    Query query = new Query("chat-activity").addSort("creation_time", SortDirection.ASCENDING);
+    PreparedQuery results = datastore.prepare(query);
+    for (Entity entity : results.asIterable()) {
+      try {
+        UUID uuid = UUID.fromString((String) entity.getProperty("activityId"));
+        Instant creationTime = Instant.parse((String) entity.getProperty("activityCreation"));
+        String message = (String) entity.getProperty("activityMessage");
+
+        Activity activity = new Activity(uuid, creationTime, message);
+        activities.add(activity);
+      } catch (Exception e) {
+        // In a production environment, errors should be very rare. Errors which may
+        // occur include network errors, Datastore service errors, authorization errors,
+        // database entity definition mismatches, or service mismatches.
+        throw new PersistentDataStoreException(e);
+      }
+    }
+    return activities;
+  }
+
   /** Write a User object to the Datastore service. */
   public void writeThrough(User user) {
     Entity userEntity = new Entity("chat-users", user.getId().toString());
@@ -215,6 +246,7 @@ public class PersistentDataStore {
     conversationEntity.setProperty("owner_uuid", conversation.getOwnerId().toString());
     conversationEntity.setProperty("title", conversation.getTitle());
     conversationEntity.setProperty("creation_time", conversation.getCreationTime().toEpochMilli());
+    conversationEntity.setProperty("conversationUser", conversation.getConversationUserAdded());
     datastore.put(conversationEntity);
   }
 
@@ -236,6 +268,14 @@ public class PersistentDataStore {
     datastore.put(profileEntity);
   }
 
+
+  public void writeThrough (Activity activity) {
+    Entity activityEntity = new Entity("chat-activity", activity.getId().toString());
+    activityEntity.setProperty("activityId", activity.getId().toString());
+    activityEntity.setProperty("activityMessage", activity.getActivityMessage());
+    activityEntity.setProperty("activityCreation", activity.getCreationTime().toString());
+    datastore.put(activityEntity);
+  }
   // TODO: Test these
   private Blob idSetToBlob(HashSet<UUID> idSet) {
     return new Blob(SerializationUtils.serialize(idSet));

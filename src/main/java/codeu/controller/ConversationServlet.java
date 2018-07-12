@@ -14,8 +14,10 @@
 
 package codeu.controller;
 
+import codeu.model.data.Activity;
 import codeu.model.data.Conversation;
 import codeu.model.data.User;
+import codeu.model.store.basic.ActivityStore;
 import codeu.model.store.basic.ConversationStore;
 import codeu.model.store.basic.UserStore;
 import java.io.IOException;
@@ -28,6 +30,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.swing.*;
 
 /** Servlet class responsible for the conversations page. */
 public class ConversationServlet extends HttpServlet {
@@ -38,6 +41,9 @@ public class ConversationServlet extends HttpServlet {
   /** Store class that gives access to Conversations. */
   private ConversationStore conversationStore;
 
+  /**Store class that gives access to Activities */
+  private ActivityStore activityStore;
+
   /**
    * Set up state for handling conversation-related requests. This method is only called when
    * running in a server, not when running in a test.
@@ -47,6 +53,7 @@ public class ConversationServlet extends HttpServlet {
     super.init();
     setUserStore(UserStore.getInstance());
     setConversationStore(ConversationStore.getInstance());
+    setActivityStore(ActivityStore.getInstance());
   }
 
   /**
@@ -64,6 +71,11 @@ public class ConversationServlet extends HttpServlet {
   void setConversationStore(ConversationStore conversationStore) {
     this.conversationStore = conversationStore;
   }
+
+  /** Sets the ActivityStore used by this servlet. This function provides a common setup method
+   * for use by the test framework or the servlet's init() function;
+   */
+  void setActivityStore(ActivityStore activityStore){this.activityStore = activityStore; }
 
   /**
    * This function fires when a user navigates to the conversations page. It gets all of the
@@ -118,25 +130,39 @@ public class ConversationServlet extends HttpServlet {
     }
 
     String conversationTitle = request.getParameter("conversationTitle");
+    String conversationUserAdded = request.getParameter("conversationUserAdded");
+    User userAdded = userStore.getUser(conversationUserAdded);
     if (!conversationTitle.matches("[\\w]*")) {
       request.setAttribute("error", "Please enter only letters and numbers.");
       request.getRequestDispatcher("/WEB-INF/view/conversations.jsp").forward(request, response);
       return;
     }
 
+    //Checks whether or not the user being added to the conversation exists
+    if(userAdded == null){
+      request.setAttribute("error", "That username does not exist");
+      request.getRequestDispatcher("/WEB-INF/view/conversations.jsp").forward(request, response);
+      return;
+    }
+
     if (conversationStore.isTitleTaken(conversationTitle)) {
       // conversation title is already taken, just go into that conversation instead of creating a
-      // new one
+      // new one unless the entered user does not exist
       response.sendRedirect("/chat/" + conversationTitle);
       return;
     }
 
     Conversation conversation =
         new Conversation(UUID.randomUUID(), user.getId(), conversationTitle, Instant.now());
+    
     conversationStore.addConversation(conversation);
 
     // Users are always whitelisted in conversations they create
     user.addToConversation(conversation);
+
+    // Adds conversation to activity feed page
+    Activity activity = new Activity(UUID.randomUUID(), Instant.now(), "New conversation: " + conversationTitle);
+    activityStore.addActivity(activity);
 
     response.sendRedirect("/chat/" + conversationTitle);
   }
