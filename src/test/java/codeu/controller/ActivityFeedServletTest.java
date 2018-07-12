@@ -15,11 +15,18 @@
 package codeu.controller;
 
 import java.io.IOException;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import codeu.model.data.Activity;
+import codeu.model.store.basic.ActivityStore;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -31,6 +38,7 @@ public class ActivityFeedServletTest {
   private HttpSession mockSession;
   private HttpServletResponse mockResponse;
   private RequestDispatcher mockRequestDispatcher;
+  private ActivityStore mockActivityStore;
 
   @Before
   public void setup() {
@@ -42,27 +50,24 @@ public class ActivityFeedServletTest {
     mockSession = Mockito.mock(HttpSession.class);
     Mockito.when(mockRequest.getSession()).thenReturn(mockSession);
 
+    mockActivityStore = Mockito.mock(ActivityStore.class);
+    activityFeedServlet.setActivityStore(mockActivityStore);
+
     mockRequestDispatcher = Mockito.mock(RequestDispatcher.class);
     Mockito.when(mockRequest.getRequestDispatcher("/WEB-INF/view/activityfeed.jsp"))
         .thenReturn(mockRequestDispatcher);
   }
 
   @Test
-  public void testDoGet_friendUsername() throws IOException, ServletException {
-    Mockito.when(mockSession.getAttribute("user")).thenReturn("Jocelyn");
+  public void testDoGet()throws IOException, ServletException {
+    List<Activity> fakeActivityList = new ArrayList<>();
+    fakeActivityList.add(
+            new Activity(UUID.randomUUID(), Instant.now(), "test_message"));
+    Mockito.when(mockActivityStore.getAllActivities()).thenReturn(fakeActivityList);
+
     activityFeedServlet.doGet(mockRequest, mockResponse);
 
-    // Verify if user is redirected to activity feed page
+    Mockito.verify(mockRequest).setAttribute("activities", fakeActivityList);
     Mockito.verify(mockRequestDispatcher).forward(mockRequest, mockResponse);
-  }
-
-  @Test
-  public void testDoGet_NotfriendUsername() throws IOException, ServletException {
-    Mockito.when(mockSession.getAttribute("user")).thenReturn(null);
-
-    activityFeedServlet.doGet(mockRequest, mockResponse);
-
-    // Verify user is redirected to login page
-    Mockito.verify(mockResponse).sendRedirect("/login");
   }
 }

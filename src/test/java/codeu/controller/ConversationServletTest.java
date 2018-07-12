@@ -14,8 +14,10 @@
 
 package codeu.controller;
 
+import codeu.model.data.Activity;
 import codeu.model.data.Conversation;
 import codeu.model.data.User;
+import codeu.model.store.basic.ActivityStore;
 import codeu.model.store.basic.ConversationStore;
 import codeu.model.store.basic.UserStore;
 import java.io.IOException;
@@ -47,6 +49,8 @@ public class ConversationServletTest {
   private Conversation publicConversation;
   private Conversation privateConversation;
 
+  private User fakeUserAdded;
+
   @Before
   public void setup() {
     conversationServlet = new ConversationServlet();
@@ -65,14 +69,17 @@ public class ConversationServletTest {
 
     publicConversation = new Conversation(
         UUID.randomUUID(), UUID.randomUUID(),
-        "test_public_conversation", Instant.now(), false);
+        "test_public_conversation", Instant.now(), false, "test_user_added");
 
     privateConversation = new Conversation(
         UUID.randomUUID(), UUID.randomUUID(),
-        "test_private_conversation", Instant.now(), true);
+        "test_private_conversation", Instant.now(), true, "test_user_added");
 
     mockUserStore = Mockito.mock(UserStore.class);
     conversationServlet.setUserStore(mockUserStore);
+
+    fakeUserAdded = new User(UUID.randomUUID(), "test_user_addded", "test_user_added", Instant.now());
+    Mockito.when(mockUserStore.getUser("test_user_added")).thenReturn(fakeUserAdded);
   }
 
   @Test
@@ -145,6 +152,7 @@ public class ConversationServletTest {
   public void testDoPost_ConversationNameTaken() throws IOException, ServletException {
     Mockito.when(mockRequest.getParameter("conversationTitle")).thenReturn("test_conversation");
     Mockito.when(mockSession.getAttribute("user")).thenReturn("test_username");
+    Mockito.when(mockRequest.getParameter("conversationUserAdded")).thenReturn("test_user_added");
 
     User fakeUser = new User(UUID.randomUUID(), "test_username", "test_username", Instant.now());
     Mockito.when(mockUserStore.getUser("test_username")).thenReturn(fakeUser);
@@ -161,12 +169,15 @@ public class ConversationServletTest {
   @Test
   public void testDoPost_NewConversation() throws IOException, ServletException {
     Mockito.when(mockRequest.getParameter("conversationTitle")).thenReturn("test_conversation");
+    Mockito.when(mockRequest.getParameter("conversationUserAdded")).thenReturn("test_user_added");
     Mockito.when(mockSession.getAttribute("user")).thenReturn("test_username");
 
     User fakeUser = new User(UUID.randomUUID(), "test_username", "test_username", Instant.now());
     Mockito.when(mockUserStore.getUser("test_username")).thenReturn(fakeUser);
-
     Mockito.when(mockConversationStore.isTitleTaken("test_conversation")).thenReturn(false);
+
+    ActivityStore mockActivityStore = Mockito.mock(ActivityStore.class);
+    conversationServlet.setActivityStore(mockActivityStore);
 
     conversationServlet.doPost(mockRequest, mockResponse);
 
@@ -174,6 +185,11 @@ public class ConversationServletTest {
         ArgumentCaptor.forClass(Conversation.class);
     Mockito.verify(mockConversationStore).addConversation(conversationArgumentCaptor.capture());
     Assert.assertEquals(conversationArgumentCaptor.getValue().getTitle(), "test_conversation");
+
+    ArgumentCaptor<Activity> activityArgumentCaptor = ArgumentCaptor.forClass(Activity.class);
+
+    Mockito.verify(mockActivityStore).addActivity(activityArgumentCaptor.capture());
+    Assert.assertEquals("New conversation: test_conversation", activityArgumentCaptor.getValue().getActivityMessage());
 
     Mockito.verify(mockResponse).sendRedirect("/chat/test_conversation");
   }
