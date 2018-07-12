@@ -17,6 +17,15 @@ package codeu.controller;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+
+import codeu.model.data.Activity;
+import codeu.model.data.User;
+import codeu.model.data.Conversation;
+import codeu.model.data.Message;
+import codeu.model.store.basic.ActivityStore;
+import codeu.model.store.basic.ConversationStore;
+import codeu.model.store.basic.MessageStore;
+import codeu.model.store.basic.UserStore;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -28,29 +37,31 @@ public class ActivityFeedServlet extends HttpServlet {
    * variable used to keep track of activity, I'm thinking to create more variables as we go to
    * register different types of activities
    */
-  private List<String> activity;
-  /** used to keep track of users friends */
-  private List<String> friends_usernames;
+
+  /** Store class that gives access to Users. */
+  private ActivityStore activityStore;
+
+  /** List of all activities */
+  private List<String> activities;
+
+
+
 
   @Override
   public void init() throws ServletException {
     super.init();
-
-    /** hardcoded activity for now */
-    activity = Arrays.asList("Ricardo Joined", "Elona says hi", "Drew just left the conversation");
-    friends_usernames = Arrays.asList("Ricardo", "Elona", "Drew");
+    setActivityStore(activityStore.getInstance());
   }
 
+  void setActivityStore(ActivityStore activityStore){
+    this.activityStore = activityStore;
+  }
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
-    String username = (String) request.getSession().getAttribute("user");
-
-    if (username == null) {
-      response.sendRedirect("/login");
-      return;
-    } else {
-      request.getRequestDispatcher("/WEB-INF/view/activityfeed.jsp").forward(request, response);
-    }
+    List<Activity> activities = activityStore.getAllActivities();
+    request.setAttribute("activities", activities);
+    request.getRequestDispatcher("/WEB-INF/view/activityfeed.jsp").forward(request, response);
   }
-}
+
+  }

@@ -22,6 +22,7 @@ public class PersistentDataStoreException extends Exception {
    * @param cause the cause of this PersistentDataStoreException
    */
   public PersistentDataStoreException(Exception cause) {
+
     super(cause);
   }
 }
