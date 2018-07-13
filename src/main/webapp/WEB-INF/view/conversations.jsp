@@ -39,7 +39,7 @@
             <label class="form-control-label">Title:</label>
             <input type="text" name="conversationTitle">
             <label class="form-control-label">Add Users:</label>
-            <input type="text" name="conversationUser">
+            <input type="text" name="add_users">
           </div>
 
         <button type="submit">Create</button>
