@@ -53,8 +53,6 @@ Boolean isOwner = (Boolean) request.getAttribute("is_owner");
 
     <h1><%= conversation.getTitle() %>
       <a href="" style="float: right">&#8635;</a></h1>
-    <h3><%=conversation.getConversationUserAdded()%></h3>
-
     <hr/>
 
     <div id="chat">
