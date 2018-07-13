@@ -14,6 +14,7 @@
 
 package codeu.controller;
 
+import codeu.controller.util.ConversationUtil;
 import codeu.model.data.Activity;
 import codeu.model.data.Conversation;
 import codeu.model.data.Message;
@@ -187,7 +188,8 @@ public class ChatServlet extends HttpServlet {
     // User can only add users if user is owner and conversation is private
     if (conversation.getOwnerId() == user.getId() && conversation.getIsPrivate()) {
       String usernamesToAdd = request.getParameter("add_users");
-      HandleAddingUsers(usernamesToAdd, conversation);
+
+      ConversationUtil.AddUsersFromSpaceDelimitedString(userStore, usernamesToAdd, conversation);
     }
 
     // redirect to a GET request
@@ -211,14 +213,5 @@ public class ChatServlet extends HttpServlet {
     //adds messages to activity feed page
     Activity activity = new Activity(UUID.randomUUID(), Instant.now(), "New message in " + conversationTitle + ": " + messageContent );
     activityStore.addActivity(activity);
-  }
-
-  private void HandleAddingUsers(String usernamesToAdd, Conversation conversation) {
-    // Get all users from the spacebar-separated username list
-    Arrays.stream(usernamesToAdd.trim().split("\\s+"))
-        .distinct()                          // Remove duplicate usernames
-        .filter(userStore::isUserRegistered) // Remove invalid usernames
-        .map(userStore::getUser)             // Get users from usernames
-        .forEach(user -> user.addToConversation(conversation)); // add each user to the conversation
   }
 }
