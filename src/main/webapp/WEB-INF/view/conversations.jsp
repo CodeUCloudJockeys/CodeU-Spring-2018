@@ -40,6 +40,8 @@
             <input type="text" name="conversationTitle">
             <label class="form-control-label">Add Users:</label>
             <input type="text" name="add_users">
+            <label class="form-control-label">Private:</label>
+            <input type="checkbox" name="privatize">
           </div>
 
         <button type="submit">Create</button>

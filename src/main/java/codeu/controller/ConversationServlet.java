@@ -129,7 +129,9 @@ public class ConversationServlet extends HttpServlet {
     }
 
     String conversationTitle = request.getParameter("conversationTitle");
+    // TODO: Grey out username adding textbox for public conversations.
     String usernamesToAdd = request.getParameter("add_users");
+    boolean privatize = request.getParameter("privatize") != null;
 
     if (conversationTitle.isEmpty()) {
       request.setAttribute("error", "Please set a conversation title.");
@@ -151,7 +153,7 @@ public class ConversationServlet extends HttpServlet {
     }
 
     Conversation conversation =
-        new Conversation(UUID.randomUUID(), user.getId(), conversationTitle, Instant.now());
+        new Conversation(UUID.randomUUID(), user.getId(), conversationTitle, Instant.now(), privatize);
     
     conversationStore.addConversation(conversation);
 
