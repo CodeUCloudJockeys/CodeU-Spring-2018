@@ -211,7 +211,8 @@ public class ChatServlet extends HttpServlet {
     messageStore.addMessage(message);
 
     //adds messages to activity feed page
-    Activity activity = new Activity(UUID.randomUUID(), Instant.now(), "New message in " + conversationTitle + ": " + messageContent );
+    Activity activity = new Activity(UUID.randomUUID(), Instant.now(),
+        "New message in " + conversation.getTitle() + ": " + messageContent);
     activityStore.addActivity(activity);
   }
 }
