@@ -15,6 +15,8 @@
 package codeu.model.data;
 
 import java.time.Instant;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -27,6 +29,7 @@ public class Conversation {
   private final Instant creation;
   private final String title;
   private final boolean isPrivate;
+  private final Set<String> whitelistedUsernames;
 
   /**
    * Constructs a new public Conversation.
@@ -42,6 +45,10 @@ public class Conversation {
     this.creation = creation;
     this.title = title;
     this.isPrivate = false;
+
+    // Public conversations have a HashSet that will never be used.
+    // Making this null instead might be reasonable, but I'm not sure.
+    this.whitelistedUsernames = new HashSet<>();
   }
 
   /**
@@ -59,6 +66,8 @@ public class Conversation {
     this.creation = creation;
     this.title = title;
     this.isPrivate = isPrivate;
+
+    this.whitelistedUsernames = new HashSet<>();
   }
 
   /** Returns the ID of this Conversation. */
@@ -86,6 +95,30 @@ public class Conversation {
     return isPrivate;
   }
   
+  /** Returns the usernames of the users in the conversation */
+  public Set<String> getConversationWhitelistedUsernames() {
+    // The whitelisted username set will be empty only if the conversation is public
+    return whitelistedUsernames;
+  }
+
+  /** Adds a user's name to the whitelist */
+  public void addUserToWhitelist(User user) {
+    if (!this.isPrivate) {
+      return;
+    }
+
+    whitelistedUsernames.add(user.getName());
+
+    // This check is necessary to prevent an infinite recursion.
+    // user.addToConversation adds to the conversation's whitelist
+    if (!user.isInConversation(this)) {
+      user.addToConversation(this);
+    }
+  }
+
+  public boolean hasUsernameInWhitelist(String username) {
+    return whitelistedUsernames.contains(username);
+  }
 
   /** Override equality, so conversations are compared based on their ID */
   @Override
