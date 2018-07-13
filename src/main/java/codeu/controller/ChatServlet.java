@@ -189,7 +189,9 @@ public class ChatServlet extends HttpServlet {
     if (conversation.getOwnerId() == user.getId() && conversation.getIsPrivate()) {
       String usernamesToAdd = request.getParameter("add_users");
 
-      ConversationUtil.AddUsersFromSpaceDelimitedString(userStore, usernamesToAdd, conversation);
+      if (usernamesToAdd != null && !usernamesToAdd.isEmpty()) {
+        ConversationUtil.AddUsersFromSpaceDelimitedString(userStore, usernamesToAdd, conversation);
+      }
     }
 
     // redirect to a GET request
