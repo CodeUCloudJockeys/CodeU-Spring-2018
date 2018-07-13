@@ -129,7 +129,7 @@ public class ConversationServlet extends HttpServlet {
     }
 
     String conversationTitle = request.getParameter("conversationTitle");
-    // TODO: Grey out username adding textbox for public conversations.
+    // TODO: Grey out add_users textbox when conversation isn't private.
     String usernamesToAdd = request.getParameter("add_users");
     boolean privatize = request.getParameter("privatize") != null;
 
