@@ -14,7 +14,6 @@
 
 package codeu.model.store.persistence;
 
-
 import codeu.model.data.*;
 import codeu.model.data.Conversation;
 import codeu.model.data.Message;
@@ -32,10 +31,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
-import java.lang.reflect.Type;
-
 import org.apache.commons.lang3.SerializationUtils;
-
 
 /**
  * This class handles all interactions with Google App Engine's Datastore service. On startup it
@@ -77,7 +73,8 @@ public class PersistentDataStore {
         Instant creationTime = Instant.ofEpochMilli((long) entity.getProperty("creation_time"));
         boolean isAdmin = (boolean) entity.getProperty("is_admin");
 
-        HashSet<UUID> conversationIdSet = blobToIdSet((Blob) entity.getProperty("conversation_ids"));
+        HashSet<UUID> conversationIdSet =
+            blobToIdSet((Blob) entity.getProperty("conversation_ids"));
 
         User user = new User(uuid, userName, password, creationTime, isAdmin);
         user.setConversationIdSet(conversationIdSet);
@@ -115,7 +112,8 @@ public class PersistentDataStore {
         String title = (String) entity.getProperty("title");
         Instant creationTime = Instant.ofEpochMilli((long) entity.getProperty("creation_time"));
         String conversationUser = (String) entity.getProperty("conversationUSer");
-        Conversation conversation = new Conversation(uuid, ownerUuid, title, creationTime, conversationUser);
+        Conversation conversation =
+            new Conversation(uuid, ownerUuid, title, creationTime, conversationUser);
         conversations.add(conversation);
       } catch (Exception e) {
         // In a production environment, errors should be very rare. Errors which may
@@ -194,7 +192,7 @@ public class PersistentDataStore {
 
     List<Activity> activities = new ArrayList<>();
 
-    //Retrieve all activities from the datastore
+    // Retrieve all activities from the datastore
     Query query = new Query("chat-activity").addSort("creation_time", SortDirection.ASCENDING);
     PreparedQuery results = datastore.prepare(query);
     for (Entity entity : results.asIterable()) {
@@ -259,17 +257,7 @@ public class PersistentDataStore {
     datastore.put(profileEntity);
   }
 
-  public void writeThroughAbout(Profile profile, String about) {
-    Entity profileEntity = new Entity("chat-profile", profile.getId().toString());
-    profileEntity.setProperty("uuid", profile.getId().toString());
-    profileEntity.setProperty("profile_uuid", profile.getProfile().toString());
-    profileEntity.setProperty("about", about);
-    profileEntity.setProperty("creation_time", profile.getCreation().toEpochMilli());
-    datastore.put(profileEntity);
-  }
-
-
-  public void writeThrough (Activity activity) {
+  public void writeThrough(Activity activity) {
     Entity activityEntity = new Entity("chat-activity", activity.getId().toString());
     activityEntity.setProperty("activityId", activity.getId().toString());
     activityEntity.setProperty("activityMessage", activity.getActivityMessage());

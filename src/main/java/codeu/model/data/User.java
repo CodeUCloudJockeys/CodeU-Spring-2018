@@ -15,7 +15,9 @@
 package codeu.model.data;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.UUID;
 
 /** Class representing a registered user. */
@@ -26,6 +28,7 @@ public class User {
   private final Instant creation;
   private boolean isAdmin;
   private HashSet<UUID> conversationIdSet;
+  private List<String> userConversationTitles;
 
   /**
    * Constructs a new non-admin User.
@@ -35,12 +38,13 @@ public class User {
    * @param passwordHash the password of this User
    * @param creation the creation time of this User
    */
-  public User (UUID id, String name, String passwordHash, Instant creation) {
+  public User(UUID id, String name, String passwordHash, Instant creation) {
     this.id = id;
     this.name = name;
     this.passwordHash = passwordHash;
     this.creation = creation;
     this.isAdmin = false;
+    this.userConversationTitles = new ArrayList<>();
 
     this.conversationIdSet = new HashSet<>();
   }
@@ -105,12 +109,19 @@ public class User {
     // if it isn't private.
     if (conversation.getIsPrivate()) {
       conversationIdSet.add(conversation.getId());
+      userConversationTitles.add(conversation.getTitle());
     }
   }
 
   /** Removes the user from a conversation */
   public void removeFromConversation(Conversation conversation) {
     conversationIdSet.remove(conversation.getId());
+    userConversationTitles.remove(conversation.getTitle());
+  }
+
+  /** Returns a list of conversation titles that the user belongs too * */
+  public List<String> getUserConversationTitles() {
+    return userConversationTitles;
   }
 
   /** Returns whether the user is an admin. */

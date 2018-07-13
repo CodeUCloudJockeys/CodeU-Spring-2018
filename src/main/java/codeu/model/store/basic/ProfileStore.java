@@ -51,14 +51,15 @@ public class ProfileStore {
   public void updateAbout(UUID id, String about) {
     for (Profile profile : profiles) {
       if (profile.getId().equals(id)) {
-        persistentStorageAgent.writeThroughAbout(profile, about);
+        profile.setAbout(about);
+        persistentStorageAgent.writeThrough(profile);
       }
     }
   }
-  
-  public String getAbout(UUID id){
-    for(Profile profile: profiles) {
-      if(profile.getId().equals(id)){
+
+  public String getAbout(UUID id) {
+    for (Profile profile : profiles) {
+      if (profile.getId().equals(id)) {
         return profile.getAbout();
       }
     }

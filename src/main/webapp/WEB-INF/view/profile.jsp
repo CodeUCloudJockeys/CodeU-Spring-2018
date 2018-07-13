@@ -2,7 +2,10 @@
     pageEncoding="ISO-8859-1"%>
     
 <%@ page import="java.util.List" %>
+<%@ page import= "java.util.UUID" %>
+
 <%@ page import="codeu.model.data.Profile" %>
+<%@ page import="codeu.model.data.Conversation" %>
 <%@ page import="codeu.model.store.basic.ProfileStore" %>
 
 
@@ -24,30 +27,35 @@
       <hr/>
     <%} %>
     
-  <% List<Profile> profiles = (List<Profile>) request.getAttribute("profiles");
-    if(profiles == null){
-  %>
-    <p>Welcome.</p>
-  <% } else{
-  %>
-    <%
-      String user = (String) request.getSession().getAttribute("user");
-      for(Profile profile : profiles){
+    <% List<Profile> profiles = (List<Profile>) request.getAttribute("profiles");
+      if(profiles == null){
     %>
+      <p>Welcome.</p>
+    <% } else{  %>
+      <%
+        String user = (String) request.getSession().getAttribute("user");
+        for(Profile profile : profiles){
+      %> 
         <a><%= profile.getAbout() %></a>
+      <% } %>
     <%} %>
-  <% } %>
-  <hr/>
-  
-  <form action="/profile/" method="POST">
-       <div class="form-group">
-          <label class="form-control-label">Edit:</label>
+    <form action="/profile/" method="POST">
+      <div class="form-group">
+        <label class="form-control-label">Edit:</label>
         <input type="text" name="profileAbout">
-      </div>
-             
+      </div>       
       <button type="submit">Update</button>
-      
     </form>
+  <hr/>
+  <% List<Conversation> convos = (List<Conversation>) request.getAttribute("convos");
+    if(convos != null){ %>
+    <% for(Conversation conversation: convos){ %>
+      <a><%= conversation.getTitle() %></a>
+    <%} %> 
+    <%} else{%> 
+      <p>Add me in some conversations!</p>
+    <%} %>
+  <hr/>
   </div>  
 </body>
 </html>
