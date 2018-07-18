@@ -18,7 +18,7 @@ public class ConversationStoreTest {
 
   private final Conversation CONVERSATION_ONE =
       new Conversation(
-          UUID.randomUUID(), UUID.randomUUID(), "conversation_one", Instant.ofEpochMilli(1000), "user_added_one");
+          UUID.randomUUID(), UUID.randomUUID(), "conversation_one", Instant.ofEpochMilli(1000));
 
   @Before
   public void setup() {
@@ -62,7 +62,7 @@ public class ConversationStoreTest {
   @Test
   public void testAddConversation() {
     Conversation inputConversation =
-        new Conversation(UUID.randomUUID(), UUID.randomUUID(), "test_conversation", Instant.now(), "test_user_added");
+        new Conversation(UUID.randomUUID(), UUID.randomUUID(), "test_conversation", Instant.now());
 
     conversationStore.addConversation(inputConversation);
     Conversation resultConversation =
@@ -83,6 +83,5 @@ public class ConversationStoreTest {
     Assert.assertEquals(expectedConversation.getTitle(), actualConversation.getTitle());
     Assert.assertEquals(
         expectedConversation.getCreationTime(), actualConversation.getCreationTime());
-    Assert.assertEquals(expectedConversation.getConversationUserAdded(), actualConversation.getConversationUserAdded());
   }
 }

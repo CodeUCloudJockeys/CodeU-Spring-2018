@@ -107,9 +107,15 @@ public class User {
   public void addToConversation(Conversation conversation) {
     // Users already belong to public conversations, so don't uselessly add to conversation
     // if it isn't private.
-    if (conversation.getIsPrivate()) {
-      conversationIdSet.add(conversation.getId());
-      userConversationTitles.add(conversation.getTitle());
+
+    if (!conversation.getIsPrivate()) {
+      return;
+    }
+
+    conversationIdSet.add(conversation.getId());
+
+    if (!conversation.hasUsernameInWhitelist(this.getName())) {
+      conversation.addUserToWhitelist(this);
     }
   }
 

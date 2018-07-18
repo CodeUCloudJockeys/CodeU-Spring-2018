@@ -77,15 +77,13 @@ public class PersistentDataStoreTest {
     UUID ownerOne = UUID.fromString("10000001-2222-3333-4444-555555555555");
     String titleOne = "Test_Title";
     Instant creationOne = Instant.ofEpochMilli(1000);
-    String conversationUserOne = "test_user_added";
-    Conversation inputConversationOne = new Conversation(idOne, ownerOne, titleOne, creationOne, conversationUserOne);
+    Conversation inputConversationOne = new Conversation(idOne, ownerOne, titleOne, creationOne);
 
     UUID idTwo = UUID.fromString("10000002-2222-3333-4444-555555555555");
     UUID ownerTwo = UUID.fromString("10000003-2222-3333-4444-555555555555");
     String titleTwo = "Test_Title_Two";
     Instant creationTwo = Instant.ofEpochMilli(2000);
-    String conversationUserTwo = "test_user_added_two";
-    Conversation inputConversationTwo = new Conversation(idTwo, ownerTwo, titleTwo, creationTwo, conversationUserTwo);
+    Conversation inputConversationTwo = new Conversation(idTwo, ownerTwo, titleTwo, creationTwo);
 
     // save
     persistentDataStore.writeThrough(inputConversationOne);
