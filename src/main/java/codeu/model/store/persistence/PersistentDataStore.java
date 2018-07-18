@@ -113,7 +113,7 @@ public class PersistentDataStore {
         Instant creationTime = Instant.ofEpochMilli((long) entity.getProperty("creation_time"));
         String conversationUser = (String) entity.getProperty("conversationUSer");
         Conversation conversation =
-            new Conversation(uuid, ownerUuid, title, creationTime, conversationUser);
+            new Conversation(uuid, ownerUuid, title, creationTime);
         conversations.add(conversation);
       } catch (Exception e) {
         // In a production environment, errors should be very rare. Errors which may
