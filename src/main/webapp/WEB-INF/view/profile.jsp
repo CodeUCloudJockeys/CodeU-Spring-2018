@@ -28,10 +28,10 @@
     <%} %>
     
     <% List<Profile> profiles = (List<Profile>) request.getAttribute("profiles");
-      if(profiles == null){
+      if(profiles == null) {
     %>
       <p>Welcome.</p>
-    <% } else{  %>
+    <% } else {  %>
       <%
         String user = (String) request.getSession().getAttribute("user");
         for(Profile profile : profiles){
@@ -48,11 +48,12 @@
     </form>
   <hr/>
   <% List<Conversation> convos = (List<Conversation>) request.getAttribute("convos");
-    if(convos != null){ %>
+    if(convos != null){
+  %>
     <% for(Conversation conversation: convos){ %>
       <a><%= conversation.getTitle() %></a>
     <%} %> 
-    <%} else{%> 
+    <%} else {%> 
       <p>Add me in some conversations!</p>
     <%} %>
   <hr/>
