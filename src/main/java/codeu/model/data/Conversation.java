@@ -15,6 +15,8 @@
 package codeu.model.data;
 
 import java.time.Instant;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -27,7 +29,7 @@ public class Conversation {
   private final Instant creation;
   private final String title;
   private final boolean isPrivate;
-  private final String conversationUserAdded;
+  private final Set<String> whitelistedUsernames;
 
   /**
    * Constructs a new public Conversation.
@@ -37,13 +39,16 @@ public class Conversation {
    * @param title the title of this Conversation
    * @param creation the creation time of this Conversation
    */
-  public Conversation(UUID id, UUID owner, String title, Instant creation, String conversationUserAdded) {
+  public Conversation(UUID id, UUID owner, String title, Instant creation) {
     this.id = id;
     this.owner = owner;
     this.creation = creation;
     this.title = title;
     this.isPrivate = false;
-    this.conversationUserAdded = conversationUserAdded;
+
+    // Public conversations have a HashSet that will never be used.
+    // Making this null instead might be reasonable, but I'm not sure.
+    this.whitelistedUsernames = new HashSet<>();
   }
 
   /**
@@ -54,15 +59,15 @@ public class Conversation {
    * @param title the title of this Conversation
    * @param creation the creation time of this Conversation
    * @param isPrivate whether the conversation is private or not
-   * @param conversationUserAdded the user added to the conversation in the conversation jsp file
    */
-  public Conversation(UUID id, UUID owner, String title, Instant creation, boolean isPrivate, String conversationUserAdded) {
+  public Conversation(UUID id, UUID owner, String title, Instant creation, boolean isPrivate) {
     this.id = id;
     this.owner = owner;
     this.creation = creation;
     this.title = title;
     this.isPrivate = isPrivate;
-    this.conversationUserAdded = conversationUserAdded;
+
+    this.whitelistedUsernames = new HashSet<>();
   }
 
   /** Returns the ID of this Conversation. */
@@ -89,9 +94,30 @@ public class Conversation {
   public boolean getIsPrivate() {
     return isPrivate;
   }
-  /**Returns the users in the conversation */
-  public String getConversationUserAdded(){
-    return conversationUserAdded;
+  
+  /** Returns the usernames of the users in the conversation */
+  public Set<String> getConversationWhitelistedUsernames() {
+    // The whitelisted username set will be empty only if the conversation is public
+    return whitelistedUsernames;
+  }
+
+  /** Adds a user's name to the whitelist */
+  public void addUserToWhitelist(User user) {
+    if (!this.isPrivate) {
+      return;
+    }
+
+    whitelistedUsernames.add(user.getName());
+
+    // This check is necessary to prevent an infinite recursion.
+    // user.addToConversation adds to the conversation's whitelist
+    if (!user.isInConversation(this)) {
+      user.addToConversation(this);
+    }
+  }
+
+  public boolean hasUsernameInWhitelist(String username) {
+    return whitelistedUsernames.contains(username);
   }
 
   /** Override equality, so conversations are compared based on their ID */

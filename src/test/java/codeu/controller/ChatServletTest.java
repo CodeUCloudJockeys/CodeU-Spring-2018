@@ -73,14 +73,14 @@ public class ChatServletTest {
     chatServlet.setUserStore(mockUserStore);
   }
 
-  // TODO: Add more tests to testDoGet()
+  // TODO: Add more tests to testDoGet() and testDoPost()
   @Test
   public void testDoGet() throws IOException, ServletException {
     Mockito.when(mockRequest.getRequestURI()).thenReturn("/chat/test_conversation");
 
     UUID fakeConversationId = UUID.randomUUID();
     Conversation fakeConversation =
-        new Conversation(fakeConversationId, UUID.randomUUID(), "test_conversation", Instant.now(), "test_user_added ");
+        new Conversation(fakeConversationId, UUID.randomUUID(), "test_conversation", Instant.now());
     Mockito.when(mockConversationStore.getConversationWithTitle("test_conversation"))
         .thenReturn(fakeConversation);
 
@@ -92,6 +92,7 @@ public class ChatServletTest {
             UUID.randomUUID(),
             "test message",
             Instant.now()));
+
     Mockito.when(mockMessageStore.getMessagesInConversation(fakeConversationId))
         .thenReturn(fakeMessageList);
 
@@ -170,7 +171,7 @@ public class ChatServletTest {
     Mockito.when(mockUserStore.getUser("test_username")).thenReturn(fakeUser);
 
     Conversation fakeConversation =
-        new Conversation(UUID.randomUUID(), UUID.randomUUID(), "test_conversation", Instant.now(), "test_user_added");
+        new Conversation(UUID.randomUUID(), UUID.randomUUID(), "test_conversation", Instant.now());
     Mockito.when(mockConversationStore.getConversationWithTitle("test_conversation"))
         .thenReturn(fakeConversation);
 
@@ -201,7 +202,7 @@ public class ChatServletTest {
     Mockito.when(mockUserStore.getUser("test_username")).thenReturn(fakeUser);
 
     Conversation fakeConversation =
-        new Conversation(UUID.randomUUID(), UUID.randomUUID(), "test_conversation", Instant.now(), "test_user_added");
+        new Conversation(UUID.randomUUID(), UUID.randomUUID(), "test_conversation", Instant.now());
     Mockito.when(mockConversationStore.getConversationWithTitle("test_conversation"))
         .thenReturn(fakeConversation);
 
