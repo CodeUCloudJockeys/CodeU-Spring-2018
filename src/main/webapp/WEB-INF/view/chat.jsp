@@ -144,7 +144,7 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
 
   <div id="flip-tabs" >
     <ul id="flip-navigation" >
-      <li class="selected"><a href="#" id="tab-0"  >Data</a></li>
+      <li class="selected"><a href="#" id="tab-0"  >Word Cloud</a></li>
       <li><a href="#" id="tab-1" >TimeSeries</a></li>
       <li><a href="#" id="tab-2" >Message count</a></li>
     </ul>
