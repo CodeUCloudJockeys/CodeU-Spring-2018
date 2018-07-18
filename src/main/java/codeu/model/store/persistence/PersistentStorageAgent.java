@@ -15,7 +15,6 @@
 package codeu.model.store.persistence;
 
 import codeu.model.data.*;
-
 import java.util.List;
 
 /**
@@ -91,7 +90,7 @@ public class PersistentStorageAgent {
     return persistentDataStore.loadProfile();
   }
 
-  public List<Activity> loadActivities() throws PersistentDataStoreException{
+  public List<Activity> loadActivities() throws PersistentDataStoreException {
     return persistentDataStore.loadActivities();
   }
 
@@ -114,11 +113,7 @@ public class PersistentStorageAgent {
     persistentDataStore.writeThrough(profile);
   }
 
-  public void writeThrough(Profile profile, String about) {
-    persistentDataStore.writeThrough(profile, about);
-  }
-
-  public void writeThrough(Activity activity){
+  public void writeThrough(Activity activity) {
     persistentDataStore.writeThrough(activity);
   }
 }
