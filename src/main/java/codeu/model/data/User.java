@@ -64,6 +64,7 @@ public class User {
     this.passwordHash = passwordHash;
     this.creation = creation;
     this.isAdmin = isAdmin;
+    this.userConversationTitles = new ArrayList<>();
 
     this.conversationIdSet = new HashSet<>();
   }

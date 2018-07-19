@@ -8,7 +8,6 @@
 <%@ page import="codeu.model.data.Conversation" %>
 <%@ page import="codeu.model.store.basic.ProfileStore" %>
 
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -32,13 +31,12 @@
     %>
       <p>Welcome.</p>
     <% } else {  %>
-      <%
-        String user = (String) request.getSession().getAttribute("user");
-        for(Profile profile : profiles){
-      %> 
-        <a><%= profile.getAbout() %></a>
-      <% } %>
+    <%
+      String aboutMe = (String) request.getAttribute("aboutMe");
+    %>
+      <%= aboutMe %>
     <%} %>
+
     <form action="/profile/" method="POST">
       <div class="form-group">
         <label class="form-control-label">Edit:</label>
@@ -47,11 +45,12 @@
       <button type="submit">Update</button>
     </form>
   <hr/>
-  <% List<Conversation> convos = (List<Conversation>) request.getAttribute("convos");
+  <% List<String> convos = (List<String>) request.getAttribute("convos");
     if(convos != null){
   %>
-    <% for(Conversation conversation: convos){ %>
-      <a><%= conversation.getTitle() %></a>
+    <p>My Conversations:</p>
+    <% for(int i = 0; i <convos.size(); i++){ %>
+      <p><%= convos.get(i) %></p>
     <%} %> 
     <%} else {%> 
       <p>Add me in some conversations!</p>

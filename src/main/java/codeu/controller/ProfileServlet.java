@@ -1,7 +1,9 @@
 package codeu.controller;
 
+import codeu.model.data.Conversation;
 import codeu.model.data.Profile;
 import codeu.model.data.User;
+import codeu.model.store.basic.ConversationStore;
 import codeu.model.store.basic.ProfileStore;
 import codeu.model.store.basic.UserStore;
 import java.io.IOException;
@@ -18,7 +20,7 @@ public class ProfileServlet extends HttpServlet {
 
   private UserStore userStore;
   private ProfileStore profileStore;
-
+  private ConversationStore conversationStore;
   @Override
   public void init() throws ServletException {
     super.init();
@@ -45,6 +47,15 @@ public class ProfileServlet extends HttpServlet {
       response.sendRedirect("/login");
     } else {
       List<Profile> profiles = profileStore.getAllProfiles();
+      User user = userStore.getUser(username);
+      String aboutMe = profileStore.getAbout(user.getId());
+      if(aboutMe.equals(null)){
+    	  aboutMe = "Enter an About me!";
+      }
+
+      List<String> convos = user.getUserConversationTitles();
+      request.setAttribute("convos", convos);
+      request.setAttribute("aboutMe", aboutMe);
       request.setAttribute("profiles", profiles);
       request.getRequestDispatcher("/WEB-INF/view/profile.jsp").forward(request, response);
     }
@@ -64,9 +75,6 @@ public class ProfileServlet extends HttpServlet {
       response.sendRedirect("/login");
       return;
     }
-
-    List<String> convos = user.getUserConversationTitles();
-    request.setAttribute("convos", convos);
 
     String profileAbout = request.getParameter("profileAbout");
     if (profileAbout != null) {
