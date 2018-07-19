@@ -150,18 +150,13 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
     </ul>
     <div id="flip-container">
       <div>
-        <p>tab 1</p>
         <%@ include file="/WEB-INF/view/wordcloud.jsp" %>
-        <!--Put Content for first tab here-->
       </div>
       <div>
         <%@ include file="/WEB-INF/view/timeseries.jsp" %>
-        <!--Put Content for second tab here-->
       </div>
       <div>
-        <p>tab 3</p>
         <%@ include file="/WEB-INF/view/messagecount.jsp" %>
-        <!--Put Content for third tab here-->
       </div>
     </div>
   </div>
