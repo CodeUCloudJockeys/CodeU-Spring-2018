@@ -36,8 +36,9 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
     }
 
     #flip-tabs{
-      width:300px;
-      margin:20px auto; position:relative;
+      width:700px;
+      margin:20px auto;
+      position:relative;
     }
     #flip-navigation{
       margin:0 0 10px; padding:0;
@@ -66,7 +67,6 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
       font-family:Arial; font-size:13px;
     }
     #flip-container div{
-      background:#fff;
     }
   </style>
 
@@ -151,14 +151,16 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
     <div id="flip-container">
       <div>
         <p>tab 1</p>
+        <%@ include file="/WEB-INF/view/wordcloud.jsp" %>
         <!--Put Content for first tab here-->
       </div>
       <div>
-        <p>tab 2</p>
+        <%@ include file="/WEB-INF/view/timeseries.jsp" %>
         <!--Put Content for second tab here-->
       </div>
       <div>
         <p>tab 3</p>
+        <%@ include file="/WEB-INF/view/messagecount.jsp" %>
         <!--Put Content for third tab here-->
       </div>
     </div>
