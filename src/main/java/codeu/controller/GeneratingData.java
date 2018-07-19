@@ -7,6 +7,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.Scanner;
 import java.util.UUID;
 
 import javax.servlet.ServletContext;
@@ -38,6 +42,9 @@ public class GeneratingData extends HttpServlet {
     private MessageStore messageStore;
     /** Store class that gives access to Users. */
     private UserStore userStore;
+    
+	private String[] users = new String[]{"boss", "manager", "ted", "frank", "linda", "exuser"};
+
 
     /** Set up state for handling chat requests. */
     @Override
@@ -65,45 +72,36 @@ public class GeneratingData extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.setContentType("text/plain");
 		ServletContext cntxt = getServletContext();
 		FileInputStream fstream = 
                 new FileInputStream(getServletContext().getRealPath("/datafile"));	
 		
-		String username = "nowork";
-	    String password = "1234";
-	    String message = "noworking";
-	    String title = "BadConvo";
+		//six mock users - will randomly be assigned a message
+		for(String user: users){
+		  newUser(user);
+		}
+		
+		//one convo for now - can expand later
+		String conversation = "codeu_faq";
 
+	    newPrivateConvo("boss", "codeu_faq");
+	    
 		BufferedReader br = new BufferedReader((new InputStreamReader(fstream)));
 		String line = br.readLine();
+		List<String> messages = new ArrayList<String>();
 		while(line !=null){
-		  username = br.readLine();
-		  password = br.readLine();
-		  message = br.readLine();
-		  title = br.readLine();
-		  String number = br.readLine();
-		  if(number.equals("0") || number.equals("1")){
-			newUser(username,password);
-		  }
-		  if(number.equals("0") || number.equals("2")){
-			newConvo(username,title);
-		  }
-		  if(number.equals("4") || number.equals("5")){
-			newPrivateConvo(username,title);
-		  }
-		  if(number.equals("0") || number.equals("3") || number.equals("5")){
-			newMessage(username,title,message);
-		  }
-
-		  line = br.readLine();
+			messages.add(br.readLine());
+			line = br.readLine();
 		}
-
+		Random rand = new Random();
+		for(int i = 0; i <20; i++){
+		  newMessage(users[rand.nextInt(5)], conversation, messages.get(rand.nextInt(38)));
+		}
 	  
 	}
 	
-	public void newUser(String username, String password){
-		String hashed =BCrypt.hashpw(password, BCrypt.gensalt());
+	public void newUser(String username){
+		String hashed =BCrypt.hashpw("1234", BCrypt.gensalt());
 		User newUser = new User(UUID.randomUUID(), username , hashed, Instant.now());
 	    userStore.addUser(newUser);
 	}
@@ -117,7 +115,10 @@ public class GeneratingData extends HttpServlet {
 		User user = userStore.getUser(username);
 		Conversation newConvo =
 		            new Conversation(UUID.randomUUID(), user.getId(), title, Instant.now(), true);
-		newConvo.addUserToWhitelist(user);
+		for(String name: users){
+		  User users = userStore.getUser(name);
+		  newConvo.addUserToWhitelist(users);
+		}
 		conversationStore.addConversation(newConvo);
 	}
 	public void newMessage(String username, String title, String message){
