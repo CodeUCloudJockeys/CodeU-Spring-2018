@@ -30,7 +30,7 @@
         var date = moment(d);
         date.date(1);
         date.month(0);
-        date.year(2012);
+        date.year(2018);
         return date.valueOf();
     }
 
@@ -105,8 +105,8 @@
         } else {
             xFormat = "%m/%d/%y";
             yFormat = "%H:%M";
-            var start = new Date(2012, 0, 1, 0, 0, 0, 0).getTime();
-            var stop = new Date(2012, 0, 1, 23, 59, 59, 59).getTime();
+            var start = new Date(2018, 0, 1, 0, 0, 0, 0).getTime();
+            var stop = new Date(2018, 0, 1, 23, 59, 59, 59).getTime();
             y.domain(d3.extent([start, stop]));
         }
 
