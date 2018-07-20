@@ -164,13 +164,13 @@ public class PersistentDataStore {
     List<Profile> profiles = new ArrayList<>();
 
     // Retrieve all profiles from the datastore.
-    Query query = new Query("chat-profile").addSort("creation_time", SortDirection.ASCENDING);
+    Query query = new Query("chat-profiles").addSort("creation_time", SortDirection.ASCENDING);
     PreparedQuery results = datastore.prepare(query);
 
     for (Entity entity : results.asIterable()) {
       try {
-        UUID uuid = UUID.fromString((String) entity.getProperty("owner_id"));
-        UUID profileUuid = UUID.fromString((String) entity.getProperty("id"));
+        UUID uuid = UUID.fromString((String) entity.getProperty("owner_uuid"));
+        UUID profileUuid = UUID.fromString((String) entity.getProperty("uuid"));
         Instant creationTime = Instant.ofEpochMilli((long) entity.getProperty("creation_time"));
         String about = (String) entity.getProperty("about");
         Profile profile = new Profile(uuid, profileUuid, about, creationTime);
@@ -246,9 +246,9 @@ public class PersistentDataStore {
   }
 
   public void writeThrough(Profile profile) {
-    Entity profileEntity = new Entity("chat-profile", profile.getId().toString());
-    profileEntity.setProperty("uuid", profile.getId().toString());
-    profileEntity.setProperty("profile_uuid", profile.getProfile().toString());
+    Entity profileEntity = new Entity("chat-profiles", profile.getId().toString());
+    profileEntity.setProperty("owner_uuid", profile.getId().toString());
+    profileEntity.setProperty("uuid", profile.getProfile().toString());
     profileEntity.setProperty("about", profile.getAbout());
     profileEntity.setProperty("creation_time", profile.getCreation().toEpochMilli());
     datastore.put(profileEntity);

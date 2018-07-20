@@ -49,9 +49,11 @@ public class ProfileStore {
   }
 
   public void updateAbout(UUID id, String about) {
-    for (Profile profile : profiles) {
-      if (profile.getId().equals(id)) {
+    for (int i = 0; i<profiles.size(); i++) {
+      Profile profile = profiles.get(i);
+      if (profile.getProfile().equals(id)) {
         profile.setAbout(about);
+        profiles.set(i, profile);
         persistentStorageAgent.writeThrough(profile);
       }
     }
@@ -59,11 +61,11 @@ public class ProfileStore {
 
   public String getAbout(UUID id) {
     for (Profile profile : profiles) {
-      if (profile.getId().equals(id)) {
+      if (profile.getProfile().equals(id)) {
         return profile.getAbout();
       }
     }
-    return null;
+    return "Enter an About me!";
   }
 
   public void setProfile(List<Profile> profiles) {
