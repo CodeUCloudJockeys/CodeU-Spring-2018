@@ -10,6 +10,8 @@ import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.time.Clock;
+import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +23,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.mindrot.jbcrypt.BCrypt;
+
 
 /** Servlet implementation class GeneratingData */
 public class GeneratingData extends HttpServlet {
@@ -109,8 +112,12 @@ public class GeneratingData extends HttpServlet {
   public void newMessage(String username, String title, String message) {
     User user = userStore.getUser(username);
     Conversation convo = conversationStore.getConversationWithTitle(title);
+    //Takes current time then offsets it at the most 90 minutes and at the least 0 minutes
+    Clock baseClock = Clock.systemDefaultZone();
+    Random rand = new Random();
+    Clock clock = Clock.offset(baseClock, Duration.ofMinutes(rand.nextInt(90)));
     Message newMessage =
-        new Message(UUID.randomUUID(), convo.getId(), user.getId(), message, Instant.now());
+        new Message(UUID.randomUUID(), convo.getId(), user.getId(), message, Instant.now(clock));
     messageStore.addMessage(newMessage);
   }
 }
