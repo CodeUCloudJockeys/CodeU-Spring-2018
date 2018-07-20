@@ -14,6 +14,7 @@
 
 package codeu.controller;
 
+import codeu.controller.util.ConversationUtil;
 import codeu.model.data.Activity;
 import codeu.model.data.Conversation;
 import codeu.model.data.User;
@@ -22,7 +23,6 @@ import codeu.model.store.basic.ConversationStore;
 import codeu.model.store.basic.UserStore;
 import java.io.IOException;
 import java.time.Instant;
-import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -30,7 +30,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.swing.*;
 
 /** Servlet class responsible for the conversations page. */
 public class ConversationServlet extends HttpServlet {
@@ -130,34 +129,42 @@ public class ConversationServlet extends HttpServlet {
     }
 
     String conversationTitle = request.getParameter("conversationTitle");
-    String conversationUserAdded = request.getParameter("conversationUserAdded");
-    User userAdded = userStore.getUser(conversationUserAdded);
+    // TODO: Grey out add_users textbox when conversation isn't private.
+    String usernamesToAdd = request.getParameter("add_users");
+    boolean privatize = request.getParameter("privatize") != null;
+
+    if (conversationTitle.isEmpty()) {
+      request.setAttribute("error", "Please set a conversation title.");
+      request.getRequestDispatcher("/WEB-INF/view/conversations.jsp").forward(request, response);
+      return;
+    }
+
     if (!conversationTitle.matches("[\\w]*")) {
       request.setAttribute("error", "Please enter only letters and numbers.");
       request.getRequestDispatcher("/WEB-INF/view/conversations.jsp").forward(request, response);
       return;
     }
 
-    //Checks whether or not the user being added to the conversation exists
-    if(userAdded == null){
-      request.setAttribute("error", "That username does not exist");
-      request.getRequestDispatcher("/WEB-INF/view/conversations.jsp").forward(request, response);
-      return;
-    }
-
     if (conversationStore.isTitleTaken(conversationTitle)) {
-      // conversation title is already taken, just go into that conversation instead of creating a
-      // new one unless the entered user does not exist
+      // Conversation title is already taken. Just go into that conversation instead of creating a
+      // new one.
       response.sendRedirect("/chat/" + conversationTitle);
       return;
     }
 
     Conversation conversation =
-        new Conversation(UUID.randomUUID(), user.getId(), conversationTitle, Instant.now(), conversationUserAdded);
+        new Conversation(UUID.randomUUID(), user.getId(), conversationTitle, Instant.now(), privatize);
+    
     conversationStore.addConversation(conversation);
 
     // Users are always whitelisted in conversations they create
     user.addToConversation(conversation);
+
+    if (!usernamesToAdd.isEmpty()) {
+      // Whitelist users in request
+      ConversationUtil.AddUsersFromSpaceDelimitedString(userStore, usernamesToAdd, conversation);
+    }
+
     // Adds conversation to activity feed page
     Activity activity = new Activity(UUID.randomUUID(), Instant.now(), "New conversation: " + conversationTitle);
     activityStore.addActivity(activity);

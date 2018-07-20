@@ -16,7 +16,6 @@ import javax.servlet.http.HttpServletResponse;
 /** This servlet class is responsible the profile pages */
 public class ProfileServlet extends HttpServlet {
 
-  private String name;
   private UserStore userStore;
   private ProfileStore profileStore;
 
@@ -66,9 +65,14 @@ public class ProfileServlet extends HttpServlet {
       return;
     }
 
+    List<String> convos = user.getUserConversationTitles();
+    request.setAttribute("convos", convos);
+
     String profileAbout = request.getParameter("profileAbout");
     if (profileAbout != null) {
       profileStore.updateAbout(user.getId(), profileAbout);
+    } else {
+      profileStore.updateAbout(user.getId(), "Enter an About Me.");
     }
 
     Profile profile = new Profile(UUID.randomUUID(), user.getId(), profileAbout, Instant.now());
