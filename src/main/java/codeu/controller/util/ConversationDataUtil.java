@@ -2,7 +2,9 @@ package codeu.controller.util;
 
 import codeu.model.data.Conversation;
 import codeu.model.data.Message;
+import codeu.model.data.User;
 import codeu.model.store.basic.MessageStore;
+import codeu.model.store.basic.UserStore;
 import java.time.*;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -12,11 +14,50 @@ import java.util.stream.Stream;
 
 public class ConversationDataUtil {
 
-  static void processData(Conversation conversation) {
-    MessageStore messageStore = MessageStore.getInstance();
+  private UserStore userStore;
+  private MessageStore messageStore;
+
+  private Map<String,Integer> wordFrequency;
+  private Map<Integer,Integer> hourFrequency;
+  private Map<String,Integer> usernameFrequency;
+
+  public ConversationDataUtil(Conversation conversation) {
+    userStore = UserStore.getInstance();
+    messageStore = MessageStore.getInstance();
+
+    processData(conversation);
+  }
+
+  private void processData(Conversation conversation) {
 
     List<Message> messageList = messageStore.getMessagesInConversation(conversation.getId());
+    Stream<Message> messageStream = messageList.stream();
 
+    wordFrequency = messageStreamToWordFrequencyMap(messageStream);
+    hourFrequency = messageStreamToHourlyMessageFrequencyMap(messageStream);
+    usernameFrequency = messageStreamToUsernameFrequencyMap(messageStream);
+
+  }
+
+  // Returns the map from words in messages to their frequency
+  // [ "hello world", "goodbye world", "hello hello" ] ->
+  // { hello: 3, world: 2, goodbye: 1 }
+  public Map<String,Integer> getWordFrequency () {
+    return wordFrequency;
+  }
+
+  // Returns the map from hours of messages to the amount of messages in each hour
+  // [ Message at 12:30, Message at 18:00, Message at 18:15, Message at 13:00, Message at 13:02 ] ->
+  // { 12: 1, 18: 2, 13: 2 }
+  public Map<Integer,Integer> getHourFrequency () {
+    return hourFrequency;
+  }
+
+  // Returns the map from usernames to amount of messages that username sent
+  // [ Message by bob, Message by bob, Message by alice, Message by bob, Message by chad ] ->
+  // { bob:3, alice:1, chad:1 }
+  public Map<String,Integer> getUsernameFrequency () {
+    return usernameFrequency;
   }
 
   // TODO: Handle weird inputs, strip numbers and upper/lowercase
@@ -31,11 +72,7 @@ public class ConversationDataUtil {
     // Counts the frequency of each word on the list of messages.
     messageStream.map(Message::getContent) // Turn into stream of message strings
         .flatMap(str -> Arrays.stream(str.split("\\s+"))) // Turn into stream of words
-        .forEach(
-            (word) -> {
-              frequencyMap.put(word, frequencyMap.getOrDefault(word, 0) + 1);
-            }
-        ); // Count each word with the map
+        .forEach((word) -> countInMap(frequencyMap, word)); // Count each word with the map
 
     return frequencyMap;
   }
@@ -48,15 +85,26 @@ public class ConversationDataUtil {
 
     Map<Integer, Integer> frequencyMap = new HashMap<>();
 
-    // Counts the number of messages that are
+    // Counts the number of messages that are sent in each hour
     messageStream.map(Message::getCreationTime)
         .mapToInt(instant -> LocalDateTime.ofInstant(instant, ZoneOffset.UTC).getHour())
-        .forEach(
-            (hour) -> {
-              frequencyMap.put(hour, frequencyMap.getOrDefault(hour, 0) + 1);
-            }
-        );
+        .forEach((hour)-> countInMap(frequencyMap, hour));
 
     return frequencyMap;
+  }
+
+  private Map<String,Integer> messageStreamToUsernameFrequencyMap(Stream<Message> messageStream) {
+    Map<String, Integer> frequencyMap = new HashMap<>();
+
+    messageStream.map(Message::getAuthorId)
+        .map(userStore::getUser)
+        .map(User::getName)
+        .forEach((username) -> countInMap(frequencyMap, username));
+
+    return frequencyMap;
+  }
+
+  private <K> void countInMap (Map<K, Integer> frequencyMap, K key) {
+    frequencyMap.put(key, frequencyMap.getOrDefault(key, 0) + 1);
   }
 }
