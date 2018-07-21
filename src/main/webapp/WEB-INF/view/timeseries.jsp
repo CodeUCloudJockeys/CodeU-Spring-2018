@@ -1,22 +1,39 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
 <html>
 <head>
-    <link rel="stylesheet" href="\timeseries\style.css" />
-    <script src="/underscore/underscore.js"></script>
-    <script src="/moment/moment.js"></script>
-    <script src="https://d3js.org/d3.v5.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-time/1.0.8/d3-time.js"></script>
-    <script src="/timeseries/timeseries.js"></script>
     <script>
-        window.onload = function() {
-            var domEl = 'timeseries';
-            var data = [{'value': 1380854103662},{'value': 1363641921283}];
-            var brushEnabled = true;
-            timeseries(domEl, data, brushEnabled);
+        window.onload = function () {
+
+            var chart = new CanvasJS.Chart("chartContainer", {
+                animationEnabled: true,
+                theme: "light2", // "light1", "light2", "dark1", "dark2"
+                title:{
+                    text: "Messages sent per hour"
+                },
+                axisY: {
+                    title: "Messages"
+                },
+                data: [{
+                    type: "column",
+                    showInLegend: true,
+                    legendMarkerColor: "grey",
+                    legendText: "Number of messages",
+                    dataPoints: [
+                        { y: 10, label: "1" },
+                        { y: 30,  label: "2" },
+                        { y: 45,  label: "3" },
+                        { y: 60,  label: "4" },
+                        { y: 15,  label: "5" }
+                    ]
+                }]
+            });
+            chart.render();
+
         }
     </script>
 </head>
 <body>
-    <div class="timeseries"></div>
+<div id="chartContainer" style="height: 300px; width: 100%;"></div>
+<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 </body>
 </html>
