@@ -1,16 +1,59 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: Jocelyn
-  Date: 7/17/2018
-  Time: 10:27 PM
-  To change this template use File | Settings | File Templates.
---%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<!DOCTYPE html>
 <html>
-<head>
-    <title>Title</title>
-</head>
-<body>
 
+<head>
+    <script src="https://cdn.zingchart.com/zingchart.min.js"></script>
+    <script>
+        zingchart.MODULESDIR = "https://cdn.zingchart.com/modules/";
+        ZC.LICENSE = ["569d52cefae586f634c54f86dc99e6a9", "ee6b7db5b51705a13dc2339db3edaf6d"];
+    </script>
+    <link href="https://fonts.googleapis.com/css?family=Crete+Round" rel="stylesheet">
+    <style></style>
+</head>
+
+<body>
+<div id="myChart"></div>
+<script>
+    var myConfig = {
+        type: 'wordcloud',
+        options: {
+            text: 'these are the top 10 words in the chat',
+            aspect: 'flow-center',
+            rotate: true,
+            colorType: 'palette',
+            palette: ['#D32F2F', '#5D4037', '#1976D2', '#E53935', '#6D4C41', '#1E88E5', '#F44336', '#795548', '#2196F3', '#EF5350', '#8D6E63', '#42A5F5'],
+
+            style: {
+                fontFamily: 'Crete Round',
+
+                hoverState: {
+                    backgroundColor: '#D32F2F',
+                    borderRadius: 2,
+                    fontColor: 'white'
+                },
+                tooltip: {
+                    text: '%text: %hits',
+                    visible: true,
+
+                    alpha: 0.9,
+                    backgroundColor: '#1976D2',
+                    borderRadius: 2,
+                    borderColor: 'none',
+                    fontColor: 'white',
+                    fontFamily: 'Georgia',
+                    textAlpha: 1
+                }
+            }
+        },
+    };
+
+    zingchart.render({
+        id: 'myChart',
+        data: myConfig,
+        height: 200,
+        width: '100%'
+    });
+</script>
 </body>
+
 </html>
