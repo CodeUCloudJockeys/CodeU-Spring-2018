@@ -24,7 +24,6 @@ public class ProfileStore {
   private PersistentStorageAgent persistentStorageAgent;
 
   private List<Profile> profiles;
-
   private ProfileStore(PersistentStorageAgent persistentStorageAgent) {
     this.persistentStorageAgent = persistentStorageAgent;
     profiles = new ArrayList<>();

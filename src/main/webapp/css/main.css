@@ -24,7 +24,7 @@ body {
 }
 
 nav {
-  background-color: #283593;
+  background-color: #408080;
 }
 
 nav a {
@@ -43,7 +43,7 @@ nav input{
   border-color: transparent;
   top: 0px;
   margin: 0vw 0vw 0vw 90vw;
-  background: #283593;
+  background: #408080;
 }
 
 #navTitle {
@@ -57,7 +57,7 @@ nav input{
 }
 
 h1 {
-  color: #757575;
+  color: #808080;
 }
 
 input {

@@ -116,6 +116,7 @@ public class User {
     conversationIdSet.add(conversation.getId());
 
     if (!conversation.hasUsernameInWhitelist(this.getName())) {
+      userConversationTitles.add(conversation.getTitle());
       conversation.addUserToWhitelist(this);
     }
   }
