@@ -17,10 +17,16 @@
 <%@ page import="codeu.model.data.Conversation" %>
 <%@ page import="codeu.model.data.Message" %>
 <%@ page import="codeu.model.store.basic.UserStore" %>
+<%@ page import="codeu.controller.util.ConversationDataUtil" %>
+<%@ page import="codeu.controller.util.JavaToJavascriptUtil" %>
+<%@ page import="java.util.Map" %>
 <%
 Conversation conversation = (Conversation) request.getAttribute("conversation");
 List<Message> messages = (List<Message>) request.getAttribute("messages");
 Boolean isOwner = (Boolean) request.getAttribute("is_owner");
+
+ConversationDataUtil utilInstance = new ConversationDataUtil(conversation);
+
 %>
 
 <!DOCTYPE html>
