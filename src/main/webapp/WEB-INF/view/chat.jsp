@@ -17,10 +17,16 @@
 <%@ page import="codeu.model.data.Conversation" %>
 <%@ page import="codeu.model.data.Message" %>
 <%@ page import="codeu.model.store.basic.UserStore" %>
+<%@ page import="codeu.controller.util.ConversationDataUtil" %>
+<%@ page import="codeu.controller.util.JavaToJavascriptUtil" %>
+<%@ page import="java.util.Map" %>
 <%
 Conversation conversation = (Conversation) request.getAttribute("conversation");
 List<Message> messages = (List<Message>) request.getAttribute("messages");
 Boolean isOwner = (Boolean) request.getAttribute("is_owner");
+
+ConversationDataUtil utilInstance = new ConversationDataUtil(conversation);
+
 %>
 
 <!DOCTYPE html>
@@ -155,13 +161,111 @@ Boolean isOwner = (Boolean) request.getAttribute("is_owner");
     </ul>
     <div id="flip-container">
       <div>
-        <%@ include file="/WEB-INF/view/wordcloud.jsp" %>
+        <script src="https://cdn.zingchart.com/zingchart.min.js"></script>
+        <script>
+            zingchart.MODULESDIR = "https://cdn.zingchart.com/modules/";
+            ZC.LICENSE = ["569d52cefae586f634c54f86dc99e6a9", "ee6b7db5b51705a13dc2339db3edaf6d"];
+        </script>
+        <link href="https://fonts.googleapis.com/css?family=Crete+Round" rel="stylesheet">
+        <%
+          Map<String, Integer> wordFrequency = utilInstance.getWordFrequency();
+          String wordcloudText = JavaToJavascriptUtil.WordFreqUtil(wordFrequency);
+
+        %>
+        <div id="myChart"></div>
+        <script>
+            var myConfig = {
+                type: 'wordcloud',
+                options: {
+                    text: <%=wordcloudText%>,
+                    aspect: 'flow-center',
+                    rotate: true,
+                    colorType: 'palette',
+                    palette: ['#D32F2F', '#5D4037', '#1976D2', '#E53935', '#6D4C41', '#1E88E5', '#F44336', '#795548', '#2196F3', '#EF5350', '#8D6E63', '#42A5F5'],
+
+                    style: {
+                        fontFamily: 'Crete Round',
+
+                        hoverState: {
+                            backgroundColor: '#D32F2F',
+                            borderRadius: 2,
+                            fontColor: 'white'
+                        },
+                        tooltip: {
+                            text: '%text: %hits',
+                            visible: true,
+
+                            alpha: 0.9,
+                            backgroundColor: '#1976D2',
+                            borderRadius: 2,
+                            borderColor: 'none',
+                            fontColor: 'white',
+                            fontFamily: 'Georgia',
+                            textAlpha: 1
+                        }
+                    }
+                },
+            };
+
+            zingchart.render({
+                id: 'myChart',
+                data: myConfig,
+                height: 200,
+                width: '100%'
+            });
+        </script>
       </div>
       <div>
-        <%@ include file="/WEB-INF/view/timeseries.jsp" %>
+        <%
+          Map<Integer, Integer> hourFrequency = utilInstance.getHourFrequency();
+          String frequency = JavaToJavascriptUtil.HourFreqUtil(hourFrequency);
+        %>
+
+        <script>
+            window.onload = function () {
+
+                var chart = new CanvasJS.Chart("chartContainer", {
+                    animationEnabled: true,
+                    theme: "light2", // "light1", "light2", "dark1", "dark2"
+                    title:{
+                        text: "Messages sent per hour"
+                    },
+                    axisY: {
+                        title: "Messages"
+                    },
+                    data: [{
+                        type: "column",
+                        showInLegend: true,
+                        legendMarkerColor: "grey",
+                        legendText: "Number of messages",
+                        dataPoints: <%=frequency%>
+                    }]
+                });
+                chart.render();
+
+            }
+        </script>
+        <div id="chartContainer" style="height: 300px; width: 100%;"></div>
+        <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
       </div>
       <div>
-        <%@ include file="/WEB-INF/view/messagecount.jsp" %>
+        <%
+          Map<String, Integer> messageCount = utilInstance.getUsernameFrequency();
+          String userMessages = JavaToJavascriptUtil.UsernameFreqUtil(messageCount);
+        %>
+        <h1>Messages sent per user</h1>
+        <canvas id="canvasId"></canvas>
+        <script src="/canvas/excanvas.js"></script>
+        <script src="/canvas/html5-canvas-bar-graph.js"></script>
+        <script>
+            var ctx = document.getElementById("canvasId").getContext("2d");
+
+            var graph = new BarGraph(ctx);
+            graph.margin = 2;
+            graph.width = 450;
+            graph.height = 150;
+            <%=userMessages%>;
+        </script>
       </div>
     </div>
   </div>
