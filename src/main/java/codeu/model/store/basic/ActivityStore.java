@@ -63,16 +63,10 @@ public class ActivityStore {
     /** The in-memory map of Activities. */
     private Map<UUID, Activity> activities;
 
-    /**
-     * A map from types to IDs, so activity IDs can be fetched from types quickly.
-     */
-    private Map<Type, UUID> typeToId;
-
     /** This class is a singleton, so its constructor is private. Call getInstance() instead. */
     private ActivityStore(PersistentStorageAgent persistentStorageAgent) {
         this.persistentStorageAgent = persistentStorageAgent;
         activities = new HashMap<>();
-        typeToId = new HashMap<>();
     }
 
     /** Amount of activities */
