@@ -1,9 +1,4 @@
 <%--TODO: fix wordcloud displaying --%>
-<%@ page import="codeu.controller.util.JavaToJavascriptUtil" %>
-<%@ page import="codeu.controller.util.ConversationDataUtil" %>
-<%@ page import="codeu.model.store.basic.ConversationStore" %>
-<%@ page import="codeu.model.data.Conversation" %>
-<%@ page import="java.util.Map" %>
 <!DOCTYPE html>
 <html>
 
@@ -18,18 +13,11 @@
 </head>
 
 <body>
-<%
-    String requestURL = request.getRequestURI();
-    String conversationTitle = requestURL.substring("/chat".length());
+    <%
+        Map<String, Integer> wordFrequency = utilInstance.getWordFrequency();
+        String wordcloudText = JavaToJavascriptUtil.WordFreqUtil(wordFrequency);
 
-    ConversationStore conversationStore = ConversationStore.getInstance();
-    Conversation currentConversation = conversationStore.getConversationWithTitle(conversationTitle);
-
-    ConversationDataUtil utilInstance = new ConversationDataUtil(currentConversation);
-    Map<String, Integer> wordFrequency = utilInstance.getWordFrequency();
-    String wordcloudText = JavaToJavascriptUtil.WordFreqUtil(wordFrequency);
-
-%>
+    %>
 <div id="myChart"></div>
 <script>
     var myConfig = {
