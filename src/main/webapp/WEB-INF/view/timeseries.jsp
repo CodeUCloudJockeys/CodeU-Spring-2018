@@ -1,6 +1,22 @@
+<%@ page import="codeu.controller.util.JavaToJavascriptUtil" %>
+<%@ page import="codeu.controller.util.ConversationDataUtil" %>
+<%@ page import="java.util.Map" %>
 <!DOCTYPE HTML>
 <html>
 <head>
+   <%
+       String requestURL = request.getRequestURI();
+       String conversationTitle = requestURL.substring("/chat".length());
+
+       ConversationStore conversationStore = ConversationStore.getInstance();
+       Conversation currentConversation = conversationStore.getConversationWithTitle(conversationTitle);
+
+       ConversationDataUtil utilInstance = new ConversationDataUtil(currentConversation);
+       Map<Integer, Integer> hourFrequency = utilInstance.getHourFrequency();
+       String frequency = JavaToJavascriptUtil.HourFreqUtil(hourFrequency);
+   %>
+
+
     <script>
         window.onload = function () {
 
@@ -18,13 +34,7 @@
                     showInLegend: true,
                     legendMarkerColor: "grey",
                     legendText: "Number of messages",
-                    dataPoints: [
-                        { y: 10, label: "1" },
-                        { y: 30,  label: "2" },
-                        { y: 45,  label: "3" },
-                        { y: 60,  label: "4" },
-                        { y: 15,  label: "5" }
-                    ]
+                    dataPoints: <%=frequency%>
                 }]
             });
             chart.render();
