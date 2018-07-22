@@ -31,11 +31,10 @@ public class ConversationDataUtil {
   private void processData(Conversation conversation) {
 
     List<Message> messageList = messageStore.getMessagesInConversation(conversation.getId());
-    Stream<Message> messageStream = messageList.stream();
 
-    wordFrequency = messageStreamToWordFrequencyMap(messageStream);
-    hourFrequency = messageStreamToHourlyMessageFrequencyMap(messageStream);
-    usernameFrequency = messageStreamToUsernameFrequencyMap(messageStream);
+    wordFrequency = messageStreamToWordFrequencyMap(messageList.stream());
+    hourFrequency = messageStreamToHourlyMessageFrequencyMap(messageList.stream());
+    usernameFrequency = messageStreamToUsernameFrequencyMap(messageList.stream());
 
   }
 
@@ -71,6 +70,7 @@ public class ConversationDataUtil {
 
     // Counts the frequency of each word on the list of messages.
     messageStream.map(Message::getContent) // Turn into stream of message strings
+        .map(str -> str.replaceAll("[^A-Za-z0-9 ]", ""))
         .flatMap(str -> Arrays.stream(str.split("\\s+"))) // Turn into stream of words
         .forEach((word) -> countInMap(frequencyMap, word)); // Count each word with the map
 

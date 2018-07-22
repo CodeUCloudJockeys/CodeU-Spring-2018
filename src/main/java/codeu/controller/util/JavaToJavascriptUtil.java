@@ -8,6 +8,7 @@ public class JavaToJavascriptUtil {
   // Ex: "hello hello what is up with the"
   public static String WordFreqUtil(Map<String,Integer> wordFrequency) {
     StringBuilder sb = new StringBuilder();
+    sb.append("'");
 
     for (String key : wordFrequency.keySet()) {
       for (int i = 0; i < wordFrequency.get(key); i++) {
@@ -15,7 +16,7 @@ public class JavaToJavascriptUtil {
         sb.append(' ');
       }
     }
-
+    sb.append("'");
     return sb.toString();
   }
 
@@ -53,12 +54,15 @@ public class JavaToJavascriptUtil {
     StringBuilder xAxisSb = new StringBuilder();
     StringBuilder yAxisSb = new StringBuilder();
 
-    xAxisSb.append("graph.xAxis = [");
-    yAxisSb.append("graph.yAxis = [");
+    xAxisSb.append("graph.xAxisLabelArr = [");
+    yAxisSb.append("graph.update( [");
 
     for (String key : userFrequency.keySet()) {
+      xAxisSb.append("'");
       xAxisSb.append(key);
+      xAxisSb.append("'");
       xAxisSb.append(',');
+
 
       yAxisSb.append(userFrequency.get(key));
       yAxisSb.append(',');
@@ -68,7 +72,7 @@ public class JavaToJavascriptUtil {
     yAxisSb.setLength(yAxisSb.length() - 1);
 
     xAxisSb.append("]\n");
-    yAxisSb.append(']');
+    yAxisSb.append("])");
 
     xAxisSb.append(yAxisSb);
 
