@@ -17,7 +17,6 @@ package codeu.model.store.basic;
 import codeu.model.data.Activity;
 import codeu.model.store.persistence.PersistentStorageAgent;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
