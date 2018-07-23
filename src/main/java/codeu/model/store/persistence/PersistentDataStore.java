@@ -191,15 +191,15 @@ public class PersistentDataStore {
     List<Activity> activities = new ArrayList<>();
 
     // Retrieve all activities from the datastore
-    Query query = new Query("chat-activity").addSort("creation_time", SortDirection.ASCENDING);
+    Query query = new Query("chat-activity").addSort("activity_creation", SortDirection.ASCENDING);
     PreparedQuery results = datastore.prepare(query);
     for (Entity entity : results.asIterable()) {
       try {
-        UUID uuid = UUID.fromString((String) entity.getProperty("activityId"));
-        Instant creationTime = Instant.parse((String) entity.getProperty("activityCreation"));
-        String message = (String) entity.getProperty("activityMessage");
+        UUID activityUuid = UUID.fromString((String) entity.getProperty("activity_id"));
+        Instant creationTime = Instant.parse((String) entity.getProperty("activity_creation"));
+        String displayMessage = (String) entity.getProperty("activity_message");
 
-        Activity activity = new Activity(uuid, creationTime, message);
+        Activity activity = new Activity(activityUuid, creationTime, displayMessage);
         activities.add(activity);
       } catch (Exception e) {
         // In a production environment, errors should be very rare. Errors which may
@@ -256,9 +256,9 @@ public class PersistentDataStore {
 
   public void writeThrough(Activity activity) {
     Entity activityEntity = new Entity("chat-activity", activity.getId().toString());
-    activityEntity.setProperty("activityId", activity.getId().toString());
-    activityEntity.setProperty("activityMessage", activity.getActivityMessage());
-    activityEntity.setProperty("activityCreation", activity.getCreationTime().toString());
+    activityEntity.setProperty("activity_id", activity.getId().toString());
+    activityEntity.setProperty("activity_message", activity.getActivityMessage());
+    activityEntity.setProperty("activity_creation", activity.getCreationTime().toString());
     datastore.put(activityEntity);
   }
   // TODO: Test these
