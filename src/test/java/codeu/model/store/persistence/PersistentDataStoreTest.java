@@ -1,5 +1,6 @@
 package codeu.model.store.persistence;
 
+import codeu.model.data.Activity;
 import codeu.model.data.Conversation;
 import codeu.model.data.Message;
 import codeu.model.data.User;
@@ -145,5 +146,34 @@ public class PersistentDataStoreTest {
     Assert.assertEquals(authorTwo, resultMessageTwo.getAuthorId());
     Assert.assertEquals(contentTwo, resultMessageTwo.getContent());
     Assert.assertEquals(creationTwo, resultMessageTwo.getCreationTime());
+  } @Test
+  public void testSaveAndLoadActivities() throws PersistentDataStoreException {
+    UUID idOne = UUID.fromString("10000000-2222-3333-4444-555555555555");
+    Instant creationOne = Instant.ofEpochMilli(1000);
+    String activityMessageOne = "Test_activity_message";
+    Activity inputActivityOne = new Activity(idOne, creationOne, activityMessageOne);
+
+    UUID idTwo = UUID.fromString("10000002-2222-3333-4444-555555555555");
+    Instant creationTwo = Instant.ofEpochMilli(2000);
+    String activityMessageTwo = "Test_activity_message_two";
+    Activity inputActivityTwo = new Activity(idTwo, creationTwo, activityMessageTwo);
+
+    // save
+    persistentDataStore.writeThrough(inputActivityOne);
+    persistentDataStore.writeThrough(inputActivityTwo);
+
+    // load
+    List<Activity> resultActivities = persistentDataStore.loadActivities();
+
+    // confirm that what we saved matches what we loaded
+     Activity resultActivityOne = resultActivities.get(0);
+     Assert.assertEquals(idOne, resultActivityOne.getId());
+     Assert.assertEquals(creationOne, resultActivityOne.getCreationTime());
+     Assert.assertEquals(activityMessageOne, resultActivityOne.getActivityMessage());
+
+     Activity resultActivityTwo = resultActivities.get(1);
+     Assert.assertEquals(idTwo, resultActivityTwo.getId());
+     Assert.assertEquals(creationTwo, resultActivityTwo.getCreationTime());
+     Assert.assertEquals(activityMessageTwo, resultActivityTwo.getActivityMessage());
   }
 }

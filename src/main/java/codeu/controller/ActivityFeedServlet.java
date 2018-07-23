@@ -41,16 +41,10 @@ public class ActivityFeedServlet extends HttpServlet {
   /** Store class that gives access to Users. */
   private ActivityStore activityStore;
 
-  /** List of all activities */
-  private List<String> activities;
-
-
-
-
   @Override
   public void init() throws ServletException {
     super.init();
-    setActivityStore(activityStore.getInstance());
+    setActivityStore(ActivityStore.getInstance());
   }
 
   void setActivityStore(ActivityStore activityStore){
