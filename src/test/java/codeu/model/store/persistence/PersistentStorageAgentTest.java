@@ -83,8 +83,7 @@ public class PersistentStorageAgentTest {
   @Test
   public void testWriteThroughActivity() {
     Activity activity =
-            new Activity(
-                    UUID.randomUUID(),Instant.now(), "test_activity");
+            new Activity(UUID.randomUUID(),Instant.now(), "test_activity");
     persistentStorageAgent.writeThrough(activity);
     Mockito.verify(mockPersistentDataStore).writeThrough(activity);
   }
