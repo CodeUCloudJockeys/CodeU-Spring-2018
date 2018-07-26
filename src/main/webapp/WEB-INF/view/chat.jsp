@@ -220,53 +220,59 @@ ConversationDataUtil utilInstance = new ConversationDataUtil(conversation);
           Map<Integer, Integer> hourFrequency = utilInstance.getHourFrequency();
           String frequency = JavaToJavascriptUtil.HourFreqUtil(hourFrequency);
         %>
-
-        <script>
-            window.onload = function () {
-
-                var chart = new CanvasJS.Chart("chartContainer", {
-                    animationEnabled: true,
-                    theme: "light2", // "light1", "light2", "dark1", "dark2"
-                    title:{
-                        text: "Messages sent per hour"
-                    },
-                    axisY: {
-                        title: "Messages"
-                    },
-                    data: [{
-                        type: "column",
-                        showInLegend: true,
-                        legendMarkerColor: "grey",
-                        legendText: "Number of messages",
-                        dataPoints: <%=frequency%>
-                    }]
-                });
-                chart.render();
-
-            }
-        </script>
-        <div id="chartContainer" style="height: 300px; width: 100%;"></div>
-        <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+        <div id="chartContainer1" style="height: 300px; width: 100%;"></div>
       </div>
       <div>
         <%
-          Map<String, Integer> messageCount = utilInstance.getUsernameFrequency();
-          String userMessages = JavaToJavascriptUtil.UsernameFreqUtil(messageCount);
+          Map<String, Integer> userFrequency = utilInstance.getUsernameFrequency();
+          String messageCount = JavaToJavascriptUtil.UsernameFreqUtil(userFrequency);
         %>
-        <h1>Messages sent per user</h1>
-        <canvas id="canvasId"></canvas>
-        <script src="/canvas/excanvas.js"></script>
-        <script src="/canvas/html5-canvas-bar-graph.js"></script>
-        <script>
-            var ctx = document.getElementById("canvasId").getContext("2d");
-
-            var graph = new BarGraph(ctx);
-            graph.margin = 2;
-            graph.width = 450;
-            graph.height = 150;
-            <%=userMessages%>;
-        </script>
+        <div id="chartContainer2" style="height: 300px; width: 100%;"></div>
       </div>
+      <script>
+          window.onload = function () {
+
+              var chart1 = new CanvasJS.Chart("chartContainer1", {
+                  animationEnabled: true,
+                  theme: "light2", // "light1", "light2", "dark1", "dark2"
+                  title:{
+                      text: "Messages sent per hour"
+                  },
+                  axisY: {
+                      title: "Messages"
+                  },
+                  data: [{
+                      type: "column",
+                      showInLegend: true,
+                      legendMarkerColor: "grey",
+                      legendText: "Number of messages",
+                      dataPoints: <%=frequency%>
+                  }]
+              });
+
+              var chart2 = new CanvasJS.Chart("chartContainer2", {
+                  animationEnabled: true,
+                  theme: "light2", // "light1", "light2", "dark1", "dark2"
+                  title:{
+                      text: "Message Count"
+                  },
+                  axisY: {
+                      title: "Messages"
+                  },
+                  data: [{
+                      type: "column",
+                      showInLegend: true,
+                      legendMarkerColor: "grey",
+                      legendText: "Number of messages",
+                      dataPoints: <%=messageCount%>
+                  }]
+              });
+              chart1.render();
+              chart2.render();
+
+          }
+      </script>
+      <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
     </div>
   </div>
 
