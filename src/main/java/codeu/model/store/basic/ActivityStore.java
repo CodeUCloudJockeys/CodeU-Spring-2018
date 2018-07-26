@@ -87,7 +87,6 @@ public class ActivityStore {
      */
     public void addActivity(Activity activity) {
         addActivityWithoutPersistentStorage(activity);
-
         persistentStorageAgent.writeThrough(activity);
     }
 
@@ -99,16 +98,14 @@ public class ActivityStore {
         activities.put(activity.getId(), activity);
     }
 
-    /** Find and return the Activity with the given title. */
-//    public Activity getConversationWithType(String title) {
-//        UUID id = titleToId.get(title);
-//        return (id == null) ? null : conversations.get(id);
-//    }
-
     /** Get a list with all the activities. */
     public List<Activity> getActivityList() {
 
         return new ArrayList<>(activities.values());
+    }
+
+    public Activity getActivity(UUID id){
+        return (id == null) ? null : activities.get(id);
     }
 
     /** Sets the Map of Activity stored by this ActivityStore. */

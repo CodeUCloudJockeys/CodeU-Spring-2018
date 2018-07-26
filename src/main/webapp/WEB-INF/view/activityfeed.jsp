@@ -12,6 +12,12 @@
 --%>
 <%@ page import="java.util.List" %>
 <%@ page import="codeu.model.data.Activity" %>
+<%@ page import="java.time.Instant" %>
+<%@ page import="java.util.Date" %>
+<%@ page import="java.time.format.DateTimeFormatter" %>
+<%@ page import="java.time.format.FormatStyle" %>
+<%@ page import="java.util.Locale" %>
+<%@ page import="java.time.ZoneId" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -35,8 +41,13 @@
       <ul class="mdl-list">
     <%
         for(Activity activity : activities){
+            DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT)
+                            .withLocale( Locale.US )
+                            .withZone( ZoneId.systemDefault() );
+            Instant creation = activity.getCreationTime();
+            String parsedDate = formatter.format(creation);
     %>
-          <li><%=activity.getActivityMessage()%></li>
+          <li><%=parsedDate + ": " + activity.getActivityMessage()%></li>
     <%
         }
     }

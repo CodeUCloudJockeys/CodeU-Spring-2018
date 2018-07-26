@@ -1,5 +1,7 @@
 package codeu.controller.util;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class JavaToJavascriptUtil {
@@ -51,31 +53,29 @@ public class JavaToJavascriptUtil {
   // Returns a string of the following form:
   // "graph.xAxis = ["bob", "alice", "chad"]\n graph.yAxis = [1, 2, 3]"
   public static String UsernameFreqUtil(Map<String,Integer> userFrequency) {
-    StringBuilder xAxisSb = new StringBuilder();
-    StringBuilder yAxisSb = new StringBuilder();
+    StringBuilder sb = new StringBuilder();
 
-    xAxisSb.append("graph.xAxisLabelArr = [");
-    yAxisSb.append("graph.update( [");
+    sb.append("[");
 
-    for (String key : userFrequency.keySet()) {
-      xAxisSb.append("'");
-      xAxisSb.append(key);
-      xAxisSb.append("'");
-      xAxisSb.append(',');
+    // [{y:10 label: "1"}, ]
+    List keys = new ArrayList(userFrequency.keySet());
+    List values = new ArrayList(userFrequency.values());
+    for (int i = 0; i < keys.size(); i++) {
+      sb.append('{');
 
+      sb.append("y:");
+      sb.append(values.get(i));
 
-      yAxisSb.append(userFrequency.get(key));
-      yAxisSb.append(',');
+      sb.append(", label:\"");
+      sb.append(keys.get(i));
+      sb.append("\"},");
+
     }
 
-    xAxisSb.setLength(xAxisSb.length() - 1);
-    yAxisSb.setLength(yAxisSb.length() - 1);
+    sb.setLength(sb.length() - 1);
 
-    xAxisSb.append("]\n");
-    yAxisSb.append("])");
+    sb.append(']');
 
-    xAxisSb.append(yAxisSb);
-
-    return xAxisSb.toString();
+    return sb.toString();
   }
 }
