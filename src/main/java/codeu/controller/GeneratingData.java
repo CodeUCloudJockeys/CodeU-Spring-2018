@@ -7,8 +7,8 @@ import codeu.model.store.basic.ConversationStore;
 import codeu.model.store.basic.MessageStore;
 import codeu.model.store.basic.UserStore;
 import java.io.BufferedReader;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.time.Clock;
 import java.time.Duration;
@@ -24,7 +24,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.mindrot.jbcrypt.BCrypt;
 
-
 /** Servlet implementation class GeneratingData */
 public class GeneratingData extends HttpServlet {
   /** Store class that gives access to Conversations. */
@@ -35,6 +34,13 @@ public class GeneratingData extends HttpServlet {
   private UserStore userStore;
 
   private String[] users = new String[] {"boss", "manager", "ted", "frank", "linda", "exuser"};
+  private String[] conversations =
+      new String[] {
+        "codeu_faq", "bookClub", "favorite_songs", "stackoverflow", "cLoUdJoCkEys", "terminator"
+      };
+  private String conversation = null;
+  private List<String> messages = new ArrayList<String>();
+  private boolean terminate = false;
 
   /** Set up state for handling chat requests. */
   @Override
@@ -57,33 +63,47 @@ public class GeneratingData extends HttpServlet {
     this.userStore = userStore;
   }
 
-  /** @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response) */
   public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
-    ServletContext cntxt = getServletContext();
-    FileInputStream fstream = new FileInputStream(getServletContext().getRealPath("/datafile"));
-
-    // six mock users - will randomly be assigned a message
+    // Max of 5 users
     for (String user : users) {
-      newUser(user);
+      if (!userStore.isUserRegistered(user)) {
+        newUser(user);
+      }
     }
 
-    // one convo for now - can expand later
-    String conversation = "codeu_faq";
+    // Max of 5 new conversations
+    for (String convo : conversations) {
+      if (!conversationStore.isTitleTaken(convo) && !convo.equals("terminator")) {
+        conversation = convo;
+        terminate = false;
+        newConvo("boss", conversation);
+        break;
+      }
+      terminate = true;
+    }
 
-    newPrivateConvo("boss", conversation);
+    // Exceeds number of times the generator can run
+    if (terminate) {
+      response.sendRedirect("/register");
+      return;
+    }
 
-    BufferedReader br = new BufferedReader((new InputStreamReader(fstream)));
+    ServletContext cntxt = getServletContext();
+    InputStream resource = cntxt.getResourceAsStream("/WEB-INF/datagen.txt");
+    BufferedReader br = new BufferedReader(new InputStreamReader(resource));
     String line = br.readLine();
-    List<String> messages = new ArrayList<String>();
     while (line != null) {
       messages.add(br.readLine());
       line = br.readLine();
     }
+
     Random rand = new Random();
-    for (int i = 0; i < 20; i++) {
-      newMessage(users[rand.nextInt(5)], conversation, messages.get(rand.nextInt(38)));
+    for (int i = 0; i < 25; i++) {
+      newMessage(users[rand.nextInt(6)], conversation, messages.get(rand.nextInt(90)));
     }
+
+    response.sendRedirect("/login");
   }
 
   public void newUser(String username) {
@@ -112,10 +132,10 @@ public class GeneratingData extends HttpServlet {
   public void newMessage(String username, String title, String message) {
     User user = userStore.getUser(username);
     Conversation convo = conversationStore.getConversationWithTitle(title);
-    //Takes current time then offsets it at the most 90 minutes and at the least 0 minutes
+    // Takes current time then offsets it at the most 90 minutes and at the least 0 minutes
     Clock baseClock = Clock.systemDefaultZone();
     Random rand = new Random();
-    Clock clock = Clock.offset(baseClock, Duration.ofMinutes(rand.nextInt(90)));
+    Clock clock = Clock.offset(baseClock, Duration.ofMinutes(rand.nextInt(1440)));
     Message newMessage =
         new Message(UUID.randomUUID(), convo.getId(), user.getId(), message, Instant.now(clock));
     messageStore.addMessage(newMessage);

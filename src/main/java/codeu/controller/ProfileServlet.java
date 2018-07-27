@@ -1,6 +1,5 @@
 package codeu.controller;
 
-import codeu.model.data.Conversation;
 import codeu.model.data.Profile;
 import codeu.model.data.User;
 import codeu.model.store.basic.ConversationStore;
@@ -21,6 +20,7 @@ public class ProfileServlet extends HttpServlet {
   private UserStore userStore;
   private ProfileStore profileStore;
   private ConversationStore conversationStore;
+
   @Override
   public void init() throws ServletException {
     super.init();
@@ -49,8 +49,8 @@ public class ProfileServlet extends HttpServlet {
       List<Profile> profiles = profileStore.getAllProfiles();
       User user = userStore.getUser(username);
       String aboutMe = profileStore.getAbout(user.getId());
-      if(aboutMe.equals(null)){
-    	  aboutMe = "Enter an About me!";
+      if (aboutMe.equals(null)) {
+        aboutMe = "Enter an About me!";
       }
 
       List<String> convos = user.getUserConversationTitles();
