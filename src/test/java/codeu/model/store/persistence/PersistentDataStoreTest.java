@@ -7,7 +7,9 @@ import codeu.model.data.User;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import org.junit.After;
 import org.junit.Assert;
@@ -45,11 +47,23 @@ public class PersistentDataStoreTest {
     Instant creationOne = Instant.ofEpochMilli(1000);
     User inputUserOne = new User(idOne, nameOne, passwordHashOne, creationOne);
 
+    HashSet<UUID> fakeConversationIdSet = new HashSet<>();
+    fakeConversationIdSet.add(UUID.randomUUID());
+    fakeConversationIdSet.add(UUID.randomUUID());
+    fakeConversationIdSet.add(UUID.randomUUID());
+    fakeConversationIdSet.add(UUID.randomUUID());
+
+    inputUserOne.setConversationIdSet(fakeConversationIdSet);
+
     UUID idTwo = UUID.fromString("10000001-2222-3333-4444-555555555555");
     String nameTwo = "test_username_two";
     String passwordHashTwo = "$2a$10$ttaMOMMGLKxBBuTN06VPvu.jVKif.IczxZcXfLcqEcFi1lq.sLb6i";
     Instant creationTwo = Instant.ofEpochMilli(2000);
     User inputUserTwo = new User(idTwo, nameTwo, passwordHashTwo, creationTwo);
+
+    HashSet<UUID> fakeConversationIdSetTwo = new HashSet<>();
+    fakeConversationIdSetTwo.add(UUID.randomUUID());
+    inputUserTwo.setConversationIdSet(fakeConversationIdSetTwo);
 
     // save
     persistentDataStore.writeThrough(inputUserOne);
@@ -64,12 +78,14 @@ public class PersistentDataStoreTest {
     Assert.assertEquals(nameOne, resultUserOne.getName());
     Assert.assertEquals(passwordHashOne, resultUserOne.getPasswordHash());
     Assert.assertEquals(creationOne, resultUserOne.getCreationTime());
+    Assert.assertEquals(fakeConversationIdSet, resultUserOne.getConversationIdSet());
 
     User resultUserTwo = resultUsers.get(1);
     Assert.assertEquals(idTwo, resultUserTwo.getId());
     Assert.assertEquals(nameTwo, resultUserTwo.getName());
     Assert.assertEquals(passwordHashTwo, resultUserTwo.getPasswordHash());
     Assert.assertEquals(creationTwo, resultUserTwo.getCreationTime());
+    Assert.assertEquals(fakeConversationIdSetTwo, resultUserTwo.getConversationIdSet());
   }
 
   @Test
