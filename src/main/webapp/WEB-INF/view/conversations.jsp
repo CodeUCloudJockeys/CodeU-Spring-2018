@@ -21,6 +21,10 @@
 <head>
   <title>Conversations</title>
   <link rel="stylesheet" href="/css/main.css">
+
+  <%-- For lock/unlock icons --%>
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+
 </head>
 <body>
 
@@ -61,12 +65,19 @@
     }
     else{
     %>
-      <ul class="mdl-list">
+      <ul class="mdl-list" style="list-style: none;">
     <%
       for(Conversation conversation : conversations){
     %>
-      <li><a href="/chat/<%= conversation.getTitle() %>">
-        <%= conversation.getTitle() %></a></li>
+      <li>
+        <% if (conversation.getIsPrivate()) { %>
+          <i class="fas fa-lock fa-fw"></i>
+        <% } else { %>
+          <i class="fas fa-lock-open fa-fw"></i>
+        <% } %>
+        <a href="/chat/<%= conversation.getTitle()%>">
+          <%= conversation.getTitle() %></a>
+        </li>
     <%
       }
     %>
