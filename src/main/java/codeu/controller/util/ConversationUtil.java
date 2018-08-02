@@ -19,6 +19,9 @@ public class ConversationUtil {
         .distinct()                          // Remove duplicate usernames
         .filter(userStore::isUserRegistered) // Remove invalid usernames
         .map(userStore::getUser)             // Get users from usernames
-        .forEach(user -> user.addToConversation(conversation)); // add each user to the conversation
+        .forEach(user -> {
+          user.addToConversation(conversation);
+          userStore.updateUser(user);
+        }); // add each user to the conversation
   }
 }

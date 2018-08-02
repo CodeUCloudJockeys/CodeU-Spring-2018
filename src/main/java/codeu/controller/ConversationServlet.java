@@ -159,6 +159,7 @@ public class ConversationServlet extends HttpServlet {
 
     // Users are always whitelisted in conversations they create
     user.addToConversation(conversation);
+    userStore.updateUser(user);
 
     if (!usernamesToAdd.isEmpty()) {
       // Whitelist users in request
