@@ -129,7 +129,7 @@ public class ChatServlet extends HttpServlet {
 
     UUID conversationId = conversation.getId();
     boolean isOwner = (user != null) &&
-        conversation.getOwnerId() == user.getId();
+        conversation.getOwnerId().equals(user.getId());
 
     // TODO: Add pagination -- this will get insane with more than a few hundred messages
     List<Message> messages = messageStore.getMessagesInConversation(conversationId);
@@ -186,7 +186,7 @@ public class ChatServlet extends HttpServlet {
     }
 
     // User can only add users if user is owner and conversation is private
-    if (conversation.getOwnerId() == user.getId() && conversation.getIsPrivate()) {
+    if (conversation.getOwnerId().equals(user.getId()) && conversation.getIsPrivate()) {
       String usernamesToAdd = request.getParameter("add_users");
 
       if (usernamesToAdd != null && !usernamesToAdd.isEmpty()) {
