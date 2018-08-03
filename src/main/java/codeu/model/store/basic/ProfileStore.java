@@ -24,6 +24,7 @@ public class ProfileStore {
   private PersistentStorageAgent persistentStorageAgent;
 
   private List<Profile> profiles;
+
   private ProfileStore(PersistentStorageAgent persistentStorageAgent) {
     this.persistentStorageAgent = persistentStorageAgent;
     profiles = new ArrayList<>();
@@ -48,7 +49,7 @@ public class ProfileStore {
   }
 
   public void updateAbout(UUID id, String about) {
-    for (int i = 0; i<profiles.size(); i++) {
+    for (int i = 0; i < profiles.size(); i++) {
       Profile profile = profiles.get(i);
       if (profile.getProfile().equals(id)) {
         profile.setAbout(about);
@@ -56,6 +57,10 @@ public class ProfileStore {
         persistentStorageAgent.writeThrough(profile);
       }
     }
+  }
+
+  public void updateProfile(Profile profile) {
+    persistentStorageAgent.writeThrough(profile);
   }
 
   public String getAbout(UUID id) {

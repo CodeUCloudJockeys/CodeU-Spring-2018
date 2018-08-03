@@ -174,6 +174,7 @@ public class PersistentDataStore {
         Instant creationTime = Instant.ofEpochMilli((long) entity.getProperty("creation_time"));
         String about = (String) entity.getProperty("about");
         Profile profile = new Profile(uuid, profileUuid, about, creationTime);
+        profile.setAbout(about);
         profiles.add(profile);
       } catch (Exception e) {
         // In a production environment, errors should be very rare. Errors which may
